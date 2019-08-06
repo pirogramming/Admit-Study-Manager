@@ -21,3 +21,10 @@ class SignupForm(UserCreationForm):
             nickname=self.cleaned_data['nickname'],
         )
         return user
+
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = StudyUser
+        widgets = {'password':forms.PasswordInput}
+        fields = ['username', 'password']
+

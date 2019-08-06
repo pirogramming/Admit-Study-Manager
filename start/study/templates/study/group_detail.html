@@ -1,1 +1,35 @@
-굳잡맨~
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    span{
+        color: blue;
+    }
+</style>
+
+<h1>Group <span>*{{group.group_name}}*</span> Details </h1>
+
+초대 링크 : <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link" readonly/>
+<button onclick="myFunction()">초대 링크 복사</button>
+
+<script>
+function myFunction() {
+  var copyText = document.getElementById("link");
+  copyText.select();
+  document.execCommand("copy");
+  alert("초대 링크를 복사했습니다." + copyText.value);
+}
+</script>
+
+<!--  alert("초대 링크를 복사했습니다." + copyText.value);-->
+
+
+<h3>구성원</h3>
+<ol>
+    {% for member in members %}
+    <li>{{member.person}}</li>
+    {% endfor %}
+</ol>
+
+{% endblock %}

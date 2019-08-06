@@ -7,6 +7,7 @@ from django.urls import reverse
 class Group(models.Model):
     group_name = models.CharField(max_length=20, unique=True)
     group_code = models.CharField(max_length=20, unique=True)
+    invitation_url = models.CharField(max_length=20, unique=True)
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
     def __str__(self):
