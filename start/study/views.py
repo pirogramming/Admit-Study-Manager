@@ -9,12 +9,14 @@ from accounts.models import StudyUser
 def group_list(request):
     return render(request, 'study/group_list.html', {})
 
+
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
 
     return render(request, 'study/group_detail.html', {
         'group': group,
     })
+
 
 def group_new(request):
     if request.method == 'POST':
@@ -27,6 +29,7 @@ def group_new(request):
     return render(request, 'study/group_form.html', {
         'form': form,
     })
+
 
 def group_register(request):
     if request.method == 'POST':
@@ -42,3 +45,7 @@ def group_register(request):
     return render(request, 'study/group_register.html', {
         'form': form,
     })
+
+
+def group_mystudy(request):
+    return render(request, 'study/group_mystudy.html')

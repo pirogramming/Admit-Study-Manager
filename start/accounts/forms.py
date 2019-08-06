@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Profile, StudyUser
 
+
 class SignupForm(UserCreationForm):
     phone_number = forms.CharField()
     address = forms.CharField()

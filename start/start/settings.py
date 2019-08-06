@@ -56,7 +56,7 @@ ROOT_URLCONF = 'start.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,6 +119,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-
 AUTH_USER_MODEL = 'accounts.StudyUser'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+from django.urls import reverse_lazy
+
+LOGOUT_URL = '/'
+LOGIN_URL = reverse_lazy('accounts:login')
+
+LOGIN_REDIRECT_URL = reverse_lazy('study:mystudy')
+LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header>
+    <div>
+        <h2>스터디 어드밋(study admit)</h2>
+        <p>당신의 스터디를 관리해드리겠습니다</p>
+    </div>
+    {% if user.is_authenticated %}
+        <div style="background-color: antiquewhite; padding:1px; margin-top: 10px">
+            <p>안녕 {{ user }}! </p>
+            <a href="{% url "accounts:profile" %}"> {{ user }} </a>&nbsp; &nbsp;
+            <a href="{% url "accounts:logout" %}" onclick="return confirm('로그아웃 할거임?');">로그아웃</a>
+        </div>
+    {% else %}
+        <div>
+        </div>
+    {% endif %}
+</header>
+{% block content %}
+{% endblock %}
+</body>
+</html>

@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <h2>{{ user }}'s Profile</h2>
 
 <ul>
@@ -5,3 +8,5 @@
     <li>email : {{ user.email }}</li>
     <li>date_joined : {{ user.date_joined }}</li>
 </ul>
+
+{% endblock %}

@@ -5,10 +5,12 @@ from django.contrib.auth.models import UserManager
 
 # Create your models here.
 
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20)
     address = models.CharField(max_length=50)
+
 
 class StudyUserManager(UserManager):
     def create_superuser(self, username, email, password, **extra_fields):

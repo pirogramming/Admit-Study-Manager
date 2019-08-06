@@ -5,6 +5,11 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
+def home(request):
+    return redirect('accounts:login')
+
+
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
