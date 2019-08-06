@@ -4,6 +4,7 @@ from .models import Profile, StudyUser
 
 
 class SignupForm(UserCreationForm):
+    nickname = forms.CharField()
     phone_number = forms.CharField()
     address = forms.CharField()
 
@@ -13,9 +14,10 @@ class SignupForm(UserCreationForm):
 
     def save(self):
         user = super().save()
-        profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             phone_number=self.cleaned_data['phone_number'],
-            address=self.cleaned_data['address']
+            address=self.cleaned_data['address'],
+            nickname=self.cleaned_data['nickname'],
         )
         return user

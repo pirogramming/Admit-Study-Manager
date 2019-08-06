@@ -3,22 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        a{
+            text-decoration: None;
+        }
+    </style>
 </head>
 <body>
 <header>
-    <div>
-        <h2>스터디 어드밋(study admit)</h2>
-        <p>당신의 스터디를 관리해드리겠습니다</p>
-    </div>
     {% if user.is_authenticated %}
+        <div>
+            <a href="{% url 'study:mystudy' %}"><h2>스터디 어드밋(study admit)</h2></a>
+            <p>당신의 스터디를 관리해드리겠습니다</p>
+        </div>
         <div style="background-color: antiquewhite; padding:1px; margin-top: 10px">
-            <p>안녕 {{ user }}! </p>
+            <p>{{ user }}님 안녕하세요 </p>
             <a href="{% url "accounts:profile" %}"> {{ user }} </a>&nbsp; &nbsp;
-            <a href="{% url "accounts:logout" %}" onclick="return confirm('로그아웃 할거임?');">로그아웃</a>
+            <a href="{% url "study:mystudy" %}"> 내 스터디로 가기 </a>&nbsp; &nbsp;
+            <a href="{% url "accounts:logout" %}" onclick="return confirm('오늘 공부는 다 했나염?');">로그아웃</a>
         </div>
     {% else %}
         <div>
+            <a href="{% url 'home' %}"><h2>스터디 어드밋(study admit)</h2></a>
+            <p>당신의 스터디를 관리해드리겠습니다</p>
         </div>
+        <div></div>
     {% endif %}
 </header>
 {% block content %}
