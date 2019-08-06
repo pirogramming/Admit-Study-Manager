@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import GroupForm, RegisterForm
 from .models import Group, Membership
-from django import forms
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -36,8 +36,21 @@ def group_register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = request.user
-            group = Group.objects.get(group_name=request.POST['group_name'])
-            m = Membership.objects.create(person=user, group=group)
+            name_list = [x.group_name for x in Group.objects.all()]
+            name = request.POST['group_name']
+            if name in  name_list:
+                group = Group.objects.get(group_name=name)
+                code_list = [x.group_code for x in Group.objects.all()]
+                code = request.POST['group_code']
+                if code in code_list:
+                    if group == Group.objects.get(group_code=code):
+                        m = Membership.objects.create(person=user, group=group)
+                    else:
+                        return HttpResponse('코드 틀렸다 인마! 다시해라')
+                else:
+                    return HttpResponse('그런 코드없다 인마! 다시해라')
+            else:
+                return HttpResponse('그런 그룹없다 인마! 다시해라')
         return redirect(group)
     else:
         form = RegisterForm()
