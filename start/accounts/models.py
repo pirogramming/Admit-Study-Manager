@@ -9,28 +9,24 @@ from django.contrib.auth.models import UserManager
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    nickname = models.CharField(blank=True, max_length=5)
-    phone_number = models.CharField(blank=True, max_length=20)
-    address = models.CharField(blank=True, max_length=50)
 
 
 class StudyUserManager(UserManager):
     def create_superuser(self, username, email, password, **extra_fields):
-        extra_fields.setdefault('major', '일')
+        extra_fields.setdefault('major', '직장인')
         return super().create_superuser(username, email, password, **extra_fields)
 
 
 class StudyUser(AbstractUser):
-    major = models.CharField(
-        max_length=10,
-        choices=(
-            ('1', '일'),
-            ('2', '이'),
-            ('3', '삼'),
-        )
-    )
+    nickname = models.CharField(max_length=10, null=True)
+    phone_number = models.CharField(blank=True, max_length=20, null=True)
+    img_profile = models.ImageField(upload_to='user', blank=True, null=True, default=None)
+    bio = models.TextField(blank=True, null=True)
 
     objects = StudyUserManager
+
+    def __str__(self):
+        return self.username
 
 
 
