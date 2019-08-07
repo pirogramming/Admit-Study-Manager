@@ -70,7 +70,17 @@ def group_register(request):
                 code = request.POST['group_code']
                 if code in code_list:
                     if group == Group.objects.get(group_name=name, group_code=code):
+                        for x in Membership.objects.all():
+                            if str(user) == str(x.person) and str(name) == str(x.group):
+                                messages.error(request, '이미 가입되었습니다.')
+                                form = RegisterForm()
+                                return render(request, 'study/group_register.html', {
+                                    'form': form,
+                                })
+
                         m = Membership.objects.create(person=user, group=group)
+                        messages.success(request, '그룹에 가입되었습니다.')
+                        return redirect(group)
                     else:
                         messages.error(request, '코드가 일치하지 않습니다.')
                         form = RegisterForm()
@@ -89,8 +99,6 @@ def group_register(request):
                 return render(request, 'study/group_register.html', {
                     'form': form,
                 })
-            messages.success(request, '그룹에 가입되었습니다.')
-        return redirect(group)
     else:
         form = RegisterForm()
     return render(request, 'study/group_register.html', {

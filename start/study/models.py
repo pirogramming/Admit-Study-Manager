@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from accounts.models import StudyUser
 from django.urls import reverse
@@ -7,7 +9,7 @@ from django.urls import reverse
 class Group(models.Model):
     group_name = models.CharField(max_length=20, unique=True)
     group_code = models.CharField(max_length=20)
-    invitation_url = models.CharField(max_length=20, unique=True)
+    invitation_url = models.CharField(max_length=20, unique=True, default=uuid.uuid1)
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
     def __str__(self):
