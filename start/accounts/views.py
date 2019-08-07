@@ -7,7 +7,10 @@ from django.contrib.auth.decorators import login_required
 
 
 def home(request):
-    return redirect('accounts:login')
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+    else:
+        return redirect('study:mystudy')
 
 
 def signup(request):

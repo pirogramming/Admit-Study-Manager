@@ -27,7 +27,7 @@ def group_new(request):
         return redirect(group)
     else:
         form = GroupForm()
-    return render(request, 'study/group_form.html', {
+    return render(request, 'study/group_new.html', {
         'form': form,
     })
 
