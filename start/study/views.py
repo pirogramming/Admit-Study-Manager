@@ -14,8 +14,14 @@ from django.contrib import messages
 
 def group_list(request):
     user = request.user
-    group_list = Group.objects.filter(group_member = user)
-    return render(request, 'study/group_list.html', {'group_list':group_list})
+    group_list = Group.objects.filter(group_member=user)
+    g = request.GET.get('g', '')
+    if g:
+        group_list = group_list.filter(group_name__icontains=g)
+
+    return render(request, 'study/group_list.html', {
+        'group_list': group_list
+    })
 
 
 def group_detail(request, id):
