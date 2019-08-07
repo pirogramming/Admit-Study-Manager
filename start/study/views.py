@@ -12,6 +12,17 @@ from django.contrib import messages
 # Create your views here.
 
 
+def all_group_list(request):
+    gs = Group.objects.all()
+    g = request.GET.get('g', '')
+
+    if g:
+        gs = gs.filter(group_name__icontains=g)
+
+    return render(request, 'study/all_group_list.html', {
+        'all_group_list': gs,
+    })
+
 def group_list(request):
     user = request.user
     group_list = Group.objects.filter(group_member=user)

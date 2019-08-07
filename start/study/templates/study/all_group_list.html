@@ -11,7 +11,7 @@
     </form>
 </div>
 
-{% for group in group_list %}
+{% for group in all_group_list %}
 <tr>
     <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
 </tr>
