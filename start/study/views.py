@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import GroupForm, RegisterForm
 from .models import Group, Membership
 from django.http import HttpResponse
+from django.contrib import messages
 
 # Create your views here.
 
@@ -46,11 +47,23 @@ def group_register(request):
                     if group == Group.objects.get(group_code=code):
                         m = Membership.objects.create(person=user, group=group)
                     else:
-                        return HttpResponse('코드 틀렸다 인마! 다시해라')
+                        messages.success(request, '코드가 일치하지 않습니다.')
+                        form = RegisterForm()
+                        return render(request, 'study/group_register.html', {
+                            'form': form,
+                        })
                 else:
-                    return HttpResponse('그런 코드없다 인마! 다시해라')
+                    messages.success(request, '존재하지 않는 코드입니다.')
+                    form = RegisterForm()
+                    return render(request, 'study/group_register.html', {
+                        'form': form,
+                    })
             else:
-                return HttpResponse('그런 그룹없다 인마! 다시해라')
+                messages.success(request, '존재하지 않는 그룹입니다.')
+                form = RegisterForm()
+                return render(request, 'study/group_register.html', {
+                    'form': form,
+                })
         return redirect(group)
     else:
         form = RegisterForm()
