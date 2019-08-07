@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% if not user.is_authenticated %}
+<p>로그인을 먼저 해주세요.</p>
+<p style="color:red;">{{ error }}</p>
+<div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" name="login"/>
+        </form>
+    </div>
+{% endif %}
+
+<h4>현재 그룹 멤버</h4>
+
+<ul style="list-style:none;">
+    {% for member in membership %}
+    <li>{{ member.username }}</li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="register">
+    <button>{{ group.group_name }}에 가입하기</button>
+    </input>
+</form>
+{% endif %}
+</body>
+</html>
