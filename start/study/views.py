@@ -13,14 +13,17 @@ from django.contrib import messages
 
 
 def group_list(request):
-    return render(request, 'study/group_list.html', {})
+    user = request.user
+    group_list = Group.objects.filter(group_member = user)
+    return render(request, 'study/group_list.html', {'group_list':group_list})
 
 
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
+    membership = [x.person for x in Membership.objects.filter(group=group)]
 
     return render(request, 'study/group_detail.html', {
-        'group': group,
+        'group': group, 'membership':membership,
     })
 
 
@@ -106,6 +109,7 @@ def group_registerbyurl(request, invitation_url):
         try:
             if user not in membership:
                 m = Membership.objects.create(person=user, group=group)
+                messages.success(request, '"{}"그룹 가입을 축하합니다!'.format(group.group_name))
                 return redirect(group)
 
             else:
