@@ -44,7 +44,7 @@ def group_new(request):
                 messages.success(request, '새 그룹을 만들었습니다')
                 return redirect(group)
             else:
-                messages.error(request, '이미 존재하는 그룹 이름입니다.')
+                messages.error(request, '이미 존재하는 그룹입니다.')
                 form = GroupForm()
                 return render(request, 'study/group_new.html', {
                     'form': form,
