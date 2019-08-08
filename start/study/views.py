@@ -1,6 +1,8 @@
+import functools
 from random import randint
 
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.forms import LoginForm
@@ -10,6 +12,24 @@ from .models import Group, Membership
 from django.contrib import messages
 
 # Create your views here.
+
+from study.models import Membership
+
+def group_required(func):
+   """View decorator that checks a user is allowed to write a review, in negative case the decorator return Forbidden"""
+
+   @functools.wraps(func)
+   def wrapper(request, id):
+       group_name = Group.objects.get(id=id).group_name
+       user = request.user
+       usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user)]
+       if request.user.is_authenticated and group_name not in usergroup_list:
+           return render(request, 'study/group_reject.html', {'group_name':group_name})
+           # return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
+
+       return func(request, id)
+   return wrapper
+
 
 
 def all_group_list(request):
@@ -44,6 +64,7 @@ def all_group_detail(request,id):
         'membership': membership,
     })
 
+@group_required
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
     membership = [x.person for x in Membership.objects.filter(group=group)]
@@ -88,15 +109,15 @@ def group_new(request):
     })
 
 
-def group_register(request):
+def group_register(request, id):
+    group = Group.objects.get(id=id)
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = request.user
             name_list = [x.group_name for x in Group.objects.all()]
-            name = request.POST['group_name']
+            name = group.group_name
             if name in name_list:
-                group = Group.objects.get(group_name=name)
                 code_list = [x.group_code for x in Group.objects.all()]
                 code = request.POST['group_code']
                 if code in code_list:
@@ -119,7 +140,7 @@ def group_register(request):
                             'form': form,
                         })
                 else:
-                    messages.error(request, '존재하지 않는 코드입니다.')
+                    messages.error(request, '코드가 일치하지 않습니다.')
                     form = RegisterForm()
                     return render(request, 'study/group_register.html', {
                         'form': form,
@@ -134,6 +155,7 @@ def group_register(request):
         form = RegisterForm()
     return render(request, 'study/group_register.html', {
         'form': form,
+        'group': group,
     })
 
 
