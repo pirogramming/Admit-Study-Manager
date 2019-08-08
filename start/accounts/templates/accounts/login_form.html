@@ -3,8 +3,7 @@
 {% block content %}
     {% if not user.is_authenticated %}
     <div>
-        <form action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+        <form action="" method="post">{% csrf_token %}
             <table>
                 {{ form.as_table }}
             </table>

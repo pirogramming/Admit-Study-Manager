@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>프로필 수정하기</h1>
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <div>
+            {{ imageform.img_profile.label_tag }} {{ imageform.img_profile }}
+        </div>
+        <div>
+            {{ profileform.as_p }}
+            <button type="submit">수정하기</button>
+        </div>
+    </form>
+{% endblock %}
+
