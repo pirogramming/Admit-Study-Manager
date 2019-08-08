@@ -13,7 +13,7 @@
 
 {% for group in all_group_list %}
 <tr>
-    <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
+    <td><a href="{% url "study:all_group_detail" group.id %}">{{group.group_name}}</a></td>
 </tr>
 {% endfor %}
 
