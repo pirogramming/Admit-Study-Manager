@@ -35,6 +35,15 @@ def group_list(request):
     })
 
 
+def all_group_detail(request,id):
+    group = get_object_or_404(Group, id=id)
+    membership = [x.person for x in Membership.objects.filter(group=group)]
+
+    return render(request, 'study/all_group_detail.html', {
+        'group': group,
+        'membership': membership,
+    })
+
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
     membership = [x.person for x in Membership.objects.filter(group=group)]

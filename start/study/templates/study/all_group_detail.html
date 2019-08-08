@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    span{
+        color: blue;
+    }
+</style>
+
+
+<h1>Group <span>*{{group.group_name}}*</span> Details </h1>
+
+<h3>구성원</h3>
+<ol>
+    {% for member in membership %}
+    <li>{{ member.username }}</li>
+    {% endfor %}
+</ol>
+
+{% endblock %}
