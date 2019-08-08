@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h2>{{ user.nickname }}'s Profile</h2>
@@ -7,7 +8,7 @@
     {% if user.img_profile %}
         <li>프로필이미지 : <br/><img src="{{ user.img_profile.url }}" width="10%" height="10%"/></li>
     {% else %}
-        <li>이미지 없음 - 미디어 파일로 대체예정</li>
+        <li>이미지 없음 : <br/><img src="{% static 'img/anonym.jpg' %}" width="10%" height="10%"/></li>
     {% endif %}
         <li>이름 : {{ user.nickname }}</li>
         <li>이메일 : {{ user.email }}</li>

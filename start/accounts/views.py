@@ -17,9 +17,7 @@ class UserCreateView(CreateView):
 
 @login_required
 def profile(request):
-    user = request.user
-    profile = user.profile
-    return render(request, 'accounts/profile.html', {'profile': profile})
+    return render(request, 'accounts/profile.html')
 
 
 @login_required

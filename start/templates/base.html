@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,6 +34,8 @@
 
             {% if user.img_profile %}
                 <div><img src="{{ user.img_profile.url }}" width="5%" height="5%"/></div>
+            {% else %}
+                <div><img src="{% static 'img/anonym.jpg' %}" width="5%" height="5%"/></div>
             {% endif %}
 
             <div>
