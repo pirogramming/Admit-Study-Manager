@@ -88,15 +88,15 @@ def group_new(request):
     })
 
 
-def group_register(request):
+def group_register(request, id):
+    group = Group.objects.get(id=id)
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = request.user
             name_list = [x.group_name for x in Group.objects.all()]
-            name = request.POST['group_name']
+            name = group.group_name
             if name in name_list:
-                group = Group.objects.get(group_name=name)
                 code_list = [x.group_code for x in Group.objects.all()]
                 code = request.POST['group_code']
                 if code in code_list:
@@ -119,7 +119,7 @@ def group_register(request):
                             'form': form,
                         })
                 else:
-                    messages.error(request, '존재하지 않는 코드입니다.')
+                    messages.error(request, '코드가 일치하지 않습니다.')
                     form = RegisterForm()
                     return render(request, 'study/group_register.html', {
                         'form': form,
@@ -134,6 +134,7 @@ def group_register(request):
         form = RegisterForm()
     return render(request, 'study/group_register.html', {
         'form': form,
+        'group': group,
     })
 
 

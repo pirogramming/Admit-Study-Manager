@@ -6,7 +6,7 @@ from study.models import Group
 
 
 class Notice(models.Model):
-    notice = models.ForeignKey(Group, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
     title = models.CharField(max_length=20, verbose_name='제목')
     content = models.TextField(verbose_name='내용')
     created_at = models.DateTimeField(auto_now_add=True)
