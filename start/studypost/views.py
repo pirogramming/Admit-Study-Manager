@@ -35,7 +35,8 @@ def notice_detail(request, id):
     })
 
 def notice_list(request, id):
-    ns = Notice.objects.get(id=id)
+    group = Group.objects.get(id=id)
+    ns = Notice.objects.filter(notice=group)
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
