@@ -24,7 +24,8 @@ def group_required(func):
        user = request.user
        usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user)]
        if request.user.is_authenticated and group_name not in usergroup_list:
-           return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
+           return render(request, 'study/group_reject.html', {'group_name':group_name})
+           # return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
 
        return func(request, id)
    return wrapper
