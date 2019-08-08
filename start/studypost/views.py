@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from study.models import Group
+from start.study.models import Group
 from .models import Notice
 from .forms import NoticeForm
 # Create your views here.
@@ -20,19 +20,17 @@ def notice_new(request):
             return redirect(notice)
     else:
         form = NoticeForm()
-    return render(request, 'studypost/notice_new.html', {
-        'form': form,
-    })
-
+        return render(request, 'studypost/notice_new.html', {'form': form})
     return render(request, 'notice_new.html', {})
 
-def notice_detail(request, id):
 
+def notice_detail(request, id):
     notice = get_object_or_404(Notice, id=id)
 
     return render(request, 'studypost/notice_detail.html', {
         'notice': notice,
     })
+
 
 def notice_list(request, id):
     group = Group.objects.get(id=id)
