@@ -1,6 +1,8 @@
+import functools
 from random import randint
 
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.forms import LoginForm
@@ -10,6 +12,23 @@ from .models import Group, Membership
 from django.contrib import messages
 
 # Create your views here.
+
+from study.models import Membership
+
+def group_required(func):
+   """View decorator that checks a user is allowed to write a review, in negative case the decorator return Forbidden"""
+
+   @functools.wraps(func)
+   def wrapper(request, id):
+       group_name = Group.objects.get(id=id).group_name
+       user = request.user
+       usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user)]
+       if request.user.is_authenticated and group_name not in usergroup_list:
+           return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
+
+       return func(request, id)
+   return wrapper
+
 
 
 def all_group_list(request):
@@ -44,6 +63,7 @@ def all_group_detail(request,id):
         'membership': membership,
     })
 
+@group_required
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
     membership = [x.person for x in Membership.objects.filter(group=group)]
