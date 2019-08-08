@@ -23,3 +23,8 @@ class Group(models.Model):
 class Membership(models.Model):
     person = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    ROLE_CHOICES = [
+        ('MANAGER', 'MANAGER'),
+        ('MEMBER', 'MEMBER')
+    ]
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='MEMBER')

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from start.study.models import Group
+from study.models import Group
 from .models import Notice
 from .forms import NoticeForm
 # Create your views here.

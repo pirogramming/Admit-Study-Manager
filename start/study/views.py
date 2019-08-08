@@ -20,7 +20,8 @@ def group_required(func):
 
    @functools.wraps(func)
    def wrapper(request, id):
-       group_name = Group.objects.get(id=id).group_name
+       group = get_object_or_404(Group, id=id)
+       group_name = group.group_name
        user = request.user
        usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user)]
        if request.user.is_authenticated and group_name not in usergroup_list:
@@ -67,7 +68,8 @@ def all_group_detail(request,id):
 @group_required
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
-    membership = [x.person for x in Membership.objects.filter(group=group)]
+    # membership = [x.person for x in Membership.objects.filter(group=group)]
+    membership = Membership.objects.filter(group=group)
 
     return render(request, 'study/group_detail.html', {
         'group': group, 'membership':membership,
@@ -92,7 +94,7 @@ def group_new(request):
                     except:
                         pass
                 group.save()
-                m = Membership.objects.create(person=request.user, group=group)
+                m = Membership.objects.create(person=request.user, group=group, role='MANAGER')
                 messages.success(request, '새 그룹을 만들었습니다')
                 return redirect(group)
             else:
@@ -161,11 +163,12 @@ def group_register(request, id):
 
 def group_registerbyurl(request, invitation_url):
     group = Group.objects.get(invitation_url=invitation_url)
-    membership = [x.person for x in Membership.objects.filter(group=group)]
+    membership = Membership.objects.filter(group=group)
+    memberlist = [x.person for x in Membership.objects.filter(group=group)]
     user = request.user
     if request.method == 'POST':
         try:
-            if user not in membership:
+            if user not in memberlist:
                 m = Membership.objects.create(person=user, group=group)
                 messages.success(request, '"{}"그룹 가입을 축하합니다!'.format(group.group_name))
                 return redirect(group)
