@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
-from .models import StudyUser
+from .models import StudyUser, Profile
 
 
 class SignupForm(UserCreationForm):
@@ -48,23 +48,18 @@ class LoginForm(forms.ModelForm):
         }
 
 
-class ProfileForm(UserChangeForm):
+class UserEditForm(UserChangeForm):
     class Meta:
         model = StudyUser
-        fields = ['nickname', 'phone_number', 'bio']
+        fields = ['img_profile', 'nickname', 'phone_number', 'bio']
 
         labels = {
             'nickname': '사용자이름',
             'phone_number': '전화번호',
+            'img_profile': '프로필 사진',
             'bio': '자기소개',
         }
 
-
-class ProfileImgForm(UserChangeForm):
-    class Meta:
-        model = StudyUser
-        fields = ['img_profile']
-
-        labels = {
-            'img_profile': '프로필 사진',
+        help_texts = {
+            'phone_number': '"-"를 포함해서 써주세요'
         }

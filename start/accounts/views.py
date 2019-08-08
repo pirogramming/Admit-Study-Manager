@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import SignupForm, ProfileForm, ProfileImgForm
+from .forms import SignupForm, UserEditForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -17,22 +17,19 @@ class UserCreateView(CreateView):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html')
+    user = request.user
+    profile = user.profile
+    return render(request, 'accounts/profile.html', {'profile': profile})
 
 
 @login_required
 def profile_revise(request):
     if request.method == 'POST':
-        profileform = ProfileForm(data=request.POST, instance=request.user)
-        imageform = ProfileImgForm(data=request.FILES, instance=request.user)
-        if profileform.is_valid():
-            user = profileform.save()
-            return redirect('accounts:profile')
-        elif imageform.is_valid():
-            user2 = imageform.save()
-            return redirect('accounts:profile')
+        form = UserEditForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            us = form.save()
+            return redirect("accounts:profile")
     else:
-        profileform = ProfileForm(instance=request.user)
-        imageform = ProfileImgForm(instance=request.user)
-        forms = {'profileform': profileform, 'imageform': imageform}
+        profileform = UserEditForm(instance=request.user)
+        forms = {'profileform': profileform}
         return render(request, 'accounts/profile_revise.html', forms)
