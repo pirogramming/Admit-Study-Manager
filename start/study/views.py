@@ -44,6 +44,8 @@ def group_detail(request, id):
     })
 
 
+
+
 def group_new(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
