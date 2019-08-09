@@ -28,3 +28,17 @@ class Membership(models.Model):
         ('MEMBER', 'MEMBER')
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='MEMBER')
+
+    STATUS_CHOICES = [
+        ('NEEDS_APPROVAL', 'NEEDS_APPROVAL'),
+        ('ACTIVE', 'ACTIVE'),
+        ('OUT', 'OUT')
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+
+    @property
+    def is_manager(self):
+        if self.role == 'MANAGER':
+            return True
+        else:
+            return False

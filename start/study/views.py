@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
+
 from .forms import GroupForm, RegisterForm
 from .models import Group, Membership
 from django.contrib import messages
@@ -23,7 +24,7 @@ def group_required(func):
        group = get_object_or_404(Group, id=id)
        group_name = group.group_name
        user = request.user
-       usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user)]
+       usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
        if request.user.is_authenticated and group_name not in usergroup_list:
            return render(request, 'study/group_reject.html', {'group_name':group_name})
            # return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
@@ -46,7 +47,9 @@ def all_group_list(request):
 
 def group_list(request):
     user = request.user
-    group_list = Group.objects.filter(group_member=user)
+    # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
+    # group_list = Group.objects.filter(group_member=user)
+    group_list = [x.group for x in Membership.objects.filter(person = user, status='ACTIVE')]
     g = request.GET.get('g', '')
     if g:
         group_list = group_list.filter(group_name__icontains=g)
@@ -68,11 +71,16 @@ def all_group_detail(request,id):
 @group_required
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
+    user = request.user
     # membership = [x.person for x in Membership.objects.filter(group=group)]
-    membership = Membership.objects.filter(group=group)
+    membership_manager = Membership.objects.filter(group=group, role='MANAGER')
+    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+    usermembership = Membership.objects.get(group=group, person=user)
 
     return render(request, 'study/group_detail.html', {
-        'group': group, 'membership':membership,
+        'group': group,
+        'membership_manager':membership_manager, 'membership_member':membership_member,
+        'usermembership':usermembership,
     })
 
 
@@ -163,14 +171,17 @@ def group_register(request, id):
 
 def group_registerbyurl(request, invitation_url):
     group = Group.objects.get(invitation_url=invitation_url)
-    membership = Membership.objects.filter(group=group)
+    membership = Membership.objects.filter(group=group, status='ACTIVE')
     memberlist = [x.person for x in Membership.objects.filter(group=group)]
     user = request.user
     if request.method == 'POST':
         try:
             if user not in memberlist:
                 m = Membership.objects.create(person=user, group=group)
-                messages.success(request, '"{}"그룹 가입을 축하합니다!'.format(group.group_name))
+                # obj = Membership.objects.create(person=user, group=group)
+                # obj.status = 'ACTIVE'
+                # obj.save()
+                messages.success(request, '"{}"그룹에 가입했습니다!'.format(group.group_name))
                 return redirect(group)
 
             else:
@@ -208,8 +219,35 @@ def group_mystudy(request):
 
 def mystudy_list(request,id):
     user = get_object_or_404(StudyUser,id=id)
-    groups = Membership.objects.filter(person=user)
+    groups = Membership.objects.filter(person=user, status='ACTIVE')
 
     return render(request, 'study/mystudy_list.html',{
         'user': user, 'groups': groups,
+    })
+
+@group_required
+def group_mysettings(request, id):
+    user = request.user
+    group = Group.objects.get(id=id)
+    usermembership = Membership.objects.get(person=user, group=group)
+    if request.method == 'POST':
+        if request.POST.get('out', '') == 'out':
+            # Membership.objects.get(person=user, group=group).update(status='OUT')
+            obj = Membership.objects.get(person=user, group=group)
+            obj.status = 'OUT'
+            obj.save()
+            return redirect('home')
+        return redirect(group)
+
+    return render(request, 'study/group_mysettings.html', {
+        'user':user, 'group':group
+    })
+
+# @manager_required (매니저만 들어갈 수 있도록 decorator 추가할 예정)
+@group_required
+def group_settings(request, id):
+    user = request.user
+    group = Group.objects.get(id=id)
+    return render(request, 'study/group_settings.html', {
+        'user':user, 'group':group,
     })

@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 <style>
     span{
         color: blue;
@@ -25,6 +27,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">현재 벌금</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내 설정</a>
+            </li>
+            {% if usermembership.is_manager %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'study:group_settings' group.id %}"><i class="material-icons">settings</i>그룹 설정</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
@@ -32,11 +42,16 @@
 <h1>Group Details </h1>
 
 <h3>구성원</h3>
+
 <ol>
-    {% for member in membership %}
-    <li>{{ member.person.username }}/{{ member.role }}</li>
+    {% for member in membership_manager %}
+    <li style="color:deepskyblue;">{{ member.person.username }}(관리자)</li>
+    {% endfor %}
+    {% for member in membership_member %}
+    <li>{{ member.person.username }}</li>
     {% endfor %}
 </ol>
+
 
 
 초대 링크 : <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link" readonly/>
