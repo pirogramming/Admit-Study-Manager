@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('study/', include('study.urls', namespace='study')),
     path('studypost/', include('studypost.urls', namespace='studypost')),
+    path('assignment/', include('assignment.urls', namespace='assignment')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
