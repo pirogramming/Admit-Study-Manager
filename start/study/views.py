@@ -18,7 +18,6 @@ from django.contrib.auth.decorators import login_required
 from study.models import Membership
 
 def group_required(func):
-
    @functools.wraps(func)
    def wrapper(request, id):
        group = get_object_or_404(Group, id=id)
@@ -98,7 +97,7 @@ def group_detail(request, id):
 
 
 
-
+@login_required
 def group_new(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
@@ -181,42 +180,36 @@ def group_register(request, id):
         'group': group,
     })
 
-
+@login_required
 def group_registerbyurl(request, invitation_url):
     group = Group.objects.get(invitation_url=invitation_url)
     membership = Membership.objects.filter(group=group, status='ACTIVE')
     memberlist = [x.person for x in Membership.objects.filter(group=group)]
     user = request.user
     if request.method == 'POST':
-        try:
-            if user not in memberlist:
-                m = Membership.objects.create(person=user, group=group)
+        # try:
+        if user not in memberlist:
+            m = Membership.objects.create(person=user, group=group)
                 # obj = Membership.objects.create(person=user, group=group)
                 # obj.status = 'ACTIVE'
                 # obj.save()
-                messages.success(request, '"{}"그룹에 가입했습니다!'.format(group.group_name))
-                return redirect(group)
+            messages.success(request, '"{}"그룹에 가입했습니다!'.format(group.group_name))
+            return redirect(group)
 
-            else:
-                return render(request, 'study/group_registerbyurl_fail.html')
+        else:
+            return render(request, 'study/group_registerbyurl_fail.html')
 
-        except:
-            form = LoginForm(request.POST)
-            id = request.POST['username']
-            pw = request.POST['password']
-            u = authenticate(username=id, password=pw)
+        # except:
+        #     form = LoginForm(request.POST)
+        #     id = request.POST['username']
+        #     pw = request.POST['password']
+        #     u = authenticate(username=id, password=pw)
 
-            if u:
-                login(request, user=u)
-                return render(request, 'study/group_registerbyurl.html', {'group': group,
-                                                                          'form': form,
-                                                                          'membership':membership})
-            else:
-                return render(request, 'study/group_registerbyurl.html', {'group': group,
-                                                                          'form': form,
-                                                                          'error':'아이디나 비밀번호가 일치하지 않습니다.',
-                                                                          'membership':membership})
-
+            # if u:
+            #     login(request, user=u)
+            #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'membership':membership})
+            # else:
+            #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'error':'아이디나 비밀번호가 일치하지 않습니다.', 'membership':membership})
                 # return render(request, 'study/group_registerbyurl.html', {'group':group})
 
     else :
