@@ -11,13 +11,13 @@ from accounts.models import StudyUser
 from .forms import GroupForm, RegisterForm
 from .models import Group, Membership
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 from study.models import Membership
 
 def group_required(func):
-   """View decorator that checks a user is allowed to write a review, in negative case the decorator return Forbidden"""
 
    @functools.wraps(func)
    def wrapper(request, id):
@@ -32,6 +32,19 @@ def group_required(func):
        return func(request, id)
    return wrapper
 
+
+def manager_required(func):
+    @functools.wraps(func)
+    def wrapper(request, id):
+        group = get_object_or_404(Group, id=id)
+        group_name = group.group_name
+        user = request.user
+        membership = Membership.objects.get(group=group, person=user)
+        if not membership.is_manager or not membership.is_active:
+            # return render(request, 'study/group_reject.html', {'group_name': group_name})
+            return HttpResponse("매니저 권한이 필요합니다.")
+        return func(request, id)
+    return wrapper
 
 
 def all_group_list(request):
@@ -225,6 +238,7 @@ def mystudy_list(request,id):
         'user': user, 'groups': groups,
     })
 
+@login_required
 @group_required
 def group_mysettings(request, id):
     user = request.user
@@ -245,6 +259,7 @@ def group_mysettings(request, id):
 
 # @manager_required (매니저만 들어갈 수 있도록 decorator 추가할 예정)
 @group_required
+@manager_required
 def group_settings(request, id):
     user = request.user
     group = Group.objects.get(id=id)
