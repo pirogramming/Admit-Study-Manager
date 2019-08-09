@@ -1,6 +1,8 @@
+import functools
 from random import randint
 
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from accounts.forms import LoginForm
@@ -10,6 +12,25 @@ from .models import Group, Membership
 from django.contrib import messages
 
 # Create your views here.
+
+from study.models import Membership
+
+def group_required(func):
+   """View decorator that checks a user is allowed to write a review, in negative case the decorator return Forbidden"""
+
+   @functools.wraps(func)
+   def wrapper(request, id):
+       group = get_object_or_404(Group, id=id)
+       group_name = group.group_name
+       user = request.user
+       usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user)]
+       if request.user.is_authenticated and group_name not in usergroup_list:
+           return render(request, 'study/group_reject.html', {'group_name':group_name})
+           # return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
+
+       return func(request, id)
+   return wrapper
+
 
 
 def all_group_list(request):
@@ -44,9 +65,11 @@ def all_group_detail(request,id):
         'membership': membership,
     })
 
+@group_required
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
-    membership = [x.person for x in Membership.objects.filter(group=group)]
+    # membership = [x.person for x in Membership.objects.filter(group=group)]
+    membership = Membership.objects.filter(group=group)
 
     return render(request, 'study/group_detail.html', {
         'group': group, 'membership':membership,
@@ -71,7 +94,7 @@ def group_new(request):
                     except:
                         pass
                 group.save()
-                m = Membership.objects.create(person=request.user, group=group)
+                m = Membership.objects.create(person=request.user, group=group, role='MANAGER')
                 messages.success(request, '새 그룹을 만들었습니다')
                 return redirect(group)
             else:
@@ -140,11 +163,12 @@ def group_register(request, id):
 
 def group_registerbyurl(request, invitation_url):
     group = Group.objects.get(invitation_url=invitation_url)
-    membership = [x.person for x in Membership.objects.filter(group=group)]
+    membership = Membership.objects.filter(group=group)
+    memberlist = [x.person for x in Membership.objects.filter(group=group)]
     user = request.user
     if request.method == 'POST':
         try:
-            if user not in membership:
+            if user not in memberlist:
                 m = Membership.objects.create(person=user, group=group)
                 messages.success(request, '"{}"그룹 가입을 축하합니다!'.format(group.group_name))
                 return redirect(group)

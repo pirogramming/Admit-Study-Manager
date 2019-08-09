@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ko'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
@@ -122,7 +122,7 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'accounts.StudyUser'
 
-STATIC_URL = '/static/'
+STATIC_URL = '/start/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'start', 'static'),

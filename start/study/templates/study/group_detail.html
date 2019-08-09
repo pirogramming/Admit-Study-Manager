@@ -34,7 +34,7 @@
 <h3>구성원</h3>
 <ol>
     {% for member in membership %}
-    <li>{{ member.username }}</li>
+    <li>{{ member.person.username }}/{{ member.role }}</li>
     {% endfor %}
 </ol>
 

@@ -21,22 +21,16 @@ def notice_new(request):
             return redirect(notice)
     else:
         form = NoticeForm()
-    return render(request, 'studypost/notice_new.html', {
-        'form': form,
-    })
-
+        return render(request, 'studypost/notice_new.html', {'form': form})
     return render(request, 'notice_new.html', {})
 
 
-
 def notice_detail(request, id):
-
     notice = get_object_or_404(Notice, id=id)
 
     return render(request, 'studypost/notice_detail.html', {
         'notice': notice,
     })
-
 
 
 def notice_list(request, id):
