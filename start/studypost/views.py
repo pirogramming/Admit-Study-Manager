@@ -21,7 +21,6 @@ def notice_new(request):
     else:
         form = NoticeForm()
         return render(request, 'studypost/notice_new.html', {'form': form})
-    return render(request, 'notice_new.html', {})
 
 
 def notice_detail(request, id):
