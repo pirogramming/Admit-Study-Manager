@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h1>{{ done.author }}님의 {{ done.assignment.title }} 과제 인증</h1>
 
 <img src="{{ done.done_img.url }}" height="300"/>{{ done.created_at }} 에 인증!
@@ -8,3 +12,5 @@
 인정!: {{ done.injung }}
 <br/>
 노인정!: {{ done.noinjung }}
+
+{% endblock %}
