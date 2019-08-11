@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block content %}
+    <div>
+        <div>
+            <h2>출석 내역 확인</h2>
+        </div>
+        <div>
+            <p>지금껏 만들어진 출석 내역 확인 가능함</p>
+        </div>
+        <div>
+            {% for post in posts %}
+                <hr/>
+                <div style = 'border: solid 1px;'>
+                    <ul>
+                        <li><a href="#">{{ post.title }}</a></li>
+                        <li>{{ post.gather_datetime }}까지 오세요</li>
+                        <li>{{ post.expired_datetime }}까지 출석 가능</li>
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            <a href="{% url 'attendance:attend_new' group.id %}">출석 만들기(방장기능)</a>
+        </div>
+    </div>
+
+{% endblock %}

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'accounts',
     'study',
     'studypost',
+    'assignment',
+    'attendance'
 ]
 
 MIDDLEWARE = [
@@ -114,7 +116,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
+# 한국에서만 사용할 웹서비스이므로, local time을 참조함
 
 
 # Static files (CSS, JavaScript, Images)

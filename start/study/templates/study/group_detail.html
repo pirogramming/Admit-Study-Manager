@@ -2,55 +2,76 @@
 
 {% block content %}
 
-<style>
-    span{
-        color: blue;
-    }
-</style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="#">{{group.group_name}}</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url "studypost:notice_home" group.id %}">스터디 공지</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">ㅇㅈ 순위</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">현재 벌금</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <style>
+        span {
+            color: blue;
+        }
+    </style>
 
-<h1>Group Details </h1>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">{{ group.group_name }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "studypost:notice_home" group.id %}">스터디 공지</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">ㅇㅈ랭킹</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "assignment:assignment_home" group.id %}">과제 제출하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내
+                        설정</a>
+                </li>
+                {% if usermembership.is_manager %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'study:group_settings' group.id %}"><i class="material-icons">settings</i>그룹
+                            설정</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 
-<h3>구성원</h3>
-<ol>
-    {% for member in membership %}
-    <li>{{ member.person.username }}/{{ member.role }}</li>
-    {% endfor %}
-</ol>
+    <h1>Group Details </h1>
+
+    <h3>구성원</h3>
+
+    <ol>
+        {% for member in membership_manager %}
+            <li style="color:deepskyblue;">{{ member.person.username }}(관리자)</li>
+        {% endfor %}
+        {% for member in membership_member %}
+            <li>{{ member.person.username }}</li>
+        {% endfor %}
+    </ol>
 
 
-초대 링크 : <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link" readonly/>
-<button onclick="myFunction()">초대 링크 복사</button>
 
-<script>
-function myFunction() {
-  var copyText = document.getElementById("link");
-  copyText.select();
-  document.execCommand("copy");
-  alert("초대 링크를 복사했습니다." + copyText.value);
-}
-</script>
+    초대 링크 :
+    <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link" readonly/>
+    <button onclick="myFunction()">초대 링크 복사</button>
 
-<!--  alert("초대 링크를 복사했습니다." + copyText.value);-->
+    <script>
+        function myFunction() {
+            var copyText = document.getElementById("link");
+            copyText.select();
+            document.execCommand("copy");
+            alert("초대 링크를 복사했습니다." + copyText.value);
+        }
+    </script>
+
+    <!--  alert("초대 링크를 복사했습니다." + copyText.value);-->
 
 {% endblock %}

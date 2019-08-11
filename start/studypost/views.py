@@ -30,7 +30,6 @@ def notice_new(request, id):
         form = NoticeForm()
     return render(request, 'studypost/notice_new.html', {
         'form': form
-    })
 
 
 
