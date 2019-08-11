@@ -19,8 +19,13 @@ def notice_new(request, id):
         form = NoticeForm(request.POST)
         if form.is_valid():
             r = request.POST
-            notice = Notice.objects.create(group=group, title=r['title'], content=r['content'])
-            return redirect(notice)
+            notice = Notice.objects.create(group=group, title=r['title'], content=r['content'], lnglat=r['lnglat'])
+            lng, lat = map(float, notice.lnglat.split(','))
+            return render(request, 'studypost/notice_detail.html', {
+                'notice': notice,
+                'lng': lng,
+                'lat': lat,
+            })
     else:
         form = NoticeForm()
     return render(request, 'studypost/notice_new.html', {
@@ -31,9 +36,11 @@ def notice_new(request, id):
 
 def notice_detail(request, id):
     notice = get_object_or_404(Notice, id=id)
-
+    lng, lat = map(float, notice.lnglat.split(','))
     return render(request, 'studypost/notice_detail.html', {
         'notice': notice,
+        'lng': lng,
+        'lat': lat,
     })
 
 
