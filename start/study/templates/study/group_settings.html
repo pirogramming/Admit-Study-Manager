@@ -8,5 +8,37 @@
 
 매니저만 볼 수 있는 그룹 설정 페이지(그룹 프로필 설정, 권한 설정 등 기능 추가 예정)
 
+멤버 관리
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <h4>멤버 탈퇴 관리</h4>
+    <ol>
+    {% for member in membership_member %}
+    <li>{{ member.person.username }}</li>
+    <input type="hidden" name="out" value="{{ member.person.username }}">
+    <button onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
+     '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
+      '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
+    </input>
+    {% endfor %}
+    </ol>
+</form>
+
+
+<!--    {% for member in membership_manager %}-->
+<!--    <li style="color:deepskyblue;">{{ member.person.username }}(관리자)</li>-->
+<!--    {% endfor %}-->
+
+
+
+
+규칙(벌금 기준)
+그룹 프로필 소개(그룹이름, 목표, d-day)
+강퇴
+(권한)
+매니저 권한 위임
+
+
 </body>
 </html>

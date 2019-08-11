@@ -256,6 +256,23 @@ def group_mysettings(request, id):
 def group_settings(request, id):
     user = request.user
     group = Group.objects.get(id=id)
+    membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
+    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+
+    if request.method == 'POST':
+        if request.POST['out']:
+        # if request.POST.get('out', '') :
+            # Membership.objects.get(person=user, group=group).update(status='OUT')
+            out_username = request.POST['out']
+            out_user = get_object_or_404(StudyUser, username = out_username)
+            obj = get_object_or_404(Membership, person=out_user, group=group)
+            obj.status = 'OUT'
+            obj.save()
+            return redirect(group)
+        return redirect(group)
+
+
     return render(request, 'study/group_settings.html', {
         'user':user, 'group':group,
+        'membership_manager':membership_manager, 'membership_member':membership_member,
     })
