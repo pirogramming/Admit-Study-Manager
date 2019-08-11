@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 
 from attendance.forms import AttendForm
 from study.models import Group
-from datetime import  timedelta
+from datetime import timedelta, datetime, time
+
 
 # Create your views here.
 
@@ -42,21 +43,44 @@ def attend_detail(request, group_id, detail_id):
     # membership.save()
 
 
+def gather_time_hour_processor(time_hour, time_ampm):
+    if time_ampm == 'PM':
+        gather_time_hour_processed = int(time_hour)+12
+    else:
+        gather_time_hour_processed = int(time_hour)
+    return gather_time_hour_processed
+
+
 def attend_new(request, group_id):
-    # 출석 포스트를 만드는 역할
     group = get_object_or_404(Group, id=group_id)
     if request.method == 'POST':
         form = AttendForm(request.POST)
+
         if form.is_valid():
-            gather_time = request.cleaned_data['gather_time']
-            expired_time = gather_time + timedelta(minutes=request.cleaned_data['expired_time'])
-            group.attend_set.create(
-                attendance_number=request.cleaned_data['attendance_number'],
-                title=request.cleaned_data['title'],
-                gather_time=gather_time,
-                expired_time=expired_time,
+            gather_date = form.cleaned_data['gather_date']
+
+            gather_time = time(
+                gather_time_hour_processor(
+                    form.cleaned_data['gather_time_hour'],
+                    form.cleaned_data['gather_time_ampm']
+                ),
+                int(form.cleaned_data['gather_time_minute'])
             )
-        return redirect(resolve_url('attendance:list', group_id=group.id))
+
+            gather_datetime = datetime.combine(gather_date, gather_time)
+
+            expired_datetime = gather_datetime + timedelta(
+                minutes=form.cleaned_data['expired_timedelta']
+            )
+
+            group.attend_set.create(
+                title=form.cleaned_data['title'],
+                attendance_number=form.cleaned_data['attendance_number'],
+                gather_datetime=gather_datetime,
+                expired_datetime=expired_datetime,
+            )
+
+        return redirect(resolve_url('attendance:attend_list', group_id=group.id))
 
     else:
         form = AttendForm()

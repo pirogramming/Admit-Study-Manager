@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <form action="#" method="POST">
+            {% csrf_token %}
+            <table>
+                {% for field in form.visible_fields %}
+                    <tr>
+                        <th>{{ field.label_tag }}</th>
+                        <td>
+                            {{ field }}
+                            {{ field.errors }}
+                        </td>
+                    </tr>
+            {% endfor %}
+            </table>
+            <input type="submit" value="출석 만들기">
+        </form>
+    </div>
+{% endblock %}
