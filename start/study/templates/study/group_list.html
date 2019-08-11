@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Group List</h1>
+
+<div class="search_bar">
+    <form action="" method="get">
+        <input type="text" name="g" value="{{ g }}"/>
+        <input type="submit" value="검색" class="btn btn-primary">
+    </form>
+</div>
+
+{% for group in group_list %}
+<tr>
+    <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
+</tr>
+{% endfor %}
+
+{% endblock %}
