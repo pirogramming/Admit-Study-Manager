@@ -2,20 +2,69 @@
 
 {% block content %}
     <div>
+        <h2>출석 만들기</h2>
         <form action="#" method="POST">
             {% csrf_token %}
-            <table>
-                {% for field in form.visible_fields %}
-                    <tr>
-                        <th>{{ field.label_tag }}</th>
-                        <td>
-                            {{ field }}
-                            {{ field.errors }}
-                        </td>
-                    </tr>
-            {% endfor %}
-            </table>
-            <input type="submit" value="출석 만들기">
+
+            <div>
+                <br/>
+                <div>
+                    <strong>{{ form.title.label_tag }}</strong>
+                    {{ form.title }}
+                </div>
+                <div>
+                    <small>{{ form.username.errors }}</small>
+                    <small>출석 포스팅의 이름을 지어주세요 ex)첫 모임/주말 회식</small>
+                </div>
+            </div>
+            <br/>
+
+            <div>
+                <div>
+                    <strong>{{ form.attendance_number.label_tag }}</strong>
+                    {{ form.attendance_number }}
+                    <small>{{ form.attendance_number.errors }}</small>
+                </div>
+                <div>
+                    <small>3~5 자리의 무작위 출석 비밀번호를 작성해주세요</small>
+                </div>
+                <div>
+                    <small>이 번호를 알고 있는 팀원만 출석이 가능합니다. 공정한 출석체크에 활용하세요!</small>
+                </div>
+            </div>
+            <hr/>
+
+            <div>
+                <div>
+                    <h5>모임 날짜와 시간을 지정해주세요</h5>
+                </div>
+                <br/>
+
+                <div>
+                    <strong>{{ form.gather_date.label_tag }}</strong>
+                    {{ form.gather_date }}<br/>
+                    <small>화살표를 누르면 달력이 나와요</small>
+                </div>
+                <br/>
+
+                <div>
+                    <strong>이번 모임은</strong>
+                    <div>
+                        {{ form.gather_time_ampm }} {{ form.gather_time_hour }}시 {{ form.gather_time_minute }}분까지 모여야 해요
+                    </div>
+                </div>
+                <br/>
+                <div>
+                    <div>
+                        모임시간 {{ form.expired_timedelta }}분 <strong>이후까지</strong> 출석이 가능합니다
+                    </div>
+                    <small>모임 시간이 된 이후 설정 시간이 지나면 출석이 불가능하고 결석으로 처리됩니다.<br/>60분까지 설정 가능합니다.</small>
+                </div>
+            </div><br/>
+
+            <div>
+                <input type="submit" value="출석 만들기">
+            </div><br/>
         </form>
     </div>
 {% endblock %}
