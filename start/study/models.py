@@ -42,3 +42,10 @@ class Membership(models.Model):
             return True
         else:
             return False
+
+    @property
+    def is_active(self):
+        if self.status == 'ACTIVE':
+            return True
+        else:
+            return False
