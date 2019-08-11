@@ -11,6 +11,10 @@ class Group(models.Model):
     group_name = models.CharField(max_length=20, unique=True)
     group_code = models.CharField(max_length=20)
     invitation_url = models.CharField(max_length=20, unique=True, default=uuid.uuid1)
+
+    group_bio = models.CharField(max_length=300, blank=True, null=True)
+    group_goal = models.CharField(max_length=300, blank=True, null=True)
+
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
     def __str__(self):

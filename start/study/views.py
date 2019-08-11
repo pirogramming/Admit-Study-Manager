@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
 
-from .forms import GroupForm, RegisterForm
+
+from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -258,9 +259,21 @@ def group_settings(request, id):
     group = Group.objects.get(id=id)
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+    groupprofileform = GroupProfileForm(instance=group)
 
     if request.method == 'POST':
-        if request.POST['out']:
+        if request.POST['groupprofilerevise']:
+            groupprofileform = GroupProfileForm(request.POST, request.FILES, instance=group)
+            if groupprofileform.is_valid():
+                us = groupprofileform.save()
+                # messages.success(request, '그룹 프로필을 성공적으로 수정했습니다.')
+                return render(request, 'study/group_settings.html', {
+                    'user': user, 'group': group,
+                    'groupprofileform': groupprofileform,
+                    'membership_manager': membership_manager, 'membership_member': membership_member,
+                })
+                # return redirect('study:group_settings', id)
+        elif request.POST['out']:
         # if request.POST.get('out', '') :
             # Membership.objects.get(person=user, group=group).update(status='OUT')
             out_username = request.POST['out']
@@ -274,5 +287,6 @@ def group_settings(request, id):
 
     return render(request, 'study/group_settings.html', {
         'user':user, 'group':group,
+        'groupprofileform':groupprofileform,
         'membership_manager':membership_manager, 'membership_member':membership_member,
     })

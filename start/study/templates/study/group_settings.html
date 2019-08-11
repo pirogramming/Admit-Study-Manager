@@ -3,13 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+     <!-- Compiled and minified CSS -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Compiled and minified JavaScript -->
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script>
+            $(document).ready(function(){
+    $('.tabs').tabs();
+  });
+
+    </script>
+
 </head>
 <body>
 
-매니저만 볼 수 있는 그룹 설정 페이지(그룹 프로필 설정, 권한 설정 등 기능 추가 예정)
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-멤버 관리
-<form action="" method="POST">
+
+<h3><i class="material-icons">settings</i>그룹 설정</h3>
+
+<div class="row">
+    <div class="col s12">
+      <ul class="tabs">
+        <li class="tab col s3"><a href="#test1">그룹 프로필</a></li>
+        <li class="tab col s3"><a href="#test2">Test 2</a></li>
+        <li class="tab col s3"><a href="#test3">Test3</a></li>
+        <li class="tab col s3"><a href="#test4">멤버 탈퇴 관리</a></li>
+      </ul>
+    </div>
+
+<!--    {% if messages %}-->
+<!--        <div class="container">-->
+<!--            {% for message in messages %}-->
+<!--                <div class="alert alert-info mt-3" role="alert">-->
+<!--                    {{ message.message }}-->
+<!--                </div>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+<!--    {% endif %}-->
+
+
+    <div id="test1" class="col s12">
+        <h4>그룹프로필 수정하기</h4>
+    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+        <div>
+            <div>
+                <div>
+                    <strong>{{ groupprofileform.group_name.label_tag }}<strong></strong></strong>
+                </div>
+                <div>{{ groupprofileform.group_name }}</div>
+                <div><small>그룹 이름을 다시 설정할 수 있습니다.</small></div>
+            </div><br/>
+            <div>
+                <div><strong>{{ groupprofileform.group_bio.label_tag }}</strong></div>
+                <div>{{ groupprofileform.group_bio }}</div>
+<!--                <div><small></small></div>-->
+            </div><br/>
+            <div>
+                <div><strong>{{ groupprofileform.group_goal.label_tag }}</strong></div>
+                <div>{{ groupprofileform.group_goal }}</div>
+<!--                <div><small></small></div>-->
+            </div><br/>
+
+            <input type="hidden" name="groupprofilerevise" value="revise">
+            <button type="submit">수정하기</button>
+            </input>
+        </div>
+    </form>
+    </div>
+    <div id="test2" class="col s12">Test 2</div>
+    <div id="test3" class="col s12">Test 3</div>
+    <div id="test4" class="col s12">
+        <form action="" method="POST">
     {% csrf_token %}
 
     <h4>멤버 탈퇴 관리</h4>
@@ -24,6 +95,21 @@
     {% endfor %}
     </ol>
 </form>
+    </div>
+  </div>
+
+매니저만 볼 수 있는 그룹 설정 페이지(그룹 프로필 설정, 권한 설정 등 기능 추가 예정)
+
+멤버 관리
+규칙(벌금 기준)
+그룹 프로필 소개(그룹이름, 목표, d-day)
+강퇴
+(권한)
+매니저 권한 위임
+
+<a href="{% url 'study:group_detail' group.id %}"><button>수정 완료</button></a>
+
+
 
 
 <!--    {% for member in membership_manager %}-->
@@ -33,11 +119,7 @@
 
 
 
-규칙(벌금 기준)
-그룹 프로필 소개(그룹이름, 목표, d-day)
-강퇴
-(권한)
-매니저 권한 위임
+
 
 
 </body>
