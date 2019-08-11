@@ -256,13 +256,13 @@ def group_mysettings(request, id):
 @manager_required
 def group_settings(request, id):
     user = request.user
-    group = Group.objects.get(id=id)
+    group = get_object_or_404(Group, id=id)
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     groupprofileform = GroupProfileForm(instance=group)
 
     if request.method == 'POST':
-        if request.POST['groupprofilerevise']:
+        if request.POST.get('groupprofilerevise',''):
             groupprofileform = GroupProfileForm(request.POST, request.FILES, instance=group)
             if groupprofileform.is_valid():
                 us = groupprofileform.save()
@@ -282,6 +282,13 @@ def group_settings(request, id):
             obj.status = 'OUT'
             obj.save()
             return redirect(group)
+        else :
+            return render(request, 'study/group_settings.html', {
+                'user': user, 'group': group,
+                'groupprofileform': groupprofileform,
+                'membership_manager': membership_manager, 'membership_member': membership_member,
+            })
+
         return redirect(group)
 
 
