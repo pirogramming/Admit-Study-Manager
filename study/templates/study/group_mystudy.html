@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <br/>
+    <div>
+        <div><a href="{% url 'study:all_group_list' %}">스터디 찾기</a></div>
+        <div><a href="{% url 'study:group_new' %}">스터디 만들기</a></div>
+    </div>
+
+{% endblock %}
