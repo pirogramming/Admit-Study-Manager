@@ -22,16 +22,13 @@
                     <a class="nav-link" href="{% url "studypost:notice_home" group.id %}">스터디 공지</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">ㅇㅈ 순위</a>
+                    <a class="nav-link" href="#">ㅇㅈ랭킹</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">현재 벌금</a>
+                    <a class="nav-link" href="{% url "assignment:assignment_home" group.id %}">과제 제출하기</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">출석하기</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">과제하기</a>
+                    <a class="nav-link" href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내

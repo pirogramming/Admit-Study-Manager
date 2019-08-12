@@ -1,3 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=d0vornngin"></script>
+
+
 <h1>{{ notice.title }}</h1>
 
 {{ notice.content|linebreaks }}
+
+{{ notice.created_at }}
+
+
+<div id="map" style="width: 300px; height: 300px;">
+
+</div>
+
+<script>
+    var base_position = new naver.maps.LatLng('{{ lat }}','{{ lng }}');
+    var dom = document.getElementById('map');
+    var map = new naver.maps.Map(dom, {
+        center: base_position
+    });
+    var marker = new naver.maps.Marker({
+        position: base_position,
+        map: map
+    });
+    naver.maps.Event.addListener(map, 'click', function(e) {
+        marker.setPosition(e.coord)
+        document.getElementById('id_lnglat').value = e.coord.lng() + "," +e.coord.lat()
+    });
+</script>
+
+
+{% endblock %}

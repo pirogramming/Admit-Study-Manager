@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>{{ homework.title }}</h1>
+
+{{ homework.content|linebreaks }}
+
+{% endblock %}

@@ -35,11 +35,17 @@ class Membership(models.Model):
         ('OUT', 'OUT')
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
-    # active만 활성화된 유저 - active인 유저들만 가져와서 벌금매기고 등수매기고 해야댐
 
     @property
     def is_manager(self):
         if self.role == 'MANAGER':
+            return True
+        else:
+            return False
+
+    @property
+    def is_active(self):
+        if self.status == 'ACTIVE':
             return True
         else:
             return False

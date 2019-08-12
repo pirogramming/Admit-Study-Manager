@@ -11,10 +11,10 @@
     </tr>
     </thead>
     <tbody>
-    {% for notice in notice_list %}
+    {% for homework in homework_list %}
     <tr>
-        <td><a href="{% url "studypost:notice_detail" notice.id %}">{{ notice.title }}</a></td>
-        <td>{{ notice.content }}</td>
+        <td><a href="{% url "studypost:homework_detail" homework.id %}">{{ homework.title }}</a></td>
+        <td>{{ homework.content }}</td>
     </tr>
     {% endfor %}
     </tbody>

@@ -11,14 +11,13 @@ from accounts.models import StudyUser
 from .forms import GroupForm, RegisterForm
 from .models import Group, Membership
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 from study.models import Membership
 
 def group_required(func):
-   """View decorator that checks a user is allowed to write a review, in negative case the decorator return Forbidden"""
-
    @functools.wraps(func)
    def wrapper(request, id):
        group = get_object_or_404(Group, id=id)
@@ -32,6 +31,19 @@ def group_required(func):
        return func(request, id)
    return wrapper
 
+
+def manager_required(func):
+    @functools.wraps(func)
+    def wrapper(request, id):
+        group = get_object_or_404(Group, id=id)
+        group_name = group.group_name
+        user = request.user
+        membership = Membership.objects.get(group=group, person=user)
+        if not membership.is_manager or not membership.is_active:
+            # return render(request, 'study/group_reject.html', {'group_name': group_name})
+            return HttpResponse("매니저 권한이 필요합니다.")
+        return func(request, id)
+    return wrapper
 
 
 def all_group_list(request):
@@ -61,7 +73,7 @@ def group_list(request):
 
 def all_group_detail(request,id):
     group = get_object_or_404(Group, id=id)
-    membership = [x.person for x in Membership.objects.filter(group=group)]
+    membership = [x.person for x in Membership.objects.filter(group=group, status='ACTIVE')]
 
     return render(request, 'study/all_group_detail.html', {
         'group': group,
@@ -85,7 +97,7 @@ def group_detail(request, id):
 
 
 
-
+@login_required
 def group_new(request):
     if request.method == 'POST':
         form = GroupForm(request.POST)
@@ -168,42 +180,36 @@ def group_register(request, id):
         'group': group,
     })
 
-
+@login_required
 def group_registerbyurl(request, invitation_url):
     group = Group.objects.get(invitation_url=invitation_url)
     membership = Membership.objects.filter(group=group, status='ACTIVE')
     memberlist = [x.person for x in Membership.objects.filter(group=group)]
     user = request.user
     if request.method == 'POST':
-        try:
-            if user not in memberlist:
-                m = Membership.objects.create(person=user, group=group)
+        # try:
+        if user not in memberlist:
+            m = Membership.objects.create(person=user, group=group)
                 # obj = Membership.objects.create(person=user, group=group)
                 # obj.status = 'ACTIVE'
                 # obj.save()
-                messages.success(request, '"{}"그룹에 가입했습니다!'.format(group.group_name))
-                return redirect(group)
+            messages.success(request, '"{}"그룹에 가입했습니다!'.format(group.group_name))
+            return redirect(group)
 
-            else:
-                return render(request, 'study/group_registerbyurl_fail.html')
+        else:
+            return render(request, 'study/group_registerbyurl_fail.html')
 
-        except:
-            form = LoginForm(request.POST)
-            id = request.POST['username']
-            pw = request.POST['password']
-            u = authenticate(username=id, password=pw)
+        # except:
+        #     form = LoginForm(request.POST)
+        #     id = request.POST['username']
+        #     pw = request.POST['password']
+        #     u = authenticate(username=id, password=pw)
 
-            if u:
-                login(request, user=u)
-                return render(request, 'study/group_registerbyurl.html', {'group': group,
-                                                                          'form': form,
-                                                                          'membership':membership})
-            else:
-                return render(request, 'study/group_registerbyurl.html', {'group': group,
-                                                                          'form': form,
-                                                                          'error':'아이디나 비밀번호가 일치하지 않습니다.',
-                                                                          'membership':membership})
-
+            # if u:
+            #     login(request, user=u)
+            #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'membership':membership})
+            # else:
+            #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'error':'아이디나 비밀번호가 일치하지 않습니다.', 'membership':membership})
                 # return render(request, 'study/group_registerbyurl.html', {'group':group})
 
     else :
@@ -225,6 +231,7 @@ def mystudy_list(request,id):
         'user': user, 'groups': groups,
     })
 
+@login_required
 @group_required
 def group_mysettings(request, id):
     user = request.user
@@ -245,6 +252,7 @@ def group_mysettings(request, id):
 
 # @manager_required (매니저만 들어갈 수 있도록 decorator 추가할 예정)
 @group_required
+@manager_required
 def group_settings(request, id):
     user = request.user
     group = Group.objects.get(id=id)

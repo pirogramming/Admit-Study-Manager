@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'accounts',
     'study',
     'studypost',
+    'assignment',
     'attendance'
 ]
 
@@ -115,7 +117,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
+# 한국에서만 사용할 웹서비스이므로, local time을 참조함
 
 
 # Static files (CSS, JavaScript, Images)
@@ -139,3 +142,5 @@ LOGIN_URL = reverse_lazy('accounts:login')
 
 LOGIN_REDIRECT_URL = reverse_lazy('study:mystudy')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
+
+NAVER_CLIENT_ID = 'd0vornngin'
