@@ -53,6 +53,23 @@ def notice_list(request, id):
     })
 
 
+def notice_edit(request, id):
+    notice = get_object_or_404(Notice, id=id)
+
+    if request.method == 'POST':
+        form = NoticeForm(request.POST, instance=notice)
+        if form.is_valid():
+            notice = form.save()
+            return redirect(notice)
+    else:
+        form = NoticeForm(instance=notice)
+    return render(request, 'studypost/notice_edit.html', {
+        'form': form,
+    })
+
+
+
+
 ########################################################
 
 
@@ -86,4 +103,19 @@ def homework_list(request, id):
 
     return render(request, 'studypost/homework_list.html', {
         'homework_list': hs,
+    })
+
+
+def homework_edit(request, id):
+    homework = get_object_or_404(Homework, id=id)
+
+    if request.method == 'POST':
+        form = HomeworkForm(request.POST, instance=homework)
+        if form.is_valid():
+            homework = form.save()
+            return redirect(homework)
+    else:
+        form = HomeworkForm(instance=homework)
+    return render(request, 'studypost/homework_edit.html', {
+        'form': form,
     })

@@ -17,6 +17,10 @@
 
 </div>
 
+<hr>
+
+<a href="{% url "studypost:notice_edit" notice.id %}" class="btn btn-secondary">수정</a>
+
 <script>
     var base_position = new naver.maps.LatLng('{{ lat }}','{{ lng }}');
     var dom = document.getElementById('map');
