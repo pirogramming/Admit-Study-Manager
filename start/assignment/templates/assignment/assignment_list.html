@@ -7,13 +7,13 @@
 
     {% if num == 0 %}
         <p>등록된 과제가 없습니다.</p>
+    {% else %}
+        {% for assignment in assignments %}
+            <table>
+                <td>{{ assignment.index_in_group }}</td>
+                <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
+                <td>{{ assignment.due_date }}</td>
+            </table>
+        {% endfor %}
     {% endif %}
-
-{% for assignment in assignments %}
-    <table>
-        <td>{{ assignment.index_in_group }}</td>
-        <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
-        <td>{{ assignment.due_date }}</td>
-    </table>
-{% endfor %}
 {% endblock %}
