@@ -1,11 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
-
 from attendance.forms import AttendForm
 from study.models import Group
 from datetime import timedelta, datetime, time
-
-
 # Create your views here.
+
 
 
 def time_cal(timedelt):
@@ -17,15 +15,16 @@ def time_cal(timedelt):
 
 def attend_list(request, group_id):     # 리스트와 디테일 템플릿 거의 동일하게
     group = get_object_or_404(Group, id=group_id)
-    posts = group.attend_set.all().order_by('-pk')[:11]
-    return render(request, 'attendance/attend_list.html', {'posts': posts, 'group': group})
+    posts = group.attend_set.all().order_by('-pk')[:5]
+    context = {'posts': posts, 'group': group}
+    return render(request, 'attendance/attend_list.html', context)
 
 
 def attend_detail(request, group_id, detail_id):
     group = get_object_or_404(Group, id=group_id)
-    posts = group.attend_set.all().ordered_by('-pk')
-    detail = group.attend_set.get(id=detail_id)
-    context = {'posts': posts, 'detail': detail}
+    attend = group.attend_set.get(id=detail_id)
+
+    context = {'group': group, 'attend': attend}
     return render(request, 'attendance/attend_detail.html', context)
     # 여기서 출석을 처리
 
@@ -48,6 +47,7 @@ def gather_time_hour_processor(time_hour, time_ampm):
         gather_time_hour_processed = int(time_hour)+12
     else:
         gather_time_hour_processed = int(time_hour)
+
     return gather_time_hour_processed
 
 
@@ -87,7 +87,7 @@ def attend_new(request, group_id):
         return render(request, 'attendance/attend_new.html', {'form': form})
 
 
-def attend_edit(request, group_id, detail_id):   # 출석 포스트 수정
+def attend_edit(request, group_id, attend_id):   # 출석 포스트 수정
     return render(request, 'attendance/attend_edit.html')
 
 
