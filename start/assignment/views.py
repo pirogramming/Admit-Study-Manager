@@ -18,8 +18,9 @@ def assignment_home(request, group_id):
 def assignment_list(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     assignments = Assignment.objects.filter(group=group).order_by('-created_at')
+    num = len(assignments)
     return render(request, 'assignment/assignment_list.html', {
-        'group': group, 'assignments': assignments,
+        'group': group, 'assignments': assignments, 'num': num,
     })
 
 
