@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
-from study.models import Group
+from study.models import Group, Membership
 from .models import Assignment, Done
 from .forms import AssignmentForm, DoneForm
 
@@ -26,17 +26,21 @@ def assignment_list(request, group_id):
 
 def assignment_new(request, group_id):
     group = get_object_or_404(Group, id=group_id)
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST)
-        if form.is_valid():
-            assignment = form.save(commit=False)
-            assignment.group = group
-            assignment.index_in_group = len(Assignment.objects.filter(group=group))+1
-            assignment.save()
-            return redirect(assignment)
+    if not Membership.objects.get(group=group, person=request.user).is_manager:
+        messages.warning(request, '매니저만 과제를 등록할 수 있습니다.')
+        return redirect('assignment:assignment_list', group_id)
     else:
-        form = AssignmentForm()
-    return render(request, 'assignment/assignment_new.html', {'form': form})
+        if request.method == 'POST':
+            form = AssignmentForm(request.POST)
+            if form.is_valid():
+                assignment = form.save(commit=False)
+                assignment.group = group
+                assignment.index_in_group = len(Assignment.objects.filter(group=group))+1
+                assignment.save()
+                return redirect(assignment)
+        else:
+            form = AssignmentForm()
+            return render(request, 'assignment/assignment_new.html', {'form': form})
 
 
 def assignment_detail(request, assignment_id):

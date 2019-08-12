@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message.message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 {% block content %}
 <h1>{{ group.group_name }}의 과제 리스트</h1>
 
-<button type="button" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    <button type="button" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
 
     {% if num == 0 %}
         <p>등록된 과제가 없습니다.</p>
