@@ -1,5 +1,56 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>데헷 디테일이라능</h1>
+    <div>
+        <h2>{{ attend.title }}출석 체크하기</h2>
+
+        <div> {# 출석 띄우기 #}
+                <div>
+                    <h3>출석 정보</h3>
+                </div>
+                <div>
+                    <strong>모임일시:</strong>{{ attend.gather_datetime }}
+                </div>
+                <div>
+                    <strong>출석 가능 기한:</strong>{{ attend.exprired_datetime }}
+                </div>
+        </div><hr/>
+
+        <div>
+            <h3>출석하기</h3>
+        </div>
+        <div> {# 출석용 폼 띄우기 #}
+            {% if attend.attend_status == '출석불가' %}
+            <div>
+                아직 출석 시간이 아닙니당
+            </div>
+
+            {% else %}
+            <div>
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <div>{{ form.as_p }}</div>
+                    <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
+                    <input type="submit" value="출석하기"/>
+                </form>
+            </div>
+            {% endif %}
+        </div><hr/>
+
+        <div>   {# 출석 한사람들 띄우기 + 등수 띄우기 #}
+            <div>
+                <h3>출석한 사람 명단</h3>
+            </div>
+            <div>
+                {% for instance in instances %}
+                    <div>
+                        <div>{{ instance.attend_check }}</div>
+                        <div>{{ instance.id }}등</div>
+                        <div>{{ instance.attend_user }}</div>
+                        <div>{{ instance.sub_time }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
