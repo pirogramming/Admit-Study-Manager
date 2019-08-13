@@ -16,7 +16,7 @@
     {% if user in authors %}
         <p>이미 인증하셨습니다! 멋져요~>_<</p>
     {% else %}
-        <button type="button" onclick="location.href='{% url 'assignment:done_new' assignment.id%}' ">인증하기</button>
+        <button type="button" onclick="location.href='{% url "assignment:done_new" assignment.id %}'">인증하기</button>
     {% endif %}
 
 
@@ -33,4 +33,10 @@
     {% endfor %}
 {% endif %}
 
+<br><br>
+    <button type="button" onclick="location.href='{% url "assignment:assignment_list" assignment.group.id %}'">과제 목록으로</button>
+
+
 {% endblock %}
+
+
