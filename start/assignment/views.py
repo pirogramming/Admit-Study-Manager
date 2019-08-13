@@ -1,8 +1,9 @@
-from datetime import datetime
+from datetime import datetime, time
 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
+from attendance.views import gather_time_hour_processor
 from study.models import Group, Membership
 from .models import Assignment, Done
 from .forms import AssignmentForm, DoneForm
@@ -31,18 +32,34 @@ def assignment_new(request, group_id):
     if not Membership.objects.get(group=group, person=request.user).is_manager:
         messages.warning(request, '매니저만 과제를 등록할 수 있습니다.')
         return redirect('assignment:assignment_list', group_id)
+
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST)
+
+        if form.is_valid():
+            assignment = form.save(commit=False)
+            assignment.group = group
+            assignment.index_in_group = len(Assignment.objects.filter(group=group)) + 1
+
+            date = form.cleaned_data['due_date']
+
+            due_time = time(
+                gather_time_hour_processor(
+                    form.cleaned_data['due_date_hour'],
+                    form.cleaned_data['due_date_ampm']
+                ),
+                int(form.cleaned_data['due_date_minute'])
+            )
+
+            due_date = datetime.combine(date, due_time)
+
+            assignment.due_date = due_date
+            assignment.save()
+            return redirect(assignment)
+
     else:
-        if request.method == 'POST':
-            form = AssignmentForm(request.POST)
-            if form.is_valid():
-                assignment = form.save(commit=False)
-                assignment.group = group
-                assignment.index_in_group = len(Assignment.objects.filter(group=group))+1
-                assignment.save()
-                return redirect(assignment)
-        else:
-            form = AssignmentForm()
-            return render(request, 'assignment/assignment_new.html', {'form': form})
+        form = AssignmentForm()
+        return render(request, 'assignment/assignment_new.html', {'form': form})
 
 
 def assignment_detail(request, assignment_id):

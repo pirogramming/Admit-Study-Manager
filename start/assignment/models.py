@@ -23,7 +23,6 @@ class Done(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     done_img = models.ImageField(upload_to='AssignmentsDone')
     injung = models.IntegerField(default=0)
-    noinjung = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
