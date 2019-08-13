@@ -13,6 +13,7 @@ urlpatterns = [
     path('register/<int:id>', views.group_register, name='group_register'),
     path('invitation/<int:invitation_url>/', views.group_registerbyurl, name='group_registerbyurl'),
     path('all_group_detail/<int:id>/', views.all_group_detail, name='all_group_detail'),
+    path('group_rule', views.group_rule, name='group_rule'), #test후 삭제!!
 
 
 ]

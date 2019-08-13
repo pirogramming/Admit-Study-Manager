@@ -297,3 +297,7 @@ def group_settings(request, id):
         'groupprofileform':groupprofileform,
         'membership_manager':membership_manager, 'membership_member':membership_member,
     })
+
+
+def group_rule(request):
+    return render(request, 'study/group_rule.html')

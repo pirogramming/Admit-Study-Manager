@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% for rule in txt_rules %}
+<div>{{ rule.id }}</div>
+<div><input type="text" name="rule_revise_txt"></div>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="rule_revise" value="revise"><button type="submit">수정</button></input>
+    <input type="hidden" name="rule_delete" value="delete"><button type="submit">삭제</button></input>
+</form>
+{% endfor %}
+
+{% for rule in ass_rules %}
+<div>{{ rule.id }}</div>
+{% if rule.late %}
+<div>
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    과제 태그 선택
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div class="dropdown-item">모든 과제</div>
+      {% for ass_tag in ass_tags %}
+      <div class="dropdown-item">{{ ass_tag.title }}</div>
+      {% endfor %}
+  </div>
+        를
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    지각/결석
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div class="dropdown-item">지각</div>
+      <div class="dropdown-item">결석</div>
+  </div>
+
+</div>
+
+    과제(태그선택지)<input type="text" name="rule_revise_txt"></div>
+<dropdown button></dropdown>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="rule_revise" value="revise"><button type="submit">수정</button></input>
+    <input type="hidden" name="rule_delete" value="delete"><button type="submit">삭제</button></input>
+</form>
+{% endfor %}
+
+
+<div>{{ rule.id }}</div>
+{% if rule.is_txt %}
+<div><input type="text" name="rule_revise_txt"></div>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="rule_revise" value="revise"><button type="submit">수정</button></input>
+    <input type="hidden" name="rule_delete" value="delete"><button type="submit">삭제</button></input>
+</form>
+{% endif %}
+
+{% if rule.is_assignmentrule %}
+<div><input type="text" name="rule_revise_txt"></div>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="rule_revise" value="revise"><button type="submit">수정</button></input>
+    <input type="hidden" name="rule_delete" value="delete"><button type="submit">삭제</button></input>
+</form>
+{% endif %}
+
+{% if rule.is_attendancerule %}
+<div><input type="text" name="rule_revise_txt"></div>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="rule_revise" value="revise"><button type="submit">수정</button></input>
+    <input type="hidden" name="rule_delete" value="delete"><button type="submit">삭제</button></input>
+</form>
+{% endif %}
+
+{% endfor %}
+
+<div id="addrule"></div>
+
+<button>규칙 추가</button>
+
+<div>
+    <form action="" method="POST"></form>
+</div>
+
+
+</body>
+</html>
