@@ -1,38 +1,64 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId={{ naver_client_id }}&submodules=geocoder"></script>
 
+    <style>
+    #map {
+        width: 500px;
+        height: 500px;
+    }
 
-{% block content %}
+    .search {
+        position: absolute;
+        z-index: 1000;
+        top: 20px;
+        left: 20px;
+    }
 
-<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=d0vornngin&submodules=geocoder"></script>
+    .search #address {
+        width: 150px;
+        height: 20px;
+        line-height: 20px;
+        border: solid 1px #555;
+        padding: 5px;
+        font-size: 12px;
+        box-sizing: content-box;
+    }
 
+    .search #submit {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        font-size: 12px;
+        border: solid 1px #555;
+        border-radius: 3px;
+        cursor: pointer;
+        box-sizing: content-box;
+    }
+    </style>
 
-<h1>{{ notice.title }}</h1>
-
-{{ notice.content|linebreaks }}
-
-{{ notice.created_at }}
-
-
-<div id="map" style="width: 500px; height: 500px;">
-
+</head>
+<body>
+<div id="map">
+    <div class="search" style="">
+        <input id="address" type="text" placeholder="주소를 입력해주세요"/>
+        <input id="submit" type="button" value="주소 검색"/>
+    </div>
 </div>
 
-<hr>
-
-<a href="{% url "studypost:notice_edit" notice.id %}" class="btn btn-secondary">수정</a>
-
 <script>
-    var base_position = new naver.maps.LatLng('{{ lat }}','{{ lng }}');
     var dom = document.getElementById('map');
-    var map = new naver.maps.Map(dom, {
-        center: base_position
-    });
+    var map = new naver.maps.Map(dom);
     var marker = new naver.maps.Marker({
-        position: base_position,
         map: map
     });
     naver.maps.Event.addListener(map, 'click', function(e) {
         marker.setPosition(e.coord)
+        document.getElementById('id_lnglat').value = e.coord.lng() + "," +e.coord.lat()
     });
 
 
@@ -77,12 +103,50 @@
 
             infoWindow.setContent([
                 '<div style="padding:10px;min-width:200px;line-height:150%;">',
-                '<h4 style="margin-top:5px;">모임 장소</h4><br />',
+                '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
                 htmlAddresses.join('<br />'),
                 '</div>'
             ].join('\n'));
 
             infoWindow.open(map, latlng);
+        });
+    }
+
+    function searchAddressToCoordinate(address) {
+        naver.maps.Service.geocode({
+            query: address
+        }, function (status, response) {
+            if (status === naver.maps.Service.Status.ERROR) {
+                return alert('Something Wrong!');
+            }
+
+            if (response.v2.meta.totalCount === 0) {
+                return alert('정확한 주소를 입력해주세요.');
+            }
+
+            var htmlAddresses = [],
+                item = response.v2.addresses[0],
+                point = new naver.maps.Point(item.x, item.y);
+
+            document.getElementById('id_lnglat').value = item.x + ',' + item.y;
+
+            if (item.roadAddress) {
+                htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
+            }
+
+            if (item.jibunAddress) {
+                htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
+            }
+
+            infoWindow.setContent([
+                '<div style="padding:10px;min-width:200px;line-height:150%;">',
+                '<h5 style="margin-top:5px;">검색 주소 : ' + address + '</h5><br />',
+                htmlAddresses.join('<br />'),
+                '</div>'
+            ].join('\n'));
+
+            map.setCenter(point);
+            infoWindow.open(map, point);
         });
     }
 
@@ -105,8 +169,7 @@
             searchAddressToCoordinate($('#address').val());
         });
 
-        var address = new naver.maps.LatLng('{{ lat }}','{{ lng }}');
-        searchCoordinateToAddress(address);
+        searchAddressToCoordinate('서울특별시 중구 세종대로 110 서울특별시 청사');
     }
 
     function makeAddress(item) {
@@ -185,6 +248,6 @@
 
     naver.maps.onJSContentLoaded = initGeocoder;
 </script>
+</body>
+</html>
 
-
-{% endblock %}

@@ -7,14 +7,14 @@
             <h2>출석 내역 확인</h2>
         </div>
         <div>
-            <p>지금껏 만들어진 출석 내역 확인 가능함</p>
+            <p>최근 5번 모임의 출석 내역을 확인 가능합니다</p>
         </div>
         <div>
             {% for post in posts %}
-                <hr/>
+                <br/>
                 <div style = 'border: solid 1px;'>
                     <ul>
-                        <li><a href="#">{{ post.title }}</a></li>
+                        <li><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></li>
                         <li>{{ post.gather_datetime }}까지 오세요</li>
                         <li>{{ post.expired_datetime }}까지 출석 가능</li>
                     </ul>

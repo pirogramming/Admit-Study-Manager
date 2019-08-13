@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>{{ homework.title }}</h1>
+
+{{ homework.content|linebreaks }}
+
+<hr>
+
+<a href="{% url "studypost:homework_edit" homework.id %}" class="btn btn-secondary">수정</a>
+
+{% endblock %}

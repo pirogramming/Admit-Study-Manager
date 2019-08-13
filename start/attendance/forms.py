@@ -27,9 +27,9 @@ class AttendForm(forms.ModelForm):    # attend를 만들어준다
 
     gather_date = forms.DateField(
         widget=DateInput(attrs={'type': 'date'}),
-        label='모임 날짜'
+        label='모임 날짜 선택'
     )
-    gather_time_ampm = forms.ChoiceField(choices=AMPM_CHOICES)
+    gather_time_ampm = forms.ChoiceField(label='이번 모임은', choices=AMPM_CHOICES)
     gather_time_hour = forms.ChoiceField(label='시', choices=TIME_CHOICES)
     gather_time_minute = forms.ChoiceField(label='분', choices=MINUTE_CHOICES)
     expired_timedelta = forms.IntegerField(label='분 동안 출석 가능합니다')

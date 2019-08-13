@@ -141,3 +141,5 @@ LOGIN_URL = reverse_lazy('accounts:login')
 
 LOGIN_REDIRECT_URL = reverse_lazy('study:mystudy')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
+
+NAVER_CLIENT_ID = 'd0vornngin'
