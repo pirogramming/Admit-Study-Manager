@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -47,14 +49,18 @@ def assignment_detail(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     dones = Done.objects.filter(assignment=assignment)
     authors = [x.author for x in dones]
+    now = datetime.now()
     return render(request, 'assignment/assignment_detail.html', {
-        'assignment': assignment, 'dones': dones, 'authors': authors, 'num': len(dones),
+        'assignment': assignment, 'dones': dones, 'authors': authors, 'num': len(dones), 'now': now,
     })
 
 
 def done_new(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
-    if request.method == 'POST':
+    if datetime.now() >= assignment.due_date:
+        messages.warning(request, '제출기한이 지났습니다.')
+        return redirect('assignment:assignment_detail', assignment_id)
+    elif request.method == 'POST':
         form = DoneForm(request.POST, request.FILES)
         if form.is_valid():
             done = form.save(commit=False)
@@ -65,7 +71,7 @@ def done_new(request, assignment_id):
             return redirect(done)
     else:
         form = DoneForm()
-    return render(request, 'assignment/done_new.html', {'form': form, 'assignment': assignment, })
+        return render(request, 'assignment/done_new.html', {'form': form, 'assignment': assignment, })
 
 
 def done_detail(request, done_id):

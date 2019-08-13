@@ -2,16 +2,23 @@
 
 {% block content %}
 
-<h1>{{ assignment.title }}</h1>
+{{ message.message }}
+
+    <h1>{{ assignment.title }}</h1>
 
 {{ assignment.content|linebreaks }}
 {{ assignment.due_date }} 까지
 
-{% if user in authors %}
-    <p>이미 인증하셨습니다! 멋져요~>_<</p>
-{% else %}
-    <button type="button" onclick="location.href='{% url 'assignment:done_new' assignment.id%}' ">인증하기</button>
-{% endif %}
+    {% if assignment.due_date <= now %}
+        (기한 지남) <br/>
+    {% endif %}
+
+    {% if user in authors %}
+        <p>이미 인증하셨습니다! 멋져요~>_<</p>
+    {% else %}
+        <button type="button" onclick="location.href='{% url 'assignment:done_new' assignment.id%}' ">인증하기</button>
+    {% endif %}
+
 
 <h2>인증한 사람들 </h2>
 
