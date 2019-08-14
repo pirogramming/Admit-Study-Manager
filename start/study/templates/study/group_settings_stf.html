@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+
      <!-- Compiled and minified CSS -->
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -19,7 +23,20 @@
     $('.dropdown-trigger').dropdown();
     $('.collapsible').collapsible();
   });
+    </script>
 
+    <script>
+        $(function() {
+            $('#staffin').attr('disabled', 'disabled');
+
+            $('.stfin_checkbox').click(function () {
+                if ($(this).prop('checked') === false) {
+                    $('#staffin').attr('disabled', 'disabled');
+                } else {
+                    $('#staffin').removeAttr('disabled');
+                }
+            });
+        });
     </script>
 
 </head>
@@ -101,18 +118,18 @@
     <div id="test3" class="col s12">
 
         관리자
-        <ol>
+        <ul>
         {% for member in membership_manager %}
             <li style="color:dodgerblue;">{{ member.person.username }}</li>
         {% endfor %}
-            </ol>
+            </ul>
         스탭
 
-        <ol>
+        <ul>
         {% for member in membership_staff %}
             <li style="color:deepskyblue;">{{ member.person.username }}</li>
         {% endfor %}
-            </ol>
+            </ul>
 
 <ul class="collapsible">
     <li>
@@ -123,14 +140,14 @@
               {% for member in membership_member %}
     <p>
       <label>
-        <input type="checkbox" name="staffin{{ forloop.counter }}" value="{{ member.person.username }}"/>
+        <input type="checkbox" class="stfin_checkbox" name="staffin{{ forloop.counter }}" value="{{ member.person.username }}"/>
         <span>{{ member.person.username }}</span>
       </label>
     </p>
 <!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
               {% endfor %}
               <input type="hidden" name="staffin" value="staffin">
-              <button type="submit" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
+              <button type="submit" id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
                   선택한 구성원을 스탭으로 추가
               </button>
               </input>

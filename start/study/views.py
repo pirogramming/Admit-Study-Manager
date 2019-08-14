@@ -297,6 +297,7 @@ def group_settings_mn(request, id):
             groupprofileform = GroupProfileForm(request.POST, request.FILES, instance=group)
             if groupprofileform.is_valid():
                 us = groupprofileform.save()
+                ctx['groupprofileform'] = groupprofileform
                 # messages.success(request, '그룹 프로필을 성공적으로 수정했습니다.')
                 return render(request, 'study/group_settings_mn.html', ctx)
                 # return redirect('study:group_settings', id)
@@ -321,6 +322,8 @@ def group_settings_mn(request, id):
             obj = get_object_or_404(Membership, person=out_staff, group=group)
             obj.role = 'MEMBER'
             obj.save()
+            ctx['membership_staff'] = membership_staff
+            ctx['membership_member'] = membership_member
             return render(request, 'study/group_settings_mn.html', ctx)
 
         elif request.POST.get('staffin', ''):
@@ -333,7 +336,8 @@ def group_settings_mn(request, id):
                     obj.save()
                 except:
                     pass
-
+            ctx['membership_staff'] = membership_staff
+            ctx['membership_member'] = membership_member
             return render(request, 'study/group_settings_mn.html', ctx)
 
         elif request.POST.get('managerin', ''):
@@ -388,6 +392,7 @@ def group_settings_stf(request, id):
             groupprofileform = GroupProfileForm(request.POST, request.FILES, instance=group)
             if groupprofileform.is_valid():
                 us = groupprofileform.save()
+                ctx['groupprofileform'] = groupprofileform
                 # messages.success(request, '그룹 프로필을 성공적으로 수정했습니다.')
                 return render(request, 'study/group_settings_stf.html', ctx)
                 # return redirect('study:group_settings', id)
@@ -413,6 +418,8 @@ def group_settings_stf(request, id):
                     obj = get_object_or_404(Membership, person=in_staff, group=group)
                     obj.role = 'STAFF'
                     obj.save()
+                    ctx['membership_staff'] = membership_staff
+                    ctx['membership_member'] = membership_member
                 except:
                     pass
 
