@@ -322,6 +322,8 @@ def group_settings_mn(request, id):
             obj = get_object_or_404(Membership, person=out_staff, group=group)
             obj.role = 'MEMBER'
             obj.save()
+            membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+            membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
             ctx['membership_staff'] = membership_staff
             ctx['membership_member'] = membership_member
             return render(request, 'study/group_settings_mn.html', ctx)
@@ -336,6 +338,8 @@ def group_settings_mn(request, id):
                     obj.save()
                 except:
                     pass
+            membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+            membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
             ctx['membership_staff'] = membership_staff
             ctx['membership_member'] = membership_member
             return render(request, 'study/group_settings_mn.html', ctx)
@@ -418,6 +422,8 @@ def group_settings_stf(request, id):
                     obj = get_object_or_404(Membership, person=in_staff, group=group)
                     obj.role = 'STAFF'
                     obj.save()
+                    membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+                    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
                     ctx['membership_staff'] = membership_staff
                     ctx['membership_member'] = membership_member
                 except:
