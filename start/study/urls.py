@@ -8,7 +8,6 @@ urlpatterns = [
     path('mystudy/', views.group_mystudy, name='mystudy'),
     path('new/', views.group_new, name='group_new'),
     path('<int:id>/', views.group_detail, name='group_detail'),
-    path('<int:id>/settings', views.group_settings, name='group_settings'),
 
     path('<int:id>/settings_mn', views.group_settings_mn, name='group_settings_mn'),
     path('<int:id>/settings_stf', views.group_settings_stf, name='group_settings_stf'),
