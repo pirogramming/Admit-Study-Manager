@@ -35,6 +35,11 @@ class Membership(models.Model):
         ('OUT', 'OUT')
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    total_admit = models.IntegerField(default=0)
+    total_penalty = models.IntegerField(default=0)
+    attend_admit = models.IntegerField(default=0)
+    assign_admit = models.IntegerField(default=0)
+    rank = models.IntegerField(default=1)
 
     @property
     def is_manager(self):
