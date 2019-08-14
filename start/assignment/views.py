@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from attendance.views import gather_time_hour_processor
 from study.models import Group, Membership
-from .models import Assignment, Done
+from .models import Assignment, Done, Injung_history
 from .forms import AssignmentForm, DoneForm
 
 
@@ -101,9 +101,19 @@ def done_detail(request, done_id):
 
 def injung_plus(request, done_id):
     done = get_object_or_404(Done, id=done_id)
+    injungs = Injung_history.objects.filter(done=done)
+    authors = [x.author for x in injungs]
+
     if done.author == request.user:
         messages.warning(request, "자기애가 넘치는군요! 자신의 과제에는 인정을 누를 수 없습니다.")
         return redirect(done)
-    done.injung += 1
-    done.save()
-    return redirect(done)
+    elif request.user in authors:
+        when = injungs.get(author=request.user).created_at
+        messages.warning(request, "이미 {}에 인정하셨습니다!".format(when))
+        return redirect(done)
+    else:
+        done.injung += 1
+        done.save()
+        new_injung = Injung_history.objects.create(author=request.user, done=done,)
+        return redirect(done)
+
