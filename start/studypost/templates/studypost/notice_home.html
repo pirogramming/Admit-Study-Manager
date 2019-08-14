@@ -10,13 +10,13 @@
 
   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
     <a class="dropdown-item" href="{% url "studypost:notice_new" group.id %}">모임 공지</a>
-    <a class="dropdown-item" href="{% url "studypost:homework_new" group.id %}">과제 공지</a>
+    <a class="dropdown-item" href="{% url "studypost:homework_new" group.id %}">기타 공지</a>
   </div>
 </div>
 
 <div>
-    <a href="{% url "studypost:notice_list" group.id %}">모임 History</a>
-    <a href="{% url "studypost:homework_list" group.id %}">과제 History</a>
+    <a href="{% url "studypost:notice_list" group.id %}">모임 공지 History</a>
+    <a href="{% url "studypost:homework_list" group.id %}">기타 공지 History</a>
 </div>
 
 {% endblock %}

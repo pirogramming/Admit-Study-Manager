@@ -8,7 +8,7 @@ class NoticeForm(forms.ModelForm):
     class Meta:
         model = Notice
         fields = '__all__'
-        exclude = ['group']
+        exclude = ['group', 'author']
         widgets = {
             'lnglat': NaverMapPointWidget,
         }
@@ -19,4 +19,4 @@ class HomeworkForm(forms.ModelForm):
     class Meta:
         model = Homework
         fields = '__all__'
-        exclude = ['group']
+        exclude = ['group', 'author']

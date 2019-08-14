@@ -2,4 +2,12 @@
 
 {% block content %}
     <h1>데헷 디테일이라능</h1>
+
+{% if membership.is_manager %}
+
+<a href="{% url "attendance:attend_edit" attend.id %}" class="btn btn-secondary">수정</a>
+<a href="{% url "attendance:attend_delete" attend.id %}" class="btn btn-secondary">삭제</a>
+
+{% endif %}
+
 {% endblock %}

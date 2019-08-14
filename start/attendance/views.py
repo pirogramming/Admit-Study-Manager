@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from attendance.forms import AttendForm
 from study.models import Group
+
+from study.models import Membership
+from .models import Attend
 from datetime import timedelta, datetime, time
 # Create your views here.
 
@@ -23,8 +26,9 @@ def attend_list(request, group_id):     # 리스트와 디테일 템플릿 거�
 def attend_detail(request, group_id, detail_id):
     group = get_object_or_404(Group, id=group_id)
     attend = group.attend_set.get(id=detail_id)
+    membership = Membership.objects.get(person=request.user, group=group)
 
-    context = {'group': group, 'attend': attend}
+    context = {'group': group, 'attend': attend, 'membership': membership}
     return render(request, 'attendance/attend_detail.html', context)
     # 여기서 출석을 처리
 
@@ -87,7 +91,43 @@ def attend_new(request, group_id):
         return render(request, 'attendance/attend_new.html', {'form': form})
 
 
-def attend_edit(request, group_id, attend_id):   # 출석 포스트 수정
-    return render(request, 'attendance/attend_edit.html')
+
+def attend_edit(request, detail_id):
+    attend = get_object_or_404(Attend, id=detail_id)
+    group = attend.attendance
+    membership = Membership.objects.get(person=request.user, group=group)
+
+    if request.method == 'POST':
+        form = AttendForm(request.POST, instance=attend)
+        if form.is_valid():
+            attend = form.save()
+            return render(request, 'attendance/attend_detail.html', {
+                'attend': attend,
+                'membership': membership,
+            })
+    else:
+        form = AttendForm(instance=attend)
+    return render(request, 'attendance/attend_new.html', {
+        'form': form,
+    })
+
+
+
+def attend_delete(request, detail_id):
+        attend = get_object_or_404(Attend, id=detail_id)
+        group = attend.attendance
+        membership = Membership.objects.get(person=request.user, group=group)
+        attend.delete()
+
+        posts = group.attend_set.all().order_by('-pk')[:5]
+
+        return render(request, 'attendance/attend_list.html', {
+            'group': group,
+            'posts': posts,
+            'membership': membership,
+        })
+
+
+
 
 
