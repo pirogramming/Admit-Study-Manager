@@ -9,6 +9,9 @@
 
 <hr>
 
-<a href="{% url "studypost:homework_edit" homework.id %}" class="btn btn-secondary">수정</a>
+{% if homework.author == request.user %}
+    <a href="{% url "studypost:homework_edit" homework.id %}" class="btn btn-secondary">수정</a>
+    <a href="{% url "studypost:homework_delete" homework.id %}" class="btn btn-secondary">삭제</a>
+{% endif %}
 
 {% endblock %}

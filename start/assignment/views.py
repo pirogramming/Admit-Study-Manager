@@ -45,10 +45,19 @@ def assignment_new(request, group_id):
 
 def assignment_detail(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
+    group = assignment.group
+    user = request.user
+    membership = Membership.objects.get(person=user, group=group)
+
     dones = Done.objects.filter(assignment=assignment)
     authors = [x.author for x in dones]
     return render(request, 'assignment/assignment_detail.html', {
-        'assignment': assignment, 'dones': dones, 'authors': authors, 'num': len(dones),
+        'assignment': assignment,
+        'dones': dones,
+        'authors': authors,
+        'num': len(dones),
+        'membership': membership,
+
     })
 
 
@@ -72,4 +81,34 @@ def done_detail(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     return render(request, 'assignment/done_detail.html', {
         'done': done,
+    })
+
+
+def assignment_edit(request, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id)
+
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST, instance=assignment)
+        if form.is_valid():
+            assignment = form.save()
+            return redirect(assignment)
+    else:
+        form = AssignmentForm(instance=assignment)
+    return render(request, 'assignment/assignment_new.html', {
+        'form': form,
+    })
+
+
+def assignment_delete(request, assignment_id):
+    assignment = get_object_or_404(Assignment, id=assignment_id)
+    group = assignment.group
+    assignment.delete()
+
+    assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
+    done = Done.objects.filter(assignment=assignment).order_by('created_at').last()
+
+    return render(request, 'assignment/assignment_home.html', {
+        'assignment': assignment,
+        'done': done,
+        'group': group,
     })

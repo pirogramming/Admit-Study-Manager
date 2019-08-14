@@ -19,7 +19,10 @@
 
 <hr>
 
-<a href="{% url "studypost:notice_edit" notice.id %}" class="btn btn-secondary">수정</a>
+{% if notice.author == request.user %}
+    <a href="{% url "studypost:notice_edit" notice.id %}" class="btn btn-secondary">수정</a>
+    <a href="{% url "studypost:notice_delete" notice.id %}" class="btn btn-secondary">삭제</a>
+{% endif %}
 
 <script>
     var base_position = new naver.maps.LatLng('{{ lat }}','{{ lng }}');

@@ -19,7 +19,9 @@ def notice_new(request, id):
         form = NoticeForm(request.POST)
         if form.is_valid():
             r = request.POST
-            notice = Notice.objects.create(group=group, title=r['title'], content=r['content'], lnglat=r['lnglat'])
+            notice = Notice.objects.create(group=group, title=r['title'],
+                                           content=r['content'], lnglat=r['lnglat'],
+                                           author=request.user)
             lng, lat = map(float, notice.lnglat.split(','))
             return render(request, 'studypost/notice_detail.html', {
                 'notice': notice,
@@ -68,6 +70,16 @@ def notice_edit(request, id):
     })
 
 
+def notice_delete(request, id):
+    notice = get_object_or_404(Notice, id=id)
+    group = notice.group
+    notice.delete()
+
+    ns = Notice.objects.filter(group=group)
+
+    return render(request, 'studypost/notice_list.html', {
+        'notice_list': ns,
+    })
 
 
 ########################################################
@@ -80,7 +92,8 @@ def homework_new(request, id):
         form = HomeworkForm(request.POST)
         if form.is_valid():
             r = request.POST
-            homework = Homework.objects.create(group=group, title=r['title'], content=r['content'])
+            homework = Homework.objects.create(group=group, title=r['title'],
+                                               content=r['content'], author=request.user)
             return redirect(homework)
     else:
         form = HomeworkForm()
@@ -119,3 +132,16 @@ def homework_edit(request, id):
     return render(request, 'studypost/homework_edit.html', {
         'form': form,
     })
+
+
+def homework_delete(request, id):
+    homework = get_object_or_404(Homework, id=id)
+    group = homework.group
+    homework.delete()
+
+    hs = Homework.objects.filter(group=group)
+
+    return render(request, 'studypost/homework_list.html', {
+        'homework_list': hs,
+    })
+
