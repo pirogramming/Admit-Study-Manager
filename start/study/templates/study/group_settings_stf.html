@@ -29,6 +29,7 @@
 
 
 <h3><i class="material-icons">settings</i>그룹 설정</h3>
+(for staff)
 
 <div class="row">
     <div class="col s12">
@@ -106,16 +107,10 @@
         {% endfor %}
             </ol>
         스탭
+
         <ol>
         {% for member in membership_staff %}
-            <li style="color:deepskyblue;">{{ member.person.username }}
-        <form action="" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="staffout" value="{{ member.person.username }}">
-                <button type="submit" onclick="return confirm('선택한 멤버의 스탭 권한을 취소하겠습니까?');">스탭 권한 취소</button>
-            </input>
-        </form>
-                </li>
+            <li style="color:deepskyblue;">{{ member.person.username }}</li>
         {% endfor %}
             </ol>
 
@@ -145,63 +140,20 @@
       </div>
     </li>
 </ul>
-        관리자 권한 위임
-        관리자 권한을 위임하면 그룹 설정 메뉴에서 가능한 모든 조작(그룹 프로필 수정, 그룹 규칙 수정, 권한 설정, 멤버 탈퇴 관리 및 그룹 삭제 등)을 할 수 없습니다.
-        <ul class="collapsible">
-    <li>
-      <div class="collapsible-header">관리자 권한을 위임할 구성원 선택</div>
-      <div class="collapsible-body">
-          <form action="" method="POST">
-              {% csrf_token %}
-              {% for member in membership_staff %}
-              <p>
-      <label>
-        <input type="radio" name="managerin" value="{{ member.person.username }}"/>
-        <span>{{ member.person.username }}</span>
-      </label>
-    </p>
-              {% endfor %}
-              {% for member in membership_member %}
-    <p>
-      <label>
-        <input type="radio" name="managerin" value="{{ member.person.username }}"/>
-        <span>{{ member.person.username }}</span>
-      </label>
-    </p>
-<!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
-              {% endfor %}
-              <input type="hidden">
-              <button type="submit" onclick="return confirm('선택한 멤버에게 관리자 권한을 위임하겠습니까?');">
-                  선택한 구성원에게 관리자 권한 위임</button>
-              </input>
 
-          </form>
-
-
-      </div>
+    </div>
     </li>
 </ul>
 
     </div>
 
-    스태프 권한 지정
-        관리자 권한 위임
+
     <div id="test4" class="col s12">
         <form action="" method="POST">
     {% csrf_token %}
 
     <h4>멤버 탈퇴 관리</h4>
             <ol>
-
-                {% for member in membership_staff %}
-    <li>{{ member.person.username }}</li>
-    <input type="hidden" name="out" value="{{ member.person.username }}">
-    <button onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
-     '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
-      '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
-    </input>
-    {% endfor %}
-
     {% for member in membership_member %}
     <li>{{ member.person.username }}</li>
     <input type="hidden" name="out" value="{{ member.person.username }}">
@@ -216,14 +168,7 @@
     </div>
   </div>
 
-매니저만 볼 수 있는 그룹 설정 페이지(그룹 프로필 설정, 권한 설정 등 기능 추가 예정)
 
-멤버 관리
-규칙(벌금 기준)
-그룹 프로필 소개(그룹이름, 목표, d-day)
-강퇴
-(권한)
-매니저 권한 위임
 
 <a href="{% url 'study:group_detail' group.id %}"><button>수정 완료</button></a>
 

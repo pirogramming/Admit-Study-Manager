@@ -56,6 +56,20 @@ class Membership(models.Model):
             return False
 
     @property
+    def is_staff(self):
+        if self.role == 'STAFF':
+            return True
+        else:
+            return False
+
+    @property
+    def is_mn_stf(self):
+        if self.role == 'MANAGER' or self.role == 'STAFF':
+            return True
+        else:
+            return False
+
+    @property
     def is_active(self):
         if self.status == 'ACTIVE':
             return True

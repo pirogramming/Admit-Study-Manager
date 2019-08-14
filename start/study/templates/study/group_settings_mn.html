@@ -29,6 +29,7 @@
 
 
 <h3><i class="material-icons">settings</i>그룹 설정</h3>
+(for manager)
 
 <div class="row">
     <div class="col s12">
@@ -146,6 +147,7 @@
     </li>
 </ul>
         관리자 권한 위임
+        <br/>
         관리자 권한을 위임하면 그룹 설정 메뉴에서 가능한 모든 조작(그룹 프로필 수정, 그룹 규칙 수정, 권한 설정, 멤버 탈퇴 관리 및 그룹 삭제 등)을 할 수 없습니다.
         <ul class="collapsible">
     <li>
@@ -184,8 +186,6 @@
 
     </div>
 
-    스태프 권한 지정
-        관리자 권한 위임
     <div id="test4" class="col s12">
         <form action="" method="POST">
     {% csrf_token %}
@@ -194,7 +194,7 @@
             <ol>
 
                 {% for member in membership_staff %}
-    <li>{{ member.person.username }}</li>
+    <li style="color:deepskyblue">{{ member.person.username }}</li>
     <input type="hidden" name="out" value="{{ member.person.username }}">
     <button onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
@@ -216,14 +216,6 @@
     </div>
   </div>
 
-매니저만 볼 수 있는 그룹 설정 페이지(그룹 프로필 설정, 권한 설정 등 기능 추가 예정)
-
-멤버 관리
-규칙(벌금 기준)
-그룹 프로필 소개(그룹이름, 목표, d-day)
-강퇴
-(권한)
-매니저 권한 위임
 
 <a href="{% url 'study:group_detail' group.id %}"><button>수정 완료</button></a>
 
