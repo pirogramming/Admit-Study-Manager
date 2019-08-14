@@ -17,7 +17,7 @@ class AttendForm(forms.ModelForm):    # attend를 만들어준다
         ('', '시각을 고르세요'),
         (1, '1'), (2, '2'), (3, '3'), (4, '4'),
         (5, '5'), (6, '6'), (7, '7'), (8, '8'),
-        (9, '9'), (10, '10'), (11, '11'), (12, '12'),
+        (9, '9'), (10, '10'), (11, '11'), (0, '12'),
     )
 
     MINUTE_CHOICES = (
@@ -47,10 +47,3 @@ class AttendForm(forms.ModelForm):    # attend를 만들어준다
 
 class AttendConfirmForm(forms.Form):
     input_number = forms.CharField(label='출석번호 입력')
-
-    #class Meta:
-     #   model = StudyUser
-      #  fields = ['password']
-       # labels = {
-        #    'password': '비밀번호 확인'
-        #}

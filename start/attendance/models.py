@@ -4,8 +4,10 @@ from study.models import Group
 
 class Attend(models.Model):     # 모델폼으로 구현
     ATTEND_STATUS =[
-        ('출석가능', '출석가능'),
-        ('출석불가', '출석불가')
+        ('출석 시작 전', '출석 시작 전'),
+        ('정상 출석 가능', '정상 출석 가능'),
+        ('지각 출석 가능', '지각 출석 가능'),
+        ('출석 시간 만료', '출석 시간 만료')
     ]
     attendance = models.ForeignKey(Group, on_delete=models.CASCADE)
     attendance_number = models.CharField(max_length=5, verbose_name='출석확인번호')
@@ -19,10 +21,11 @@ class Attend(models.Model):     # 모델폼으로 구현
 class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현
     ATTEND_CHANCE = [
         ('지각', '지각'),
-        ('출석', '출석')
+        ('출석', '출석'),
+        ('결석', '결석')
     ]
     attendconfirm = models.ForeignKey(Attend, on_delete=models.CASCADE)
-    attend_user = models.CharField(max_length=20)
-    arrive_time = models.DateTimeField()
-    sub_time = models.IntegerField()
-    attend_check = models.CharField(max_length=20, choices=ATTEND_CHANCE, default='지각')
+    attend_user = models.CharField(max_length=20, verbose_name='출석 닉네임')
+    arrive_time = models.DateTimeField(null=True, verbose_name='도착 시간')
+    sub_time = models.IntegerField(null=True, verbose_name='시간 차이')
+    attend_check = models.CharField(max_length=20, choices=ATTEND_CHANCE, default='결석')
