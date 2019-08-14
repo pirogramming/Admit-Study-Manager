@@ -75,3 +75,9 @@ class Membership(models.Model):
             return True
         else:
             return False
+
+    # def is_notself(request, self):
+    #     if self == request.user:
+    #         return True
+    #     else :
+    #         False

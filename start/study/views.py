@@ -279,7 +279,7 @@ def group_mysettings(request, id):
 @manager_required
 def group_settings_mn(request, id):
     user = request.user
-    group = get_object_or_404(Group, id=id)
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
@@ -370,7 +370,7 @@ def group_settings_mn(request, id):
 @mn_stf_required
 def group_settings_stf(request, id):
     user = request.user
-    group = get_object_or_404(Group, id=id)
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')

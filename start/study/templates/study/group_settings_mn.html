@@ -191,8 +191,13 @@
     {% csrf_token %}
 
     <h4>멤버 탈퇴 관리</h4>
-            <ol>
+            <ul>
+<li>관리자</li>
+                {% for member in membership_manager %}
+    <li style="color: dodgerblue;">{{ member.person.username }}</li>
+                {% endfor %}
 
+                <li>스탭</li>
                 {% for member in membership_staff %}
     <li style="color:deepskyblue">{{ member.person.username }}</li>
     <input type="hidden" name="out" value="{{ member.person.username }}">
@@ -201,7 +206,7 @@
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
     </input>
     {% endfor %}
-
+                <li>멤버</li>
     {% for member in membership_member %}
     <li>{{ member.person.username }}</li>
     <input type="hidden" name="out" value="{{ member.person.username }}">
@@ -211,7 +216,7 @@
     </input>
     {% endfor %}
 
-    </ol>
+    </ul>
 </form>
     </div>
   </div>
