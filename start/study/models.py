@@ -1,5 +1,4 @@
 import uuid
-
 from django.db import models
 from accounts.models import StudyUser
 from django.urls import reverse

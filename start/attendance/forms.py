@@ -1,10 +1,12 @@
 from django import forms
+# from django.contrib.auth.forms import AuthenticationForm
 from django.forms import DateInput
+
+# from start.accounts.models import StudyUser
 from .models import Attend
 
 
 class AttendForm(forms.ModelForm):    # attend를 만들어준다
-
     AMPM_CHOICES = (
         ('', '오전오후'),
         ('AM', '오전'),
@@ -15,7 +17,7 @@ class AttendForm(forms.ModelForm):    # attend를 만들어준다
         ('', '시각을 고르세요'),
         (1, '1'), (2, '2'), (3, '3'), (4, '4'),
         (5, '5'), (6, '6'), (7, '7'), (8, '8'),
-        (9, '9'), (10, '10'), (11, '11'), (12, '12'),
+        (9, '9'), (10, '10'), (11, '11'), (0, '12'),
     )
 
     MINUTE_CHOICES = (
@@ -43,5 +45,5 @@ class AttendForm(forms.ModelForm):    # attend를 만들어준다
         }
 
 
-class AttendConfirmForm(forms.Form):   # 출석을 처리하고 confirm인스턴스 만들기
-     input_number = forms.CharField()
+class AttendConfirmForm(forms.Form):
+    input_number = forms.CharField(label='출석번호 입력')
