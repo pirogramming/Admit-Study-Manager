@@ -12,6 +12,7 @@ class Assignment(models.Model):
     content = models.TextField(verbose_name='내용')
     due_date = models.DateTimeField(verbose_name='기한')
     created_at = models.DateTimeField(auto_now_add=True)
+    done_checked = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])

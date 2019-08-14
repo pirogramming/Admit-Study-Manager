@@ -105,7 +105,7 @@ def injung_plus(request, done_id):
     authors = [x.author for x in injungs]
 
     if done.author == request.user:
-        messages.warning(request, "자기애가 넘치는군요! 자신의 과제에는 인정을 누를 수 없습니다.")
+        messages.warning(request, "너무 잘하시긴 했어요.. 그렇지만 자신의 과제에는 인정을 누를 수 없습니다.")
         return redirect(done)
     elif request.user in authors:
         when = injungs.get(author=request.user).created_at
