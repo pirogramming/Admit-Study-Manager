@@ -1,13 +1,10 @@
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from attendance.forms import AttendForm, AttendConfirmForm
-from django.urls import reverse
 from study.models import Group
-
-from study.models import Membership
-from .models import Attend
 from datetime import timedelta, datetime, time
+from attendance.models import Attend
+from study.models import Membership
 
 
 def sub_timedelta_function(time_delta):
@@ -55,29 +52,6 @@ def attend_list(request, group_id):  # 리스트와 디테일 템플릿 거의 �
 def attend_detail(request, group_id, detail_id):
     group = get_object_or_404(Group, id=group_id)
     attend = group.attend_set.get(id=detail_id)
-    membership = Membership.objects.get(person=request.user, group=group)
-
-    context = {'group': group, 'attend': attend, 'membership': membership}
-    return render(request, 'attendance/attend_detail.html', context)
-    # 여기서 출석을 처리
-
-    # 현재 attend 모델 인스턴스를 가져온다
-    # 인스턴스.attendance_number가 request.post와 같은지 확인한다
-    # if 일치할경우 confirm에 인스턴스를 생성하고 저장한다
-    # 일치하지 않을 경우 에러 or 메시지를 발생시킨다
-
-    # 출석을 인스턴스를 만들었으면 membership 모델을 불러온다
-    # 출석을 했을 경우 membership 모델 안의 admit속성에 ㅇㅈ을 하나 더한다
-    # 출석을 안 했을 경우 벌금 definition을 만들어 정해진 기준에 변수를 곱한다
-    # 가령 지각횟수 필드 만들어서 지각횟수 x 벌금기준 같은걸 맴버십에 더한다던지
-    # membership = Membership.objets.get(person=request.user, group=group)
-    # membership.admit += 1
-    # membership.save()
-
-
-def gather_time_hour_processor(time_hour, time_ampm):
-    if time_ampm == 'PM':
-        gather_time_hour_processed = int(time_hour)+12
 
     if request.method == 'POST':
         form = AttendConfirmForm(request.POST)
@@ -191,8 +165,6 @@ def attend_new(request, group_id):
         return render(request, 'attendance/attend_new.html', {'form': form})
 
 
-
-
 def attend_edit(request, detail_id):
     attend = get_object_or_404(Attend, id=detail_id)
     group = attend.attendance
@@ -211,7 +183,6 @@ def attend_edit(request, detail_id):
     return render(request, 'attendance/attend_new.html', {
         'form': form,
     })
-
 
 
 def attend_delete(request, detail_id):
