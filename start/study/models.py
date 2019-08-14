@@ -15,6 +15,13 @@ class Group(models.Model):
     group_bio = models.CharField(max_length=300, blank=True, null=True)
     group_goal = models.CharField(max_length=300, blank=True, null=True)
 
+
+    group_rule = models.CharField(max_length=600, blank=True, null=True)
+    late_penalty = models.CharField(max_length=10, default="0")
+    abscence_penalty = models.CharField(max_length=10, default="0")
+    notsubmit_penalty = models.CharField(max_length=10, default="0")
+
+
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
     def __str__(self):
@@ -29,6 +36,7 @@ class Membership(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     ROLE_CHOICES = [
         ('MANAGER', 'MANAGER'),
+        ('STAFF', 'STAFF'),
         ('MEMBER', 'MEMBER')
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='MEMBER')

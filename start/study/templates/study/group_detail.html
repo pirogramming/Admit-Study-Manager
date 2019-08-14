@@ -52,6 +52,9 @@
         {% for member in membership_manager %}
             <li style="color:deepskyblue;">{{ member.person.username }}(관리자)</li>
         {% endfor %}
+        {% for member in membership_staff %}
+            <li style="color:deepskyblue;">{{ member.person.username }}(스탭)</li>
+        {% endfor %}
         {% for member in membership_member %}
             <li>{{ member.person.username }}</li>
         {% endfor %}
