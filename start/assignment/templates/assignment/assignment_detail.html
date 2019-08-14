@@ -20,6 +20,11 @@
     {% endif %}
 
 
+{% if membership.is_manager %}
+    <a href="{% url "assignment:assignment_edit" assignment.id %}" class="btn btn-primary">수정</a>
+    <a href="{% url "assignment:assignment_delete" assignment.id %}" class="btn btn-primary">삭제</a>
+{% endif %}
+
 <h2>인증한 사람들 </h2>
 
 {% if num == 0 %}

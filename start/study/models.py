@@ -1,5 +1,4 @@
 import uuid
-
 from django.db import models
 from accounts.models import StudyUser
 from django.urls import reverse
@@ -11,6 +10,17 @@ class Group(models.Model):
     group_name = models.CharField(max_length=20, unique=True)
     group_code = models.CharField(max_length=20)
     invitation_url = models.CharField(max_length=20, unique=True, default=uuid.uuid1)
+
+    group_bio = models.CharField(max_length=300, blank=True, null=True)
+    group_goal = models.CharField(max_length=300, blank=True, null=True)
+
+
+    group_rule = models.CharField(max_length=600, blank=True, null=True)
+    late_penalty = models.CharField(max_length=10, default="0")
+    abscence_penalty = models.CharField(max_length=10, default="0")
+    notsubmit_penalty = models.CharField(max_length=10, default="0")
+
+
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
     def __str__(self):
@@ -25,12 +35,13 @@ class Membership(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     ROLE_CHOICES = [
         ('MANAGER', 'MANAGER'),
+        ('STAFF', 'STAFF'),
         ('MEMBER', 'MEMBER')
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='MEMBER')
 
     STATUS_CHOICES = [
-        ('NEEDS_APPROVAL', 'NEEDS_APPROVAL'),
+        # ('NEEDS_APPROVAL', 'NEEDS_APPROVAL'),
         ('ACTIVE', 'ACTIVE'),
         ('OUT', 'OUT')
     ]
@@ -49,8 +60,28 @@ class Membership(models.Model):
             return False
 
     @property
+    def is_staff(self):
+        if self.role == 'STAFF':
+            return True
+        else:
+            return False
+
+    @property
+    def is_mn_stf(self):
+        if self.role == 'MANAGER' or self.role == 'STAFF':
+            return True
+        else:
+            return False
+
+    @property
     def is_active(self):
         if self.status == 'ACTIVE':
             return True
         else:
             return False
+
+    # def is_notself(request, self):
+    #     if self == request.user:
+    #         return True
+    #     else :
+    #         False

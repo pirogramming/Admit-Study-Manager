@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load tz %}
+
 
 {% block content %}
     <div>
@@ -12,13 +12,13 @@
         <div>
             {% for post in posts %}
                 <br/>
-                <div style = 'border: solid 1px;'>
+                <div>
                     <ul>
                         <li><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></li>
-                        <li>{{ post.gather_datetime }}까지 오세요</li>
-                        <li>{{ post.expired_datetime }}까지 출석 가능</li>
+                        <li>출석 기한 : {{ post.init_datetime }}부터 {{ post.expired_datetime }}까지 출석 가능</li>
+                        <li>출석 가능 여부 : {{ post.attend_status }}</li>
                     </ul>
-                </div>
+                </div><hr/>
             {% endfor %}
         </div>
         <div>
