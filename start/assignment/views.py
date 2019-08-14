@@ -97,3 +97,13 @@ def done_detail(request, done_id):
     return render(request, 'assignment/done_detail.html', {
         'done': done,
     })
+
+
+def injung_plus(request, done_id):
+    done = get_object_or_404(Done, id=done_id)
+    if done.author == request.user:
+        messages.warning(request, "자기애가 넘치는군요! 자신의 과제에는 인정을 누를 수 없습니다.")
+        return redirect(done)
+    done.injung += 1
+    done.save()
+    return redirect(done)
