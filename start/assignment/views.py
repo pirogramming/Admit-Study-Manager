@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import random
-=======
 from datetime import datetime, time
-
->>>>>>> d46175f5be2b0b710881a9421aac131ff841b780
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
