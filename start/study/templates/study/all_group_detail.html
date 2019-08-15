@@ -13,10 +13,17 @@
 
 <h3>구성원</h3>
 <ol>
-    {% for member in membership %}
-    <li>{{ member.username }}</li>
-    {% endfor %}
-</ol>
+
+        {% for member in membership_manager %}
+            <li style="color:dodgerblue;">{{ member.person.username }}(관리자)</li>
+        {% endfor %}
+        {% for member in membership_staff %}
+            <li style="color:deepskyblue;">{{ member.person.username }}(스탭)</li>
+        {% endfor %}
+        {% for member in membership_member %}
+            <li>{{ member.person.username }}</li>
+        {% endfor %}
+    </ol>
 
 <div>
     <a href="{% url "study:group_register" group.id %}">스터디 가입하기</a>

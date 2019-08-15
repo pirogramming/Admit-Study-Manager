@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
 
-from .forms import GroupForm, RegisterForm
+
+from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -31,6 +32,19 @@ def group_required(func):
        return func(request, id)
    return wrapper
 
+
+def mn_stf_required(func):
+    @functools.wraps(func)
+    def wrapper(request, id):
+        group = get_object_or_404(Group, id=id)
+        group_name = group.group_name
+        user = request.user
+        membership = Membership.objects.get(group=group, person=user)
+        if not membership.is_mn_stf or not membership.is_active:
+            # return render(request, 'study/group_reject.html', {'group_name': group_name})
+            return HttpResponse("매니저 권한이 필요합니다.")
+        return func(request, id)
+    return wrapper
 
 def manager_required(func):
     @functools.wraps(func)
@@ -73,11 +87,19 @@ def group_list(request):
 
 def all_group_detail(request,id):
     group = get_object_or_404(Group, id=id)
-    membership = [x.person for x in Membership.objects.filter(group=group, status='ACTIVE')]
+    # membership_manager = [x.person for x in Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')]
+    # membership_member = [x.person for x in Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')]
+
+
+    membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
+    membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
 
     return render(request, 'study/all_group_detail.html', {
         'group': group,
-        'membership': membership,
+        'membership_manager': membership_manager,
+        'membership_staff': membership_staff,
+        'membership_member': membership_member,
     })
 
 @group_required
@@ -85,13 +107,16 @@ def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
     user = request.user
     # membership = [x.person for x in Membership.objects.filter(group=group)]
-    membership_manager = Membership.objects.filter(group=group, role='MANAGER')
+    membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
+    membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     usermembership = Membership.objects.get(group=group, person=user)
 
     return render(request, 'study/group_detail.html', {
         'group': group,
-        'membership_manager':membership_manager, 'membership_member':membership_member,
+        'membership_manager':membership_manager,
+        'membership_staff':membership_staff,
+        'membership_member':membership_member,
         'usermembership':usermembership,
     })
 
@@ -250,12 +275,177 @@ def group_mysettings(request, id):
         'user':user, 'group':group
     })
 
-# @manager_required (매니저만 들어갈 수 있도록 decorator 추가할 예정)
 @group_required
 @manager_required
-def group_settings(request, id):
+def group_settings_mn(request, id):
     user = request.user
-    group = Group.objects.get(id=id)
-    return render(request, 'study/group_settings.html', {
-        'user':user, 'group':group,
-    })
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
+    membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+    groupprofileform = GroupProfileForm(instance=group)
+
+    ctx = {'user': user, 'group': group,
+           'groupprofileform': groupprofileform,
+           'membership_manager': membership_manager,
+           'membership_staff': membership_staff,
+           'membership_member': membership_member,
+           }
+
+    if request.method == 'POST':
+        if request.POST.get('groupprofilerevise', ''):
+            groupprofileform = GroupProfileForm(request.POST, request.FILES, instance=group)
+            if groupprofileform.is_valid():
+                us = groupprofileform.save()
+                ctx['groupprofileform'] = groupprofileform
+                # messages.success(request, '그룹 프로필을 성공적으로 수정했습니다.')
+                return render(request, 'study/group_settings_mn.html', ctx)
+                # return redirect('study:group_settings', id)
+
+        elif request.POST.get('rulerevise', ''):
+            group_rule = request.POST.get('group_rule', '')
+            late_penalty = request.POST.get('late_penalty', '')
+            abscence_penalty = request.POST.get('abscence_penalty', '')
+            notsubmit_penalty = request.POST.get('notsubmit_penalty', '')
+
+            group.group_rule = group_rule
+            group.late_penalty = late_penalty
+            group.abscence_penalty = abscence_penalty
+            group.notsubmit_penalty = notsubmit_penalty
+            group.save()
+
+            return render(request, 'study/group_settings_mn.html', ctx)
+
+        elif request.POST.get('staffout', ''):
+            out_staffname = request.POST['staffout']
+            out_staff = get_object_or_404(StudyUser, username=out_staffname)
+            obj = get_object_or_404(Membership, person=out_staff, group=group)
+            obj.role = 'MEMBER'
+            obj.save()
+            membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+            membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+            ctx['membership_staff'] = membership_staff
+            ctx['membership_member'] = membership_member
+            return render(request, 'study/group_settings_mn.html', ctx)
+
+        elif request.POST.get('staffin', ''):
+            for i in range(1, len(membership_member) + 1):
+                try:
+                    in_staffname = request.POST['staffin{}'.format(i)]
+                    in_staff = get_object_or_404(StudyUser, username=in_staffname)
+                    obj = get_object_or_404(Membership, person=in_staff, group=group)
+                    obj.role = 'STAFF'
+                    obj.save()
+                except:
+                    pass
+            membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+            membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+            ctx['membership_staff'] = membership_staff
+            ctx['membership_member'] = membership_member
+            return render(request, 'study/group_settings_mn.html', ctx)
+
+        elif request.POST.get('managerin', ''):
+            # print(request.POST.get('managerin', ''))
+            manager_username = request.POST.get('managerin', '')
+            manager_user = get_object_or_404(StudyUser, username=manager_username)
+            obj = get_object_or_404(Membership, person=manager_user, group=group)
+            obj.role = 'MANAGER'
+            obj.save()
+            ect = get_object_or_404(Membership, person=user, group=group)
+            ect.role = 'MEMBER'
+            ect.save()
+            messages.success(request, '관리자 권한을 위임했습니다.')
+            return redirect(group)
+
+        elif request.POST['out']:
+            # if request.POST.get('out', '') :
+            # Membership.objects.get(person=user, group=group).update(status='OUT')
+            out_username = request.POST['out']
+            out_user = get_object_or_404(StudyUser, username=out_username)
+            obj = get_object_or_404(Membership, person=out_user, group=group)
+            obj.status = 'OUT'
+            obj.save()
+            return redirect(group)
+
+        else:
+            return render(request, 'study/group_settings_mn.html', ctx)
+
+        return redirect(group)
+
+    return render(request, 'study/group_settings_mn.html', ctx)
+
+@group_required
+@mn_stf_required
+def group_settings_stf(request, id):
+    user = request.user
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
+    membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+    groupprofileform = GroupProfileForm(instance=group)
+
+    ctx = {'user': user, 'group': group,
+           'groupprofileform': groupprofileform,
+           'membership_manager': membership_manager,
+           'membership_staff': membership_staff,
+           'membership_member': membership_member,
+           }
+
+    if request.method == 'POST':
+        if request.POST.get('groupprofilerevise', ''):
+            groupprofileform = GroupProfileForm(request.POST, request.FILES, instance=group)
+            if groupprofileform.is_valid():
+                us = groupprofileform.save()
+                ctx['groupprofileform'] = groupprofileform
+                # messages.success(request, '그룹 프로필을 성공적으로 수정했습니다.')
+                return render(request, 'study/group_settings_stf.html', ctx)
+                # return redirect('study:group_settings', id)
+
+        elif request.POST.get('rulerevise', ''):
+            group_rule = request.POST.get('group_rule', '')
+            late_penalty = request.POST.get('late_penalty', '')
+            abscence_penalty = request.POST.get('abscence_penalty', '')
+            notsubmit_penalty = request.POST.get('notsubmit_penalty', '')
+
+            group.group_rule = group_rule
+            group.late_penalty = late_penalty
+            group.abscence_penalty = abscence_penalty
+            group.notsubmit_penalty = notsubmit_penalty
+            group.save()
+
+            return render(request, 'study/group_settings_stf.html', ctx)
+        elif request.POST.get('staffin', ''):
+            for i in range(1, len(membership_member) + 1):
+                try:
+                    in_staffname = request.POST['staffin{}'.format(i)]
+                    in_staff = get_object_or_404(StudyUser, username=in_staffname)
+                    obj = get_object_or_404(Membership, person=in_staff, group=group)
+                    obj.role = 'STAFF'
+                    obj.save()
+                    membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
+                    membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
+                    ctx['membership_staff'] = membership_staff
+                    ctx['membership_member'] = membership_member
+                except:
+                    pass
+
+            return render(request, 'study/group_settings_stf.html', ctx)
+
+        elif request.POST['out']:
+            # if request.POST.get('out', '') :
+            # Membership.objects.get(person=user, group=group).update(status='OUT')
+            out_username = request.POST['out']
+            out_user = get_object_or_404(StudyUser, username=out_username)
+            obj = get_object_or_404(Membership, person=out_user, group=group)
+            obj.status = 'OUT'
+            obj.save()
+            return redirect(group)
+
+        else:
+            return render(request, 'study/group_settings_stf.html', ctx)
+
+        return redirect(group)
+
+    return render(request, 'study/group_settings_stf.html', ctx)
+
+

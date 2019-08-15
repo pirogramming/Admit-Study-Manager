@@ -28,13 +28,19 @@
 
 
 
-<h4>현재 그룹 멤버</h4>
+<h3>구성원</h3>
+<ol>
 
-<ul style="list-style:none;">
-    {% for member in membership %}
-        <li>{{ member.person.username }} / {{ member.role }}</li>
-    {% endfor %}
-</ul>
+        {% for member in membership_manager %}
+            <li style="color:dodgerblue;">{{ member.person.username }}(관리자)</li>
+        {% endfor %}
+        {% for member in membership_staff %}
+            <li style="color:deepskyblue;">{{ member.person.username }}(스탭)</li>
+        {% endfor %}
+        {% for member in membership_member %}
+            <li>{{ member.person.username }}</li>
+        {% endfor %}
+    </ol>
 
 {% if user.is_authenticated %}
     <form action="" method="POST">
