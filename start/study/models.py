@@ -46,6 +46,12 @@ class Membership(models.Model):
         ('OUT', 'OUT')
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    total_admit = models.IntegerField(default=0, verbose_name='인정 총합')
+    total_penalty = models.IntegerField(default=0, verbose_name='벌금 총합')
+    noshow_num = models.IntegerField(default=0, verbose_name='출석 결석 횟수')
+    late_num = models.IntegerField(default=0, verbose_name='출석 지각 횟수')
+    attend_admit = models.IntegerField(default=0, verbose_name='출석 인정 횟수')
+
 
     @property
     def is_manager(self):
