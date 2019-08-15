@@ -33,14 +33,14 @@ def update(request, group_id):
     assignments = Assignment.objects.filter(done_checked=False, group=group, due_date__lte=datetime.now())
     for assignment in assignments:
         dones = Done.objects.filter(assignment=assignment)
-        submitters = [x.author for x in dones]
+        submitters_id = [x.author.id for x in dones]
         assignment.done_checked = True
-        assignment.save()
+        assignment.save(update_fields=['done_checked'])
         for member in members:
-            if member not in submitters:
-                non_submit = memberships.get(person=member)
+            if member.id not in submitters_id:
+                non_submit = memberships.get(person=member, group=group)
                 non_submit.noshow_assign += 1
-                non_submit.save()
+                non_submit.save(update_fields=['noshow_assign'])
 
     # 결석 반영
 
@@ -50,7 +50,7 @@ def update(request, group_id):
     for m in memberships:
         m.total_penalty = int(group.abscence_penalty) * m.noshow_attend + \
                           int(group.late_penalty) * m.late_attend + int(group.notsubmit_penalty) * m.noshow_assign
-        m.save()
+        m.save(update_fields=['total_penalty'])
 
     # 업데이트 기록 저장
     new_update = UpdateHistory.objects.create(group=group)

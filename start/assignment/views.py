@@ -107,7 +107,6 @@ def done_detail(request, done_id):
     })
 
 
-
 def injung_plus(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     original_author = Membership.objects.get(person=done.author, group=done.assignment.group)
