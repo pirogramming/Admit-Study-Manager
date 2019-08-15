@@ -17,4 +17,6 @@ urlpatterns = [
     path('invitation/<int:invitation_url>/', views.group_registerbyurl, name='group_registerbyurl'),
     path('all_group_detail/<int:id>/', views.all_group_detail, name='all_group_detail'),
 
+    path('<int:id>/group_base/', views.group_base, name='group_base'),
+
 ]

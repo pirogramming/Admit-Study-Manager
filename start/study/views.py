@@ -449,3 +449,12 @@ def group_settings_stf(request, id):
     return render(request, 'study/group_settings_stf.html', ctx)
 
 
+def group_base(request, id):
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    user = request.user
+    ctx = {
+        'group':group,
+        'user':user,
+    }
+    return render(request, 'group_base.html', ctx)
+
