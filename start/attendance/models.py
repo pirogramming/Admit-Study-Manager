@@ -16,6 +16,7 @@ class Attend(models.Model):     # 모델폼으로 구현
     gather_datetime = models.DateTimeField(verbose_name='모임 날짜와 시간')
     expired_datetime = models.DateTimeField(verbose_name='출석가능 만료시간')
     attend_status = models.CharField(max_length=15, choices=ATTEND_STATUS, default='출석불가')
+    checked = models.BooleanField(default=False)
 
 
 class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현
