@@ -1,3 +1,4 @@
-from django.test import TestCase
+import random
+from django.shortcuts import render
 
-# Create your tests here.
+

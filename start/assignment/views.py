@@ -1,3 +1,4 @@
+import random
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -112,3 +113,36 @@ def assignment_delete(request, assignment_id):
         'done': done,
         'group': group,
     })
+
+'''
+def admit_rank(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+    memberships = Membership.objects.filter(group=group)
+    users = [x.person for x in memberships]
+    injung_rank = []
+
+    for user in users:
+        dones = Done.objects.filter(author=user)
+        total_injung = sum([int(x.injung) for x in dones])
+        injung_rank.append(total_injung)
+
+    injung_rank.sort(reverse=True)
+
+    while True:
+        random.shuffle(users)
+        injung_rank2 = []
+        for user in users:
+            dones = Done.objects.filter(author=user)
+            total_injung = sum([int(x.injung) for x in dones])
+            injung_rank2.append(total_injung)
+
+        if injung_rank == injung_rank2:
+            break
+        else:
+            continue
+
+
+    return render(request, 'assignment/injung_rank.html', {
+        'user_list': users,
+    })
+'''
