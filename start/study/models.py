@@ -57,12 +57,6 @@ class Membership(models.Model):
     admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
     rank = models.IntegerField(default=0, null=True, verbose_name='등수')
 
-
-class UpdateHistory(models.Model):
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(null=True, verbose_name='업데이트 기준')
-
-
     @property
     def is_manager(self):
         if self.role == 'MANAGER':
@@ -96,3 +90,8 @@ class UpdateHistory(models.Model):
     #         return True
     #     else :
     #         False
+
+
+class UpdateHistory(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(null=True, verbose_name='업데이트 기준')
