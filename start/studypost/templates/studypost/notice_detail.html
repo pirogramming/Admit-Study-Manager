@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load imagekit %}
 
 {% block content %}
 
@@ -9,6 +9,14 @@
 <h1>{{ notice.title }}</h1>
 
 {{ notice.content|linebreaks }}
+
+{% if notice.photo %}
+    {% thumbnail "100x100" notice.photo %}
+{% endif %}
+
+{% if notice.file %}
+    <a href="{% url 'studypost:notice_download' notice.file.path %}" class="btn btn-secondary">첨부파일</a>
+{% endif %}
 
 {{ notice.created_at }}
 

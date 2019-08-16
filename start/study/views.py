@@ -272,7 +272,9 @@ def group_mysettings(request, id):
         return redirect(group)
 
     return render(request, 'study/group_mysettings.html', {
-        'user':user, 'group':group
+        'user': user,
+        'group': group,
+        'membership': usermembership,
     })
 
 @group_required

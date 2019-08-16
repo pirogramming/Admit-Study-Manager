@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
-
+{% load imagekit %}
 
 {% block content %}
 
 <h1>{{ homework.title }}</h1>
 
 {{ homework.content|linebreaks }}
+
+{% if homework.photo %}
+    {% thumbnail "100x100" homework.photo %}
+{% endif %}
+
+{% if homework.file %}
+    <a href="{% url 'studypost:homework_download' homework.file.path %}" class="btn btn-secondary">첨부파일</a>
+{% endif %}
 
 <hr>
 
