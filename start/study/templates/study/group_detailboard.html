@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="notice"></div>
+
+
+
+<div class="assignment">
+    진행중인 과제
+    {% if num == 0 %}
+        <div><p>등록된 과제가 없습니다.</div>
+    {% else %}
+           <div class="latest_assignment">
+              {{ latest_assignment.index_in_group }}
+              <a href="{% url "assignment:assignment_detail" assignment.id %}">{{ latest_assignment.title }}</a>
+              {{ assignment.due_date }} {% if assignment.due_date <= now %}(만료){% endif %}
+              <div class="assignment_set" style="justify-content: space-around;">
+              {% for 인증 in 인증s %}
+                  <div class="인증">
+                      {{ 인증한 사람 이름 }}
+                      <img src="" alt="">
+                      <button>ㅇㅈ</button>
+                  </div>
+              </div>
+              {% endfor %}
+
+           </div>
+    {% endif %}
+
+</div>
+
+
+<div class="attendance">
+    진행중인 출석
+    {% if num == 0 %}
+        <div><p>등록된 출석이 없습니다.</div>
+    {% else %}
+           <div class="latest_attendance">
+              {{ latest_attendance.index_in_group }}
+              <a href="{% url "attendance:attendance_detail" attendance.id %}">{{ latest_attendance.title }}</a>
+              {{ attendance.due_date }} {% if attendance.due_date <= now %}(만료){% endif %}
+              <ul>
+                        <li><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></li>
+                        <li>출석 기한 : {{ post.init_datetime }}부터 {{ post.expired_datetime }}까지 출석 가능</li>
+                        <li>출석 가능 여부 : {{ post.attend_status }}</li>
+                    </ul>
+
+               <div>
+                    {% if instances_attend %}
+                        <div><strong>출석한자</strong></div>
+                        {% for instance in instances_attend %}
+                            <div>
+                                {{ instance.attend_user }} | {{ instance.arrive_time }} | <p style="color: green">
+                                정상출석</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div>
+                    {% if instances_late %}
+                        <div><strong>지각한자</strong></div>
+                        {% for instance in instances_late %}
+                            <div>
+                                {{ instance.attend_user }} | {{ instance.arrive_time }} | <p
+                                    style="color: orange">{{ instance.sub_time }}분 지각</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div>
+                    <div><strong>결석!한자</strong></div>
+                    <div>
+                        <small>사정이 있다면 스터디장에게 말하기!</small>
+                    </div>
+                    {% for instance in instances_none %}
+                        <div>
+                            {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+               <p>출석하기 버튼 누르면 modal 뜨고 출석코드 입력하면 출석완료로 바뀜</p>
+
+              </div>
+              {% endfor %}
+
+           </div>
+    {% endif %}
+
+</div>
+
+<div class="freeboard"></div>
+</body>
+</html>

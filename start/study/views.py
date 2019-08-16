@@ -75,7 +75,8 @@ def group_list(request):
     user = request.user
     # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     # group_list = Group.objects.filter(group_member=user)
-    group_list = [x.group for x in Membership.objects.filter(person = user, status='ACTIVE')]
+    group_list = Membership.objects.filter(person = user, status='ACTIVE')
+    print(group_list)
     g = request.GET.get('g', '')
     if g:
         group_list = group_list.filter(group_name__icontains=g)

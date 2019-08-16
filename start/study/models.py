@@ -52,6 +52,23 @@ class Membership(models.Model):
     assign_admit = models.IntegerField(default=0)
     rank = models.IntegerField(default=1)
 
+    phone_number_open = models.BooleanField(default = False)
+    bio_open = models.BooleanField(default= False)
+
+    @property
+    def phone_number_open(self):
+        if self.phone_number_open == True:
+            return True
+        else:
+            return False
+
+    @property
+    def bio_open(self):
+        if self.bio_open == True:
+            return True
+        else:
+            return False
+
     @property
     def is_manager(self):
         if self.role == 'MANAGER':
