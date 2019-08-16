@@ -30,8 +30,8 @@ def assignment_list(request, group_id):
 
 def assignment_new(request, group_id):
     group = get_object_or_404(Group, id=group_id)
-    if not Membership.objects.get(group=group, person=request.user).is_manager:
-        messages.warning(request, '매니저만 과제를 등록할 수 있습니다.')
+    if Membership.objects.get(group=group, person=request.user).role == 'MEMBER':
+        messages.warning(request, '매니저와 스탭만 과제를 등록할 수 있습니다.')
         return redirect('assignment:assignment_list', group_id)
 
     if request.method == 'POST':
