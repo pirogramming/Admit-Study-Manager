@@ -16,6 +16,8 @@ class Notice(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     title = models.CharField(max_length=20, verbose_name='제목')
     content = models.TextField(verbose_name='내용')
+    photo = models.ImageField(blank=True, null=True, verbose_name='사진', upload_to='studypost/notice/%Y/%m/%d')
+    file = models.FileField(blank=True, null=True, verbose_name='파일 업로드', upload_to='studypost/notice/%Y/%m/%d')
     lnglat = models.CharField(max_length=50, blank=True,
                               validators=[lnglat_validator],
                               verbose_name='장소')
@@ -33,6 +35,8 @@ class Homework(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     title = models.CharField(max_length=20, verbose_name='제목')
     content = models.TextField(verbose_name='내용')
+    photo = models.ImageField(blank=True, null=True, verbose_name='사진', upload_to='studypost/homework/%Y/%m/%d')
+    file = models.FileField(blank=True, null=True, verbose_name='파일 업로드', upload_to='studypost/homework/%Y/%m/%d')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
