@@ -107,9 +107,9 @@ def done_detail(request, done_id):
     })
 
 
-
 def injung_plus(request, done_id):
     done = get_object_or_404(Done, id=done_id)
+    original_author = Membership.objects.get(person=done.author, group=done.assignment.group)
     injungs = Injung_history.objects.filter(done=done)
     authors = [x.author for x in injungs]
 
@@ -122,8 +122,20 @@ def injung_plus(request, done_id):
         return redirect(done)
     else:
         done.injung += 1
+        original_author.admit_assign += 1
+        original_author.total_admit += 1
         done.save()
+        original_author.save()
         new_injung = Injung_history.objects.create(author=request.user, done=done,)
+
+        memberships = Membership.objects.filter(group=done.assignment.group)
+        for m in memberships:
+            m.rank = 1
+            for mc in memberships:
+                if m.total_admit < mc.total_admit:
+                    m.rank += 1
+            m.save()
+
         return redirect(done)
 
 
@@ -133,7 +145,21 @@ def assignment_edit(request, assignment_id):
     if request.method == 'POST':
         form = AssignmentForm(request.POST, instance=assignment)
         if form.is_valid():
-            assignment = form.save()
+            assignment = form.save(commit=False)
+            date = form.cleaned_data['due_date']
+
+            due_time = time(
+                gather_time_hour_function(
+                    form.cleaned_data['due_date_hour'],
+                    form.cleaned_data['due_date_ampm']
+                ),
+                int(form.cleaned_data['due_date_minute'])
+            )
+
+            due_date = datetime.combine(date, due_time)
+
+            assignment.due_date = due_date
+            assignment.save()
             return redirect(assignment)
     else:
         form = AssignmentForm(instance=assignment)
