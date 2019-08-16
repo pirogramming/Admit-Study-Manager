@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Group, Membership
+from .models import Group, Membership, UpdateHistory
 
 # Register your models here.
+
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
@@ -10,4 +11,9 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
-    list_display = ['person', 'group']
+    list_display = ['person', 'group', 'total_admit', 'total_penalty']
+
+
+@admin.register(UpdateHistory)
+class UpdateHistoryAdmin(admin.ModelAdmin):
+    list_display = ['group', 'created_at']

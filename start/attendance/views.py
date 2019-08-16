@@ -60,7 +60,7 @@ def attend_detail(request, group_id, detail_id):
         # 중복 출석 방지
         confirm_value = attend.attendconfirm_set.filter(
             attend_user=request.user.nickname,
-            attend_check='없음'
+            attend_check='출석 정보 없음'
         )
 
         if confirm_value:
@@ -112,7 +112,8 @@ def attend_detail(request, group_id, detail_id):
     else:
         instances_attend = attend.attendconfirm_set.filter(attend_check='출석').order_by('arrive_time')
         instances_late = attend.attendconfirm_set.filter(attend_check='지각').order_by('arrive_time')
-        instances_none = attend.attendconfirm_set.filter(attend_check='없음')
+        instances_none = attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
+        instances_absence = attend.attendconfirm_set.filter(attend_check='결석')
         form = AttendConfirmForm()
         context = {
             'group': group,
@@ -120,7 +121,8 @@ def attend_detail(request, group_id, detail_id):
             'form': form,
             'instances_attend': instances_attend,
             'instances_late': instances_late,
-            'instances_none': instances_none
+            'instances_none': instances_none,
+            'instances_absence': instances_absence,
         }
         return render(request, 'attendance/attend_detail.html', context)
 
@@ -160,7 +162,7 @@ def attend_new(request, group_id):
             for member in group_members:
                 new_attend.attendconfirm_set.create(
                     attend_user=member.person.nickname,
-                    attend_check='결석'
+                    attend_check='출석 정보 없음'
                 )
 
         return redirect(resolve_url('attendance:attend_list', group_id=group.id))

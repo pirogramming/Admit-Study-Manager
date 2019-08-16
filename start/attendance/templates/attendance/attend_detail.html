@@ -78,7 +78,7 @@
                 <div>
                     <div><strong>출석하지 않은 자들</strong></div>
                     <div>
-                        <small>사정이 있다면 스터디장에게 말하기!</small>
+                        <small>사정이 있다면 스터디장에게 말하기!</small><br/>
                         <small>출석 만료 시간이 지나면 결석으로 처리됩니다</small>
                     </div>
                     {% for instance in instances_none %}
@@ -86,6 +86,13 @@
                             {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                         </div>
                     {% endfor %}
+                    {% if instsnces_absence %}
+                        {% for instance in instance_absence %}
+                            <div>
+                                {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div>
                     <a href="{% url "attendance:attend_edit" attend.id %}" class="btn btn-secondary">출석 수정하기</a>
