@@ -1,5 +1,5 @@
+import random
 from datetime import datetime, time
-
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -107,9 +107,9 @@ def done_detail(request, done_id):
     })
 
 
-
 def injung_plus(request, done_id):
     done = get_object_or_404(Done, id=done_id)
+    original_author = Membership.objects.get(person=done.author, group=done.assignment.group)
     injungs = Injung_history.objects.filter(done=done)
     authors = [x.author for x in injungs]
 
@@ -122,8 +122,20 @@ def injung_plus(request, done_id):
         return redirect(done)
     else:
         done.injung += 1
+        original_author.admit_assign += 1
+        original_author.total_admit += 1
         done.save()
+        original_author.save()
         new_injung = Injung_history.objects.create(author=request.user, done=done,)
+
+        memberships = Membership.objects.filter(group=done.assignment.group)
+        for m in memberships:
+            m.rank = 1
+            for mc in memberships:
+                if m.total_admit < mc.total_admit:
+                    m.rank += 1
+            m.save()
+
         return redirect(done)
 
 
@@ -133,7 +145,21 @@ def assignment_edit(request, assignment_id):
     if request.method == 'POST':
         form = AssignmentForm(request.POST, instance=assignment)
         if form.is_valid():
-            assignment = form.save()
+            assignment = form.save(commit=False)
+            date = form.cleaned_data['due_date']
+
+            due_time = time(
+                gather_time_hour_function(
+                    form.cleaned_data['due_date_hour'],
+                    form.cleaned_data['due_date_ampm']
+                ),
+                int(form.cleaned_data['due_date_minute'])
+            )
+
+            due_date = datetime.combine(date, due_time)
+
+            assignment.due_date = due_date
+            assignment.save()
             return redirect(assignment)
     else:
         form = AssignmentForm(instance=assignment)
@@ -156,3 +182,36 @@ def assignment_delete(request, assignment_id):
         'group': group,
     })
 
+
+'''
+def admit_rank(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+    memberships = Membership.objects.filter(group=group)
+    users = [x.person for x in memberships]
+    injung_rank = []
+
+    for user in users:
+        dones = Done.objects.filter(author=user)
+        total_injung = sum([int(x.injung) for x in dones])
+        injung_rank.append(total_injung)
+
+    injung_rank.sort(reverse=True)
+
+    while True:
+        random.shuffle(users)
+        injung_rank2 = []
+        for user in users:
+            dones = Done.objects.filter(author=user)
+            total_injung = sum([int(x.injung) for x in dones])
+            injung_rank2.append(total_injung)
+
+        if injung_rank == injung_rank2:
+            break
+        else:
+            continue
+
+
+    return render(request, 'assignment/injung_rank.html', {
+        'user_list': users,
+    })
+'''

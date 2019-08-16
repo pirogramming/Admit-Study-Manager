@@ -63,11 +63,20 @@
   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
       <form action="" method="POST">
     {% csrf_token %}
+
+    {% if membership.is_manager %}
+    <input type="hidden" name="out" value="">
+    <button onclick="return alert('방장 권한을 먼저 위임하세요.');">그룹 탈퇴</button>
+    </input>
+    {% else %}
     <input type="hidden" name="out" value="out">
     <button onclick="return confirm('그룹을 탈퇴하면 재가입이 불가능하며, ' +
      '그룹페이지에 들어가 그룹과 관련된 내 정보를 열람할 수 없습니다. ' +
-      '정말 탈퇴하겠습니까?');">그룹 탈퇴</button>
+      '정말 탈퇴하겠습니까?');">그룹 탈퇴
+    </button>
     </input>
+    {% endif %}
+
 </form>
   </div>
   <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>

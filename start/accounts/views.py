@@ -1,6 +1,9 @@
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.contrib import messages
 
 from .forms import SignupForm, UserEditForm
 from django.contrib.auth.decorators import login_required
@@ -31,3 +34,21 @@ def profile_revise(request):
         profileform = UserEditForm(instance=request.user)
         forms = {'profileform': profileform}
         return render(request, 'accounts/profile_revise.html', forms)
+
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, '비밀번호가 변경되었습니다.')
+            return redirect('accounts:profile')
+        else:
+            messages.error(request, '오류를 수정해주세요.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'accounts/password_change.html', {
+        'form': form
+    })

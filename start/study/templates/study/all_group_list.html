@@ -11,10 +11,28 @@
     </form>
 </div>
 
-{% for group in all_group_list %}
-<tr>
-    <td><a href="{% url "study:all_group_detail" group.id %}">{{group.group_name}}</a></td>
-</tr>
-{% endfor %}
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>그룹명</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for group in all_group_list %}
+        <tr>
+            <td><a href="{% url "study:all_group_detail" group.id %}">{{group.group_name}}</a></td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
+
+<hr>
+
+<a href="{% url 'study:group_new' %}" class="btn btn-primary">스터디 만들기</a>
 
 {% endblock %}

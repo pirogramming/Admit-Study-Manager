@@ -14,12 +14,10 @@ class Group(models.Model):
     group_bio = models.CharField(max_length=300, blank=True, null=True)
     group_goal = models.CharField(max_length=300, blank=True, null=True)
 
-
     group_rule = models.CharField(max_length=600, blank=True, null=True)
     late_penalty = models.CharField(max_length=10, default="0")
     abscence_penalty = models.CharField(max_length=10, default="0")
     notsubmit_penalty = models.CharField(max_length=10, default="0")
-
 
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
@@ -46,11 +44,17 @@ class Membership(models.Model):
         ('OUT', 'OUT')
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
-    total_admit = models.IntegerField(default=0)
-    total_penalty = models.IntegerField(default=0)
-    attend_admit = models.IntegerField(default=0)
-    assign_admit = models.IntegerField(default=0)
-    rank = models.IntegerField(default=1)
+    # 총합 필드
+    total_admit = models.IntegerField(default=0, verbose_name='인정 총합')
+    total_penalty = models.IntegerField(default=0, verbose_name='벌금 총합')
+    # 출석 처리 필드
+    noshow_attend = models.IntegerField(default=0, verbose_name='출석 결석 횟수')
+    late_attend = models.IntegerField(default=0, verbose_name='출석 지각 횟수')
+    admit_attend = models.IntegerField(default=0, verbose_name='출석 인정')
+    # 과제 처리 필드
+    noshow_assign = models.IntegerField(default=0, verbose_name='과제 미제출 횟수')
+    admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
+    rank = models.IntegerField(default=0, null=True, verbose_name='과제 인정')
 
     phone_number_open = models.BooleanField(default = False)
     bio_open = models.BooleanField(default= False)

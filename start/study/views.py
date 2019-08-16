@@ -71,18 +71,20 @@ def all_group_list(request):
         'all_group_list': gs,
     })
 
+
 def group_list(request):
     user = request.user
     # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     # group_list = Group.objects.filter(group_member=user)
-    group_list = Membership.objects.filter(person = user, status='ACTIVE')
-    print(group_list)
+
+    groups = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
+    gs = Group.objects.filter(group_name__in=groups)
     g = request.GET.get('g', '')
     if g:
-        group_list = group_list.filter(group_name__icontains=g)
+        gs = gs.filter(group_name__icontains=g)
 
     return render(request, 'study/group_list.html', {
-        'group_list': group_list
+        'group_list': gs,
     })
 
 
@@ -273,7 +275,9 @@ def group_mysettings(request, id):
         return redirect(group)
 
     return render(request, 'study/group_mysettings.html', {
-        'user':user, 'group':group
+        'user': user,
+        'group': group,
+        'membership': usermembership,
     })
 
 @group_required
@@ -458,4 +462,23 @@ def group_base(request, id):
         'user':user,
     }
     return render(request, 'group_base.html', ctx)
+
+def member_info(request, id):
+    membership = get_object_or_404(Membership, id=id)
+    user = membership.person
+
+    return render(request, 'study/member_info.html', {
+        'user': user,
+        'membership': membership,
+    })
+
+
+def member_info_list(request, id):
+    group = get_object_or_404(Group, id=id)
+    memberships = Membership.objects.filter(group=group)
+
+    return render(request, 'study/member_info_list.html', {
+        'memberships': memberships
+    })
+
 
