@@ -145,7 +145,21 @@ def assignment_edit(request, assignment_id):
     if request.method == 'POST':
         form = AssignmentForm(request.POST, instance=assignment)
         if form.is_valid():
-            assignment = form.save()
+            assignment = form.save(commit=False)
+            date = form.cleaned_data['due_date']
+
+            due_time = time(
+                gather_time_hour_function(
+                    form.cleaned_data['due_date_hour'],
+                    form.cleaned_data['due_date_ampm']
+                ),
+                int(form.cleaned_data['due_date_minute'])
+            )
+
+            due_date = datetime.combine(date, due_time)
+
+            assignment.due_date = due_date
+            assignment.save()
             return redirect(assignment)
     else:
         form = AssignmentForm(instance=assignment)
