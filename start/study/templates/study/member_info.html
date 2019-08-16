@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<ul>
+    {% if user.img_profile %}
+    <li><br/><img src="{{ user.img_profile.url }}" width="10%" height="10%"/></li>
+    {% else %}
+    <li><br/><img src="{% static 'img/anonym.jpg' %}" width="10%" height="10%"/></li>
+    {% endif %}
+    <li>그룹 권한 : {{ membership.role }}</li>
+    <li>닉네임 : {{ user.nickname }}</li>
+    <li>이메일 : {{ user.email }}</li>
+    <li>자기소개 : {{ user.bio }}</li>
+    <li>전화번호 : {{ user.phone_number }}</li>
+    <li>{{ user.nickname }}님의 ㅇㅈ : {{ membership.total_admit }}</li>
+    <li>{{ user.nickname }}님의 벌금 : {{ membership.total_penalty }}</li>
+    <li>{{ user.nickname }}님의 ㅇㅈ 랭킹 : {{ membership.rank }}</li>
+</ul>
+
+{% endblock %}

@@ -457,3 +457,22 @@ def group_settings_stf(request, id):
     return render(request, 'study/group_settings_stf.html', ctx)
 
 
+def member_info(request, id):
+    membership = get_object_or_404(Membership, id=id)
+    user = membership.person
+
+    return render(request, 'study/member_info.html', {
+        'user': user,
+        'membership': membership,
+    })
+
+
+def member_info_list(request, id):
+    group = get_object_or_404(Group, id=id)
+    memberships = Membership.objects.filter(group=group)
+
+    return render(request, 'study/member_info_list.html', {
+        'memberships': memberships
+    })
+
+
