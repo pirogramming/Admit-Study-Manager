@@ -11,10 +11,22 @@
     </form>
 </div>
 
-{% for group in group_list %}
-<tr>
-    <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
-</tr>
-{% endfor %}
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>그룹명</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for group in group_list %}
+        <tr>
+            <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
 
 {% endblock %}

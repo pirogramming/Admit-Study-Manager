@@ -18,7 +18,7 @@ class StudyUserManager(UserManager):
 
 
 class StudyUser(AbstractUser):
-    nickname = models.CharField(max_length=10, null=True)
+    nickname = models.CharField(max_length=10, null=True, unique=True)
     phone_number = models.CharField(blank=True, max_length=20, null=True)
     img_profile = models.ImageField(upload_to='user', blank=True, null=True, default=None)
     bio = models.TextField(blank=True, null=True)
