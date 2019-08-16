@@ -90,7 +90,6 @@ def all_group_detail(request,id):
     # membership_manager = [x.person for x in Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')]
     # membership_member = [x.person for x in Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')]
 
-
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
@@ -128,10 +127,6 @@ def group_detail(request, id):
         'membership_member': membership_member,
         'usermembership': usermembership,
     })
-
-
-
-
 
 @login_required
 def group_new(request):
