@@ -20,6 +20,7 @@ class Attend(models.Model):     # 모델폼으로 구현
 
 class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현
     ATTEND_CHANCE = [
+        ('없음', '없음'),
         ('지각', '지각'),
         ('출석', '출석'),
         ('결석', '결석')

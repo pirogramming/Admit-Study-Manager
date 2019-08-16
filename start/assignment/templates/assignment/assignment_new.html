@@ -1,7 +1,58 @@
-<form action="" method="post">
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>새 과제 업로드</h2>
+
+    <form action="#" method="POST">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit">
-</form>
+
+
+        <div>
+                <br/>
+                <div>
+                    <strong>{{ form.title.label_tag }}</strong>
+                    {{ form.title }}
+                </div>
+
+            <br/>
+
+            <div>
+                <div>
+                    <strong>{{ form.content.label_tag }}</strong>
+                    {{ form.content }}
+                </div>
+            </div>
+            <hr/>
+
+            <div>
+                <div>
+                    <h5>과제 기한 입력</h5>
+                </div>
+                <br/>
+
+                <div>
+                    <strong>{{ form.due_date.label_tag }}</strong>
+                    {{ form.due_date }}<br/>
+                    <small>화살표를 누르면 달력이 나와요</small>
+                </div>
+                <br/>
+
+                <div>
+                    <strong>이 과제는</strong>
+                    <div>
+                        {{ form.due_date_ampm }} {{ form.due_date_hour }}시 {{ form.due_date_minute }}분까지!
+                    </div>
+                </div>
+                <br/>
+            </div><br/>
+
+            <div>
+                <input type="submit" value="과제 만들기">
+            </div><br/>
+
+         </div>
+
+    </form>
+
+{% endblock %}

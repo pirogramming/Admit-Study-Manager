@@ -12,6 +12,7 @@ class Assignment(models.Model):
     content = models.TextField(verbose_name='내용')
     due_date = models.DateTimeField(verbose_name='기한')
     created_at = models.DateTimeField(auto_now_add=True)
+    done_checked = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])
@@ -23,8 +24,13 @@ class Done(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     done_img = models.ImageField(upload_to='AssignmentsDone')
     injung = models.IntegerField(default=0)
-    noinjung = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
         return reverse('assignment:done_detail', args=[self.id])
+
+
+class Injung_history(models.Model):
+    done = models.ForeignKey(Done, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

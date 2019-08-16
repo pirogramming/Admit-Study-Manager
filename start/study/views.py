@@ -3,14 +3,14 @@ from random import randint
 
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
 
 
 from .forms import GroupForm, RegisterForm, GroupProfileForm
-from .models import Group, Membership
+from .models import Group, Membership, UpdateHistory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -102,6 +102,7 @@ def all_group_detail(request,id):
         'membership_member': membership_member,
     })
 
+
 @group_required
 def group_detail(request, id):
     group = get_object_or_404(Group, id=id)
@@ -112,13 +113,23 @@ def group_detail(request, id):
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     usermembership = Membership.objects.get(group=group, person=user)
 
+    ### 상황판 렌더링
+    # 상황판 - 그룹이름/그룹소개/총 ㅇㅈ 랭킹/총 벌금 랭킹/출석하기/과제하기/공지게시판
+    # ㅇㅈ/벌금 멤버별 상황
+
+    ### 템플릿
+    # 그룹설정 요소중에 상황판에 넣을만한거 추리기
+    # 멤버별 보기(지각 몇번, 결석 몇번, 벌금 얼마, ㅇㅈ몇개)
+
     return render(request, 'study/group_detail.html', {
         'group': group,
-        'membership_manager':membership_manager,
-        'membership_staff':membership_staff,
-        'membership_member':membership_member,
-        'usermembership':usermembership,
+        'membership_manager': membership_manager,
+        'membership_staff': membership_staff,
+        'membership_member': membership_member,
+        'usermembership': usermembership,
     })
+
+
 
 
 

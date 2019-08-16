@@ -13,4 +13,7 @@ urlpatterns = [
 
     path('<int:assignment_id>/done_new/', views.done_new, name='done_new'),
     path('<int:done_id>/done_detail/', views.done_detail, name='done_detail'),
+    # path('<int:group_id>/injung_rank/', views.injung_rank, name='injung_rank'),
+    path('<int:done_id>/injung_plus', views.injung_plus, name='injung_plus'),
+
 ]

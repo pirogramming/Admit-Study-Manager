@@ -60,7 +60,7 @@ def attend_detail(request, group_id, detail_id):
         # 중복 출석 방지
         confirm_value = attend.attendconfirm_set.filter(
             attend_user=request.user.nickname,
-            attend_check='결석'
+            attend_check='없음'
         )
 
         if confirm_value:
@@ -85,7 +85,7 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.sub_time = sub_time
                         attending_member.attend_check = '출석'
                         attending_member.save()
-                        membership.attend_admit += 1    # ㅇㅈ하나 추가
+                        membership.admit_attend += 1    # ㅇㅈ하나 추가
                         membership.save()
                         messages.success(request, '성공적으로 출석했습니다!')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
@@ -95,7 +95,7 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.sub_time = sub_time
                         attending_member.attend_check = '지각'
                         attending_member.save()
-                        membership.late_num += 1    # 지각 횟수 한번 추가
+                        membership.late_attend += 1    # 지각 횟수 한번 추가
                         membership.save()
                         messages.success(request, '지각입니다ㅜㅜ')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
@@ -112,7 +112,7 @@ def attend_detail(request, group_id, detail_id):
     else:
         instances_attend = attend.attendconfirm_set.filter(attend_check='출석').order_by('arrive_time')
         instances_late = attend.attendconfirm_set.filter(attend_check='지각').order_by('arrive_time')
-        instances_none = attend.attendconfirm_set.filter(attend_check='결석')
+        instances_none = attend.attendconfirm_set.filter(attend_check='없음')
         form = AttendConfirmForm()
         context = {
             'group': group,

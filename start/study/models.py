@@ -46,11 +46,24 @@ class Membership(models.Model):
         ('OUT', 'OUT')
     ]
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    # 총합 필드
     total_admit = models.IntegerField(default=0, verbose_name='인정 총합')
     total_penalty = models.IntegerField(default=0, verbose_name='벌금 총합')
-    noshow_num = models.IntegerField(default=0, verbose_name='출석 결석 횟수')
-    late_num = models.IntegerField(default=0, verbose_name='출석 지각 횟수')
-    attend_admit = models.IntegerField(default=0, verbose_name='출석 인정 횟수')
+    # 출석 처리 필드
+    penalty_attend = models.IntegerField(default=0, verbose_name='출석 벌금 총합')
+    noshow_attend = models.IntegerField(default=0, verbose_name='출석 결석 횟수')
+    late_attend = models.IntegerField(default=0, verbose_name='출석 지각 횟수')
+    admit_attend = models.IntegerField(default=0, verbose_name='출석 인정')
+
+    # 과제 처리 필드
+    noshow_assign = models.IntegerField(default=0, verbose_name='과제 미제출 횟수')
+    admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
+    rank = models.IntegerField(default=0, null=True, verbose_name='등수')
+
+
+class UpdateHistory(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
     @property
