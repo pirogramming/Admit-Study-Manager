@@ -22,7 +22,7 @@
                     <a class="nav-link" href="{% url "studypost:notice_home" group.id %}">스터디 공지</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">ㅇㅈ랭킹</a>
+                    <a class="nav-link" href="{% url 'check:check_home' group.id %}">랭킹 및 벌금 췍</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url "assignment:assignment_home" group.id %}">과제 제출하기</a>
