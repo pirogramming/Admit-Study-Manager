@@ -106,11 +106,12 @@ def group_new(request):
             name_list = [x.group_name for x in Group.objects.all()]
             if name not in name_list:
                 group = form.save(commit=False)
-                while True:
+                for _ in range(99999):
                     try:
                         group.invitation_url = str(randint(1, 999999)).zfill(6)
                         group.save()
                         break
+                    # TODO : exception handling! 그냥 무조건 익셉트는 디버깅이 어렵다.
                     except:
                         pass
                 group.save()
@@ -146,6 +147,10 @@ def group_register(request, id):
                     if group == Group.objects.get(group_name=name, group_code=code):
                         for x in Membership.objects.all():
                             if str(user) == str(x.person) and str(name) == str(x.group):
+                                # TODO : 따로 error_texts.py라는 파일을 만들고
+                                # TODO : ALREADY_SIGNED_UP = '이미 가입되었습니다.'처럼 작성하고
+                                # TODO : messages.error(request, error_texts.ALREADY_SIGNED_UP)
+                                # TODO : 이렇게 사용하는게 이러한 텍스트들을 한 파일에 몰아서 재사용하기에 편함.
                                 messages.error(request, '이미 가입되었습니다.')
                                 form = RegisterForm()
                                 return render(request, 'study/group_register.html', {
