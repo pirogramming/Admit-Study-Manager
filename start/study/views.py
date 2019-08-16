@@ -71,17 +71,19 @@ def all_group_list(request):
         'all_group_list': gs,
     })
 
+
 def group_list(request):
     user = request.user
     # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     # group_list = Group.objects.filter(group_member=user)
-    group_list = [x.group for x in Membership.objects.filter(person = user, status='ACTIVE')]
+    groups = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
+    gs = Group.objects.filter(group_name__in=groups)
     g = request.GET.get('g', '')
     if g:
-        group_list = group_list.filter(group_name__icontains=g)
+        gs = gs.filter(group_name__icontains=g)
 
     return render(request, 'study/group_list.html', {
-        'group_list': group_list
+        'group_list': gs,
     })
 
 
