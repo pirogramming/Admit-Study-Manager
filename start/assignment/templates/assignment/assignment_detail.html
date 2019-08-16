@@ -20,7 +20,7 @@
     {% endif %}
 
 
-{% if membership.is_manager %}
+{% if membership.role != 'MEMBER' %}
     <a href="{% url "assignment:assignment_edit" assignment.id %}" class="btn btn-primary">수정</a>
     <a href="{% url "assignment:assignment_delete" assignment.id %}" class="btn btn-primary">삭제</a>
 {% endif %}
