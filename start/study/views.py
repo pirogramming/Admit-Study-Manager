@@ -149,14 +149,15 @@ def group_update(request, group_id):
     assignments = Assignment.objects.filter(done_checked=False, group=group, due_date__lte=datetime.now())
     for assignment in assignments:
         dones = Done.objects.filter(assignment=assignment)
-        submitters_id = [x.author.id for x in dones]
+        submitters = [x.author for x in dones]
         assignment.done_checked = True
         assignment.save(update_fields=['done_checked'])
         for member in members:
-            if member.id not in submitters_id:
-                non_submit = memberships.get(person=member, group=group)
-                non_submit.noshow_assign += 1
-                non_submit.save(update_fields=['noshow_assign'])
+            if member not in submitters:
+                non_submit = memberships.get(person=member)
+                non_submit.noshow_assign = non_submit.noshow_assign + 1
+                non_submit.save()
+
 
     # 결석 반영
     attends = group.attend_set.filter(attend_status='출석시간만료', attend_data_checked=False)
@@ -173,16 +174,18 @@ def group_update(request, group_id):
             noshow_membership.noshow_attend += 1
             noshow_membership.save(update_fields=['noshow_attend'])
 
+
+
     # 총 벌금 산출/저장
     for membership in memberships:
         penalty_attend = membership.late_attend * int(group.late_penalty) + \
                          membership.noshow_attend * int(group.abscence_penalty)
-        penalty_assign = int(group.abscence_penalty) * membership.noshow_attend
+        penalty_assign = int(group.notsubmit_penalty) * membership.noshow_assign
 
         membership.penalty_attend = penalty_attend
         membership.penalty_assign = penalty_assign
         membership.total_penalty = penalty_attend + penalty_assign
-        membership.save()
+        membership.save(update_fields=['penalty_attend','penalty_assign','total_penalty'])
 
 
     # 업데이트 기록 저장
