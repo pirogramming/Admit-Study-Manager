@@ -7,8 +7,10 @@ from attendance.views import gather_time_hour_function
 from study.models import Group, Membership
 from .models import Assignment, Done, Injung_history
 from .forms import AssignmentForm, DoneForm
+from study.views import group_required, manager_required, mn_stf_required
 
 
+@group_required
 def assignment_home(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
@@ -17,7 +19,7 @@ def assignment_home(request, group_id):
         'group': group, 'assignment': assignment, 'done': done,
     })
 
-
+@group_required
 def assignment_list(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     assignments = Assignment.objects.filter(group=group).order_by('-created_at')
@@ -27,7 +29,8 @@ def assignment_list(request, group_id):
         'group': group, 'assignments': assignments, 'num': num, 'now': now,
     })
 
-
+@group_required
+@mn_stf_required
 def assignment_new(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     if not Membership.objects.get(group=group, person=request.user).is_manager:
@@ -60,9 +63,10 @@ def assignment_new(request, group_id):
 
     else:
         form = AssignmentForm()
-        return render(request, 'assignment/assignment_new.html', {'form': form})
+        return render(request, 'assignment/assignment_new.html',
+                      {'form': form, 'group':group})
 
-
+@group_required
 def assignment_detail(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group
@@ -73,6 +77,7 @@ def assignment_detail(request, assignment_id):
     authors = [x.author for x in dones]
     now = datetime.now()
     return render(request, 'assignment/assignment_detail.html', {
+        'group': group,
         'assignment': assignment,
         'dones': dones,
         'authors': authors,
@@ -80,9 +85,10 @@ def assignment_detail(request, assignment_id):
         'membership': membership,
     })
 
-
+@group_required
 def done_new(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
+    group = assignment.group
     if datetime.now() >= assignment.due_date:
         messages.warning(request, '제출기한이 지났습니다.')
         return redirect('assignment:assignment_detail', assignment_id)
@@ -97,16 +103,20 @@ def done_new(request, assignment_id):
             return redirect(done)
     else:
         form = DoneForm()
-        return render(request, 'assignment/done_new.html', {'form': form, 'assignment': assignment, })
+        return render(request, 'assignment/done_new.html', {
+            'form': form, 'assignment': assignment,
+        'group':group,})
 
-
+@group_required
 def done_detail(request, done_id):
     done = get_object_or_404(Done, id=done_id)
+    group = done.assignment.group
     return render(request, 'assignment/done_detail.html', {
+        'group':group,
         'done': done,
     })
 
-
+@group_required
 def injung_plus(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     original_author = Membership.objects.get(person=done.author, group=done.assignment.group)
@@ -138,9 +148,11 @@ def injung_plus(request, done_id):
 
         return redirect(done)
 
-
+@group_required
+@mn_stf_required
 def assignment_edit(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
+    group = assignment.group
 
     if request.method == 'POST':
         form = AssignmentForm(request.POST, instance=assignment)
@@ -164,10 +176,12 @@ def assignment_edit(request, assignment_id):
     else:
         form = AssignmentForm(instance=assignment)
     return render(request, 'assignment/assignment_new.html', {
+        'group':group,
         'form': form,
     })
 
-
+@group_required
+@mn_stf_required
 def assignment_delete(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group

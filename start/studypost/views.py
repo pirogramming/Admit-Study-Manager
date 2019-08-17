@@ -7,19 +7,22 @@ from django.shortcuts import render, get_object_or_404, redirect
 from study.models import Group, Membership
 from .models import Notice, Homework
 from .forms import NoticeForm, HomeworkForm
+from study.views import group_required, manager_required, mn_stf_required
+
 
 # Create your views here.
 
-
+@group_required
 def notice_home(request, id):
     group = get_object_or_404(Group, id=id)
     return render(request, 'studypost/notice_home.html', {
         'group': group,
     })
 
-
+@group_required
+@mn_stf_required
 def notice_new(request, id):
-    group = Group.objects.get(id=id)
+    group = get_object_or_404(Group, id=id)
     if request.method == 'POST':
         form = NoticeForm(request.POST, request.FILES)
         if form.is_valid():
@@ -32,6 +35,7 @@ def notice_new(request, id):
                                            )
             lng, lat = map(float, notice.lnglat.split(','))
             return render(request, 'studypost/notice_detail.html', {
+                'group': group,
                 'notice': notice,
                 'lng': lng,
                 'lat': lat,
@@ -39,31 +43,37 @@ def notice_new(request, id):
     else:
         form = NoticeForm()
     return render(request, 'studypost/notice_new.html', {
+        'group':group,
         'form': form
     })
 
 
-
+@group_required
 def notice_detail(request, id):
+    group = get_object_or_404(Group, id=id)
     notice = get_object_or_404(Notice, id=id)
     lng, lat = map(float, notice.lnglat.split(','))
     return render(request, 'studypost/notice_detail.html', {
+        'group': group,
         'notice': notice,
         'lng': lng,
         'lat': lat,
     })
 
-
+@group_required
 def notice_list(request, id):
-    group = Group.objects.get(id=id)
+    group = get_object_or_404(Group, id=id)
     ns = Notice.objects.filter(group=group)
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
+        'group': group,
     })
 
-
+@group_required
+@mn_stf_required
 def notice_edit(request, id):
+    group = get_object_or_404(Group, id=id)
     notice = get_object_or_404(Notice, id=id)
 
     if request.method == 'POST':
@@ -74,10 +84,12 @@ def notice_edit(request, id):
     else:
         form = NoticeForm(instance=notice)
     return render(request, 'studypost/notice_new.html', {
+        'group': group,
         'form': form,
     })
 
-
+@group_required
+@mn_stf_required
 def notice_delete(request, id):
     notice = get_object_or_404(Notice, id=id)
     group = notice.group
@@ -86,6 +98,7 @@ def notice_delete(request, id):
     ns = Notice.objects.filter(group=group)
 
     return render(request, 'studypost/notice_list.html', {
+        'group': group,
         'notice_list': ns,
     })
 
@@ -93,7 +106,8 @@ def notice_delete(request, id):
 ########################################################
 
 
-
+@group_required
+@mn_stf_required
 def homework_new(request, id):
     group = Group.objects.get(id=id)
     if request.method == 'POST':
@@ -108,28 +122,35 @@ def homework_new(request, id):
     else:
         form = HomeworkForm()
     return render(request, 'studypost/homework_new.html', {
+        'group': group,
         'form': form
     })
 
-
+@group_required
 def homework_detail(request, id):
+    group = get_object_or_404(Group, id=id)
     homework = get_object_or_404(Homework, id=id)
 
     return render(request, 'studypost/homework_detail.html', {
+        'group': group,
         'homework': homework,
     })
 
 
+@group_required
 def homework_list(request, id):
     group = Group.objects.get(id=id)
     hs = Homework.objects.filter(group=group)
 
     return render(request, 'studypost/homework_list.html', {
+        'group': group,
         'homework_list': hs,
     })
 
-
+@group_required
+@mn_stf_required
 def homework_edit(request, id):
+    group = Group.objects.get(id=id)
     homework = get_object_or_404(Homework, id=id)
 
     if request.method == 'POST':
@@ -140,10 +161,12 @@ def homework_edit(request, id):
     else:
         form = HomeworkForm(instance=homework)
     return render(request, 'studypost/homework_new.html', {
+        'group': group,
         'form': form,
     })
 
-
+@group_required
+@mn_stf_required
 def homework_delete(request, id):
     homework = get_object_or_404(Homework, id=id)
     group = homework.group
@@ -152,10 +175,11 @@ def homework_delete(request, id):
     hs = Homework.objects.filter(group=group)
 
     return render(request, 'studypost/homework_list.html', {
+        'group': group,
         'homework_list': hs,
     })
 
-
+@group_required
 def file_download(request, file_path):
     original_filename = file_path.split('\\')[-1]
 

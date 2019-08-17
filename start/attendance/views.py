@@ -162,7 +162,9 @@ def attend_new(request, group_id):
 
     else:
         form = AttendForm()
-        return render(request, 'attendance/attend_new.html', {'form': form})
+        return render(request, 'attendance/attend_new.html', {
+            'group':group,
+            'form': form})
 
 
 def attend_edit(request, detail_id):
@@ -175,12 +177,14 @@ def attend_edit(request, detail_id):
         if form.is_valid():
             attend = form.save()
             return render(request, 'attendance/attend_detail.html', {
+                'group':group,
                 'attend': attend,
                 'membership': membership,
             })
     else:
         form = AttendForm(instance=attend)
     return render(request, 'attendance/attend_new.html', {
+        'group':group,
         'form': form,
     })
 
