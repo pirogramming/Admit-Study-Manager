@@ -76,6 +76,7 @@ def group_list(request):
     user = request.user
     # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     # group_list = Group.objects.filter(group_member=user)
+
     groups = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     gs = Group.objects.filter(group_name__in=groups)
     g = request.GET.get('g', '')
@@ -520,11 +521,22 @@ def group_settings_stf(request, id):
     return render(request, 'study/group_settings_stf.html', ctx)
 
 
+def group_base(request, id):
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    user = request.user
+    ctx = {
+        'group':group,
+        'user':user,
+    }
+    return render(request, 'group_base.html', ctx)
+
 def member_info(request, id):
+    group = get_object_or_404(Group, id=id)
     membership = get_object_or_404(Membership, id=id)
     user = membership.person
 
     return render(request, 'study/member_info.html', {
+        'group':group,
         'user': user,
         'membership': membership,
     })
@@ -535,6 +547,7 @@ def member_info_list(request, id):
     memberships = Membership.objects.filter(group=group)
 
     return render(request, 'study/member_info_list.html', {
+        'group':group,
         'memberships': memberships
     })
 
