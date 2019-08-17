@@ -85,19 +85,19 @@
     <hr/>
 
     <div>
-        <h4>그룹정보</h4>
+        <h4>그룹정보</h4><br/>
         <div>
-            <div>{{ group.group_name }} 그룹 소개</div>
+            <div><h5>{{ group.group_name }} 그룹 소개</h5></div>
             <div>{{ group.group_bio }}</div>
-        </div>
+        </div><br/>
         <div>
-            <div>우리의 목표</div>
+            <div><h5>우리의 목표</h5></div>
             <div>{{ group.group_goal }}</div>
-        </div>
+        </div><br/>
         <div>
-            <div>이것만은 꼭 지키자!</div>
+            <div><h5>이것만은 꼭 지키자!</h5></div>
             <div>{{ group.group_rule }}</div>
-        </div>
+        </div><br/>
     </div>
     <hr/>
 
@@ -176,7 +176,7 @@
                 <br/>
                 <div>
                     <div>
-                        <a href="{% url 'attendance:attend_detail' group.id attend_post.id %}">{{ attend_post.title }}</a>
+                        <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
                     </div>
                     <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
                 </div>
@@ -192,8 +192,7 @@
             {% for assign_post in assign_posts %}
                 <br/>
                 <div>
-                    <div>{{ assignment.index_in_group }}</div>
-                    <div><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></div>
+                    <div><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assign_post.title }}</a></div>
                     <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
                 </div>
                 <br/>
@@ -201,6 +200,12 @@
         </div>
     </div>
     <hr/>
+
+    <footer>
+        <div style="background-color: darkslategrey">
+            <p>푸터</br>푸터푸터</p>
+        </div>
+    </footer>
 
     <script>
         function myFunction() {
