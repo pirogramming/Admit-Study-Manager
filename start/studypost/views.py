@@ -57,38 +57,27 @@ def notice_new(request, id):
 
 @group_required
 def notice_detail(request, id):
-    group = get_object_or_404(Group, id=id)
-    usermembership = get_object_or_404(Membership, group=group, person=request.user)
-
     notice = get_object_or_404(Notice, id=id)
     lng, lat = map(float, notice.lnglat.split(','))
     return render(request, 'studypost/notice_detail.html', {
-        'group': group,
         'notice': notice,
         'lng': lng,
         'lat': lat,
-        'usermembership':usermembership,
     })
 
 @group_required
 def notice_list(request, id):
     group = get_object_or_404(Group, id=id)
-    usermembership = get_object_or_404(Membership, group=group, person=request.user)
-
     ns = Notice.objects.filter(group=group)
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
         'group': group,
-        'usermembership':usermembership,
     })
 
 @group_required
 @mn_stf_required
 def notice_edit(request, id):
-    group = get_object_or_404(Group, id=id)
-    usermembership = get_object_or_404(Membership, group=group, person=request.user)
-
     notice = get_object_or_404(Notice, id=id)
 
     if request.method == 'POST':
@@ -99,9 +88,8 @@ def notice_edit(request, id):
     else:
         form = NoticeForm(instance=notice)
     return render(request, 'studypost/notice_new.html', {
-        'group': group,
         'form': form,
-        'usermembership':usermembership,
+
     })
 
 @group_required
@@ -125,8 +113,7 @@ def notice_delete(request, id):
 ########################################################
 
 
-@group_required
-@mn_stf_required
+
 def homework_new(request, id):
     group = Group.objects.get(id=id)
     usermembership = get_object_or_404(Membership, group=group, person=request.user)
@@ -148,12 +135,13 @@ def homework_new(request, id):
         'usermembership':usermembership,
     })
 
-@group_required
+
 def homework_detail(request, id):
-    group = get_object_or_404(Group, id=id)
-    usermembership = get_object_or_404(Membership, group=group, person=request.user)
 
     homework = get_object_or_404(Homework, id=id)
+    group = homework.group
+
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
 
     return render(request, 'studypost/homework_detail.html', {
         'group': group,
@@ -162,7 +150,7 @@ def homework_detail(request, id):
     })
 
 
-@group_required
+
 def homework_list(request, id):
     group = Group.objects.get(id=id)
     usermembership = get_object_or_404(Membership, group=group, person=request.user)
@@ -175,13 +163,14 @@ def homework_list(request, id):
         'usermembership': usermembership,
     })
 
-@group_required
-@mn_stf_required
+
 def homework_edit(request, id):
-    group = Group.objects.get(id=id)
-    usermembership = get_object_or_404(Membership, group=group, person=request.user)
 
     homework = get_object_or_404(Homework, id=id)
+
+    group = homework.group
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
+
 
     if request.method == 'POST':
         form = HomeworkForm(request.POST, request.FILES, instance=homework)
@@ -196,8 +185,8 @@ def homework_edit(request, id):
         'usermembership':usermembership,
     })
 
-@group_required
-@mn_stf_required
+
+
 def homework_delete(request, id):
     homework = get_object_or_404(Homework, id=id)
     group = homework.group
@@ -213,7 +202,7 @@ def homework_delete(request, id):
         'usermembership':usermembership,
     })
 
-@group_required
+
 def file_download(request, file_path):
     original_filename = file_path.split('\\')[-1]
 
