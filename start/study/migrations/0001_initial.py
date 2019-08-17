@@ -47,14 +47,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(choices=[('ACTIVE', 'ACTIVE'), ('OUT', 'OUT')], default='ACTIVE', max_length=20)),
                 ('total_admit', models.IntegerField(default=0, verbose_name='인정 총합')),
                 ('total_penalty', models.IntegerField(default=0, verbose_name='벌금 총합')),
-<<<<<<< HEAD
-                ('noshow_attend', models.IntegerField(default=0, verbose_name='출석 결석 횟수')),
-                ('late_attend', models.IntegerField(default=0, verbose_name='출석 지각 횟수')),
-                ('admit_attend', models.IntegerField(default=0, verbose_name='출석 인정')),
-                ('noshow_assign', models.IntegerField(default=0, verbose_name='과제 미제출 횟수')),
-                ('admit_assign', models.IntegerField(default=0, verbose_name='과제 인정')),
-                ('rank', models.IntegerField(default=0, null=True, verbose_name='과제 인정')),
-=======
+
                 ('penalty_attend', models.IntegerField(default=0, verbose_name='출석 벌금 총합')),
                 ('noshow_attend', models.IntegerField(default=0, verbose_name='출석 결석 횟수')),
                 ('late_attend', models.IntegerField(default=0, verbose_name='출석 지각 횟수')),
@@ -63,7 +56,7 @@ class Migration(migrations.Migration):
                 ('noshow_assign', models.IntegerField(default=0, verbose_name='과제 미제출 횟수')),
                 ('admit_assign', models.IntegerField(default=0, verbose_name='과제 인정')),
                 ('rank', models.IntegerField(default=0, null=True, verbose_name='등수')),
->>>>>>> genyeon4
+
                 ('group', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='study.Group')),
                 ('person', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

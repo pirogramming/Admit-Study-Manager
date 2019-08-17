@@ -7,32 +7,37 @@ from attendance.views import gather_time_hour_function
 from study.models import Group, Membership
 from .models import Assignment, Done, Injung_history
 from .forms import AssignmentForm, DoneForm
-from study.views import group_required, manager_required, mn_stf_required
+from study.views import manager_required, mn_stf_required
 
 
-@group_required
+
 def assignment_home(request, group_id):
     group = get_object_or_404(Group, id=group_id)
+    usermembership = Membership.objects.get(group=group, person=request.user)
     assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
     done = Done.objects.filter(assignment=assignment).order_by('created_at').last()
     return render(request, 'assignment/assignment_home.html', {
         'group': group, 'assignment': assignment, 'done': done,
+        'usermembership':usermembership,
     })
 
-@group_required
+
 def assignment_list(request, group_id):
     group = get_object_or_404(Group, id=group_id)
+    usermembership = Membership.objects.get(group=group, person=request.user)
     assignments = Assignment.objects.filter(group=group).order_by('-created_at')
     num = len(assignments)
     now = datetime.now()
     return render(request, 'assignment/assignment_list.html', {
         'group': group, 'assignments': assignments, 'num': num, 'now': now,
+        'usermembership':usermembership,
     })
 
-@group_required
-@mn_stf_required
+
+
 def assignment_new(request, group_id):
     group = get_object_or_404(Group, id=group_id)
+    usermembership = Membership.objects.get(group=group, person=request.user)
     if Membership.objects.get(group=group, person=request.user).role == 'MEMBER':
         messages.warning(request, '매니저와 스탭만 과제를 등록할 수 있습니다.')
         return redirect('assignment:assignment_list', group_id)
@@ -64,13 +69,15 @@ def assignment_new(request, group_id):
     else:
         form = AssignmentForm()
         return render(request, 'assignment/assignment_new.html',
-                      {'form': form, 'group':group})
+                      {'form': form, 'group':group,
+                       'usermembership':usermembership})
 
-@group_required
+
 def assignment_detail(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group
     user = request.user
+    usermembership = Membership.objects.get(group=group, person=request.user)
     membership = Membership.objects.get(person=user, group=group)
 
     dones = Done.objects.filter(assignment=assignment)
@@ -83,12 +90,14 @@ def assignment_detail(request, assignment_id):
         'authors': authors,
         'num': len(dones),
         'membership': membership,
+        'usermembeship':usermembership,
     })
 
-@group_required
+
 def done_new(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group
+    usermembership = Membership.objects.get(group=group, person=request.user)
     if datetime.now() >= assignment.due_date:
         messages.warning(request, '제출기한이 지났습니다.')
         return redirect('assignment:assignment_detail', assignment_id)
@@ -105,18 +114,22 @@ def done_new(request, assignment_id):
         form = DoneForm()
         return render(request, 'assignment/done_new.html', {
             'form': form, 'assignment': assignment,
-        'group':group,})
+        'group':group,
+        'usermembership':usermembership,})
 
-@group_required
+
 def done_detail(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     group = done.assignment.group
+    usermembership = Membership.objects.get(group=group, person=request.user)
+
     return render(request, 'assignment/done_detail.html', {
         'group':group,
         'done': done,
+        'usermembership':usermembership,
     })
 
-@group_required
+
 def injung_plus(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     original_author = Membership.objects.get(person=done.author, group=done.assignment.group)
@@ -148,11 +161,13 @@ def injung_plus(request, done_id):
 
         return redirect(done)
 
-@group_required
-@mn_stf_required
+
+
 def assignment_edit(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group
+    usermembership = Membership.objects.get(group=group, person=request.user)
+
 
     if request.method == 'POST':
         form = AssignmentForm(request.POST, instance=assignment)
@@ -178,13 +193,15 @@ def assignment_edit(request, assignment_id):
     return render(request, 'assignment/assignment_new.html', {
         'group':group,
         'form': form,
+        'usermembership':usermembership,
     })
 
-@group_required
-@mn_stf_required
+
+
 def assignment_delete(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group
+    usermembership = Membership.objects.get(group=group, person=request.user)
     assignment.delete()
 
     assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
@@ -194,6 +211,7 @@ def assignment_delete(request, assignment_id):
         'assignment': assignment,
         'done': done,
         'group': group,
+        'usermembership':usermembership,
     })
 
 
