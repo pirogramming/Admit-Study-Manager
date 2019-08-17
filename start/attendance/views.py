@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from attendance.forms import AttendForm, AttendConfirmForm
-from study.models import Group
+from study.models import Group, Membership
 from datetime import timedelta, datetime, time
 from attendance.models import Attend
 from study.models import Membership
@@ -52,6 +52,7 @@ def attend_list(request, group_id):  # 리스트와 디테일 템플릿 거의 �
 def attend_detail(request, group_id, detail_id):
     group = get_object_or_404(Group, id=group_id)
     attend = group.attend_set.get(id=detail_id)
+    membership = group.membership_set.get(person=request.user)
 
     if request.method == 'POST':
         form = AttendConfirmForm(request.POST)
@@ -59,7 +60,7 @@ def attend_detail(request, group_id, detail_id):
         # 중복 출석 방지
         confirm_value = attend.attendconfirm_set.filter(
             attend_user=request.user.nickname,
-            attend_check='결석'
+            attend_check='출석 정보 없음'
         )
 
         if confirm_value:
@@ -84,6 +85,8 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.sub_time = sub_time
                         attending_member.attend_check = '출석'
                         attending_member.save()
+                        membership.admit_attend += 1    # ㅇㅈ하나 추가
+                        membership.save()
                         messages.success(request, '성공적으로 출석했습니다!')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
 
@@ -92,6 +95,8 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.sub_time = sub_time
                         attending_member.attend_check = '지각'
                         attending_member.save()
+                        membership.late_attend += 1    # 지각 횟수 한번 추가
+                        membership.save()
                         messages.success(request, '지각입니다ㅜㅜ')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
 
@@ -107,7 +112,8 @@ def attend_detail(request, group_id, detail_id):
     else:
         instances_attend = attend.attendconfirm_set.filter(attend_check='출석').order_by('arrive_time')
         instances_late = attend.attendconfirm_set.filter(attend_check='지각').order_by('arrive_time')
-        instances_none = attend.attendconfirm_set.filter(attend_check='결석')
+        instances_none = attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
+        instances_absence = attend.attendconfirm_set.filter(attend_check='결석')
         form = AttendConfirmForm()
         context = {
             'group': group,
@@ -115,7 +121,8 @@ def attend_detail(request, group_id, detail_id):
             'form': form,
             'instances_attend': instances_attend,
             'instances_late': instances_late,
-            'instances_none': instances_none
+            'instances_none': instances_none,
+            'instances_absence': instances_absence,
         }
         return render(request, 'attendance/attend_detail.html', context)
 
@@ -155,7 +162,7 @@ def attend_new(request, group_id):
             for member in group_members:
                 new_attend.attendconfirm_set.create(
                     attend_user=member.person.nickname,
-                    attend_check='결석'
+                    attend_check='출석 정보 없음'
                 )
 
         return redirect(resolve_url('attendance:attend_list', group_id=group.id))

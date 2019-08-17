@@ -11,14 +11,13 @@ class Group(models.Model):
     group_code = models.CharField(max_length=20)
     invitation_url = models.CharField(max_length=20, unique=True, default=uuid.uuid1)
 
-    group_bio = models.CharField(max_length=300, blank=True, null=True)
-    group_goal = models.CharField(max_length=300, blank=True, null=True)
+    group_bio = models.CharField(max_length=300, blank=True, null=True, default='그룹 설정에서 수정하세요')
+    group_goal = models.CharField(max_length=300, blank=True, null=True, default='그룹 설정에서 수정하세요')
 
-    group_rule = models.CharField(max_length=600, blank=True, null=True)
+    group_rule = models.CharField(max_length=600, blank=True, null=True, default='그룹 설정에서 수정하세요')
     late_penalty = models.CharField(max_length=10, default="0")
     abscence_penalty = models.CharField(max_length=10, default="0")
     notsubmit_penalty = models.CharField(max_length=10, default="0")
-
     group_member = models.ManyToManyField(StudyUser, through='Membership')
 
     def __str__(self):
@@ -48,13 +47,15 @@ class Membership(models.Model):
     total_admit = models.IntegerField(default=0, verbose_name='인정 총합')
     total_penalty = models.IntegerField(default=0, verbose_name='벌금 총합')
     # 출석 처리 필드
+    penalty_attend = models.IntegerField(default=0, verbose_name='출석 벌금 총합')
     noshow_attend = models.IntegerField(default=0, verbose_name='출석 결석 횟수')
     late_attend = models.IntegerField(default=0, verbose_name='출석 지각 횟수')
     admit_attend = models.IntegerField(default=0, verbose_name='출석 인정')
     # 과제 처리 필드
+    penalty_assign = models.IntegerField(default=0, verbose_name='과제 벌금 총합')
     noshow_assign = models.IntegerField(default=0, verbose_name='과제 미제출 횟수')
     admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
-    rank = models.IntegerField(default=0, null=True, verbose_name='과제 인정')
+    rank = models.IntegerField(default=0, null=True, verbose_name='등수')
 
     phone_number_open = models.BooleanField(default = False)
     bio_open = models.BooleanField(default= False)
@@ -106,3 +107,8 @@ class Membership(models.Model):
     #         return True
     #     else :
     #         False
+
+
+class UpdateHistory(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(null=True, verbose_name='업데이트 기준')
