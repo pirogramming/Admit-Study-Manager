@@ -113,8 +113,10 @@ def group_detail(request, id):
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     usermembership = Membership.objects.get(group=group, person=user)
+
     memberships = Membership.objects.filter(group=group).order_by('-total_admit')
-    penalty_list = memberships.order_by('-total_penalty')
+    penalty_list = Membership.objects.filter(group=group).order_by('-total_penalty')
+
     latest_update = UpdateHistory.objects.filter(group=group).order_by('created_at').last()
     attend_posts = group.attend_set.all().order_by('-pk')[:3]
     notice_posts = group.notice_set.all().order_by('-pk')[:3]
@@ -158,16 +160,18 @@ def group_update(request, group_id):
                 non_submit.save(update_fields=['noshow_assign'])
 
     # 결석 반영
-    attends = group.attend_set.filter(attend_status='출석시간만료', attend_data_checked=False)
+    attends = group.attend_set.filter(attend_status='출석 시간 만료', attend_data_checked=False)
     for attend in attends:
-        instances = attend.attendconfirm_set.filter(attend_check='없음')
+        instances = attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
         for instance in instances:
             instance.attend_check = '결석'
             instance.save(update_fields=['attend_check'])
 
             noshow_user = instance.attend_user
-            noshow = StudyUser.objects.get(nickname=noshow_user)
-            noshow_membership = group.membership_set.get(person=noshow.username)
+            absense_instance = StudyUser.objects.get(nickname=noshow_user)
+
+            absense_user = absense_instance.username
+            noshow_membership = group.membership_set.get(person=absense_user)
 
             noshow_membership.noshow_attend += 1
             noshow_membership.save(update_fields=['noshow_attend'])
@@ -176,13 +180,12 @@ def group_update(request, group_id):
     for membership in memberships:
         penalty_attend = membership.late_attend * int(group.late_penalty) + \
                          membership.noshow_attend * int(group.abscence_penalty)
-        penalty_assign = int(group.abscence_penalty) * membership.noshow_attend
+        penalty_assign = int(group.abscence_penalty) * membership.noshow_assign
 
         membership.penalty_attend = penalty_attend
         membership.penalty_assign = penalty_assign
         membership.total_penalty = penalty_attend + penalty_assign
         membership.save()
-
 
     # 업데이트 기록 저장
     UpdateHistory.objects.create(group=group, created_at=datetime.now())

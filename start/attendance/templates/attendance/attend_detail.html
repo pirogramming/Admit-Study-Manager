@@ -86,8 +86,9 @@
                             {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                         </div>
                     {% endfor %}
-                    {% if instsnces_absence %}
-                        {% for instance in instance_absence %}
+
+                    {% if instances_absence %}
+                        {% for instance in instances_absence %}
                             <div>
                                 {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                             </div>
