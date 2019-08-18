@@ -180,7 +180,16 @@ def group_update(request, group_id):
         attend.attend_data_checked = True
         attend.save(update_fields=['attend_data_checked'])
 
-    # 벌금 합계
+    # 업데이트 기록 저장
+    UpdateHistory.objects.create(group=group, created_at=datetime.now())
+
+    # 벌금 산출 함수로 넘어가기
+    return redirect(resolve_url('study:penalty', group.id))
+
+
+def penalty(request, id):
+    group = Group.objects.get(id=id)
+    memberships = Membership.objects.filter(group=group)
     for membership in memberships:
         penalty_attend = membership.late_attend * int(group.late_penalty) + \
                          membership.noshow_attend * int(group.abscence_penalty)
@@ -189,10 +198,8 @@ def group_update(request, group_id):
         membership.penalty_assign = penalty_assign
         membership.total_penalty = penalty_attend + penalty_assign
         membership.save(update_fields=['penalty_attend', 'penalty_assign', 'total_penalty'])
-
-    # 업데이트 기록 저장
-    UpdateHistory.objects.create(group=group, created_at=datetime.now())
     return redirect(resolve_url('study:group_detail', group.id))
+
 
 @login_required
 def group_new(request):
