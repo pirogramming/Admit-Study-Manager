@@ -167,13 +167,10 @@ def group_update(request, group_id):
         for instance in instances:
             instance.attend_check = '결석'
             instance.save(update_fields=['attend_check'])
-
             noshow_user = instance.attend_user
-            absense_instance = StudyUser.objects.get(nickname=noshow_user)
-
-            absense_user = absense_instance.username
-            noshow_membership = group.membership_set.get(person=absense_user)
-
+            absense_user = StudyUser.objects.get(nickname=noshow_user)
+            absense_user_id = absense_user.username
+            noshow_membership = group.membership_set.get(person=absense_user_id)
             noshow_membership.noshow_attend += 1
             noshow_membership.save(update_fields=['noshow_attend'])
 
@@ -186,7 +183,7 @@ def group_update(request, group_id):
         membership.penalty_attend = penalty_attend
         membership.penalty_assign = penalty_assign
         membership.total_penalty = penalty_attend + penalty_assign
-        membership.save()
+        membership.save(update_fields=['penalty_attend', 'penalty_assign', 'total_penalty'])
 
     # 업데이트 기록 저장
     UpdateHistory.objects.create(group=group, created_at=datetime.now())

@@ -90,6 +90,7 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.attend_check = '출석'
                         attending_member.save()
                         membership.admit_attend += 1    # ㅇㅈ하나 추가
+                        membership.total_admit += 1
                         membership.save()
                         messages.success(request, '성공적으로 출석했습니다!')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
