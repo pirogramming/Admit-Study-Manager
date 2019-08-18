@@ -1,5 +1,6 @@
 from django.db import models
 from study.models import Group
+from accounts.models import StudyUser
 
 
 class Attend(models.Model):     # 모델폼으로 구현
@@ -27,6 +28,7 @@ class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현
         ('결석', '결석')
     ]
     attend = models.ForeignKey(Attend, on_delete=models.CASCADE)
+    person = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
     attend_user = models.CharField(max_length=20, verbose_name='출석 닉네임')
     arrive_time = models.DateTimeField(null=True, blank=True, verbose_name='도착 시간')
     sub_time = models.IntegerField(null=True, blank=True, verbose_name='시간 차이')

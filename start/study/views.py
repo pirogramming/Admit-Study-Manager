@@ -1,14 +1,12 @@
 from datetime import datetime
 import functools
 from random import randint
-
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
-
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
-
 from assignment.models import Assignment, Done
+from attendance.views import attend_status_function
 from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership, UpdateHistory
 from django.contrib import messages
@@ -123,6 +121,15 @@ def group_detail(request, id):
     notice_posts = group.notice_set.all().order_by('-pk')[:3]
     assign_posts = group.assignment_set.all().order_by('-pk')[:3]
 
+    for post in attend_posts:
+        post.attend_status = attend_status_function(
+            datetime.now(),
+            post.init_datetime,
+            post.gather_datetime,
+            post.expired_datetime
+        )
+        post.save(update_fields=['attend_status'])
+
     context = {
         'membership_manager': membership_manager,
         'membership_staff': membership_staff,
@@ -145,41 +152,39 @@ def group_update(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     memberships = Membership.objects.filter(group=group).order_by('-total_admit')
     members = [x.person for x in memberships]
-    # 그룹 맴버들의 모든 맴버십, 그리고 그 안에 포함된 아이디를 가져옴
 
-    # 과제 미제출 반영
+    # 과제 미제출 처리
     assignments = Assignment.objects.filter(done_checked=False, group=group, due_date__lte=datetime.now())
     for assignment in assignments:
         dones = Done.objects.filter(assignment=assignment)
-        submitters_id = [x.author.id for x in dones]
+        submitters = [x.author for x in dones]
         assignment.done_checked = True
         assignment.save(update_fields=['done_checked'])
         for member in members:
-            if member.id not in submitters_id:
-                non_submit = memberships.get(person=member, group=group)
-                non_submit.noshow_assign += 1
-                non_submit.save(update_fields=['noshow_assign'])
+            if member not in submitters:
+                non_submit = memberships.get(person=member)
+                non_submit.noshow_assign = non_submit.noshow_assign + 1
+                non_submit.save()
 
-    # 결석 반영
+    # 결석 처리
+
     attends = group.attend_set.filter(attend_status='출석 시간 만료', attend_data_checked=False)
     for attend in attends:
         instances = attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
         for instance in instances:
             instance.attend_check = '결석'
             instance.save(update_fields=['attend_check'])
-            noshow_user = instance.attend_user
-            absense_user = StudyUser.objects.get(nickname=noshow_user)
-            absense_user_id = absense_user.username
-            noshow_membership = group.membership_set.get(person=absense_user_id)
-            noshow_membership.noshow_attend += 1
-            noshow_membership.save(update_fields=['noshow_attend'])
+            absense_membership = group.membership_set.get(person=instance.person)
+            absense_membership.noshow_attend += 1
+            absense_membership.save(update_fields=['noshow_attend'])
+        attend.attend_data_checked = True
+        attend.save(update_fields=['attend_data_checked'])
 
-    # 총 벌금 산출/저장
+    # 벌금 합계
     for membership in memberships:
         penalty_attend = membership.late_attend * int(group.late_penalty) + \
                          membership.noshow_attend * int(group.abscence_penalty)
-        penalty_assign = int(group.abscence_penalty) * membership.noshow_assign
-
+        penalty_assign = int(group.notsubmit_penalty) * membership.noshow_assign
         membership.penalty_attend = penalty_attend
         membership.penalty_assign = penalty_assign
         membership.total_penalty = penalty_attend + penalty_assign
