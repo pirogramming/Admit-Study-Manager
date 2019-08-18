@@ -111,7 +111,7 @@
     <hr/>
 
     <div>
-        <h4>스터디 공지</h4>
+        <h4><a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a></h4>
         <div>
             {% for notice_post in notice_posts %}
                 <br/>
@@ -127,7 +127,7 @@
     <hr/>
 
     <div>
-        <h4>출석</h4>
+        <h4><a href="{% url 'attendance:attend_list' group.id %}">출석하기</a></h4>
         <div>
             {% for attend_post in attend_posts %}
                 <br/>
@@ -136,6 +136,7 @@
                         <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
                     </div>
                     <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
+                    <div>출석 만료 시간 : {{ attend_post.expired_datetime }}</div>
                 </div>
                 <br/>
             {% endfor %}
@@ -144,12 +145,12 @@
     <hr/>
 
     <div>
-        <h4>과제</h4>
+        <h4><a href="{% url 'assignment:assignment_list' group.id %}">과제 인증하기</a></h4>
         <div>
             {% for assign_post in assign_posts %}
                 <br/>
                 <div>
-                    <div><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assign_post.title }}</a></div>
+                    <div><a href="{% url "assignment:assignment_detail" assign_post.id %}">{{ assign_post.title }}</a></div>
                     <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
                 </div>
                 <br/>

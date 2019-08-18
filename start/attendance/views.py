@@ -56,6 +56,7 @@ def attend_detail(request, group_id, detail_id):
 
     attend = group.attend_set.get(id=detail_id)
     membership = group.membership_set.get(person=request.user)
+    posts = group.attend_set.all().order_by('-pk')[:5]
 
     if request.method == 'POST':
         form = AttendConfirmForm(request.POST)
@@ -120,6 +121,7 @@ def attend_detail(request, group_id, detail_id):
         instances_absence = attend.attendconfirm_set.filter(attend_check='결석')
         form = AttendConfirmForm()
         context = {
+            'posts': posts,
             'group': group,
             'usermembership':usermembership,
             'attend': attend,

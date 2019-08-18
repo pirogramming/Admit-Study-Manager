@@ -119,7 +119,7 @@ def group_detail(request, id):
     latest_update = UpdateHistory.objects.filter(group=group).order_by('created_at').last()
     attend_posts = group.attend_set.all().order_by('-pk')[:3]
     notice_posts = group.notice_set.all().order_by('-pk')[:3]
-    assign_posts = group.assignment_set.all().order_by('-pk')[:3]
+    assign_posts = group.assignment_set.filter(group=group).order_by('-pk')[:3]
 
     for post in attend_posts:
         post.attend_status = attend_status_function(
@@ -141,7 +141,7 @@ def group_detail(request, id):
         'latest_update': latest_update,
         'attend_posts': attend_posts,
         'notice_posts': notice_posts,
-        'assign posts': assign_posts
+        'assign_posts': assign_posts
     }
 
     return render(request, 'study/group_detail.html', context)
