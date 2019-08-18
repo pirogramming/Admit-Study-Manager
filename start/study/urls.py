@@ -10,7 +10,6 @@ urlpatterns = [
     path('new/', views.group_new, name='group_new'),
     path('<int:id>/', views.group_detail, name='group_detail'),
     path('<int:id>/update', views.group_update, name='group_update'),
-    path('<int:id>/penalty', views.penalty, name='penalty'),
     path('<int:id>/settings_mn', views.group_settings_mn, name='group_settings_mn'),
     path('<int:id>/settings_stf', views.group_settings_stf, name='group_settings_stf'),
     path('<int:id>/mysettings', views.group_mysettings, name='group_mysettings'),

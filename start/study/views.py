@@ -1,6 +1,8 @@
 from datetime import datetime
 import functools
 from random import randint
+
+from django.db.models import F
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from accounts.forms import LoginForm
@@ -180,25 +182,16 @@ def group_update(request, group_id):
         attend.attend_data_checked = True
         attend.save(update_fields=['attend_data_checked'])
 
+    # 벌금 산출
+    memberships.update(penalty_attend= F('late_attend') * int(group.late_penalty) + \
+                         F('noshow_attend') * int(group.abscence_penalty),
+                          penalty_assign=F('noshow_assign')*int(group.notsubmit_penalty))
+    memberships.update(total_penalty=F('penalty_attend')+F('penalty_assign'))
+
     # 업데이트 기록 저장
     UpdateHistory.objects.create(group=group, created_at=datetime.now())
-
-    # 벌금 산출 함수로 넘어가기
-    return redirect(resolve_url('study:penalty', group.id))
-
-
-def penalty(request, id):
-    group = Group.objects.get(id=id)
-    memberships = Membership.objects.filter(group=group)
-    for membership in memberships:
-        penalty_attend = membership.late_attend * int(group.late_penalty) + \
-                         membership.noshow_attend * int(group.abscence_penalty)
-        penalty_assign = int(group.notsubmit_penalty) * membership.noshow_assign
-        membership.penalty_attend = penalty_attend
-        membership.penalty_assign = penalty_assign
-        membership.total_penalty = penalty_attend + penalty_assign
-        membership.save(update_fields=['penalty_attend', 'penalty_assign', 'total_penalty'])
     return redirect(resolve_url('study:group_detail', group.id))
+
 
 
 @login_required
