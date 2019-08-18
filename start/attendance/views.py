@@ -5,7 +5,6 @@ from study.models import Group, Membership
 from datetime import timedelta, datetime, time
 from attendance.models import Attend
 from study.models import Membership
-from study.views import group_required, mn_stf_required
 
 def sub_timedelta_function(time_delta):
     if time_delta.days == -1:
@@ -57,6 +56,7 @@ def attend_detail(request, group_id, detail_id):
 
     attend = group.attend_set.get(id=detail_id)
     membership = group.membership_set.get(person=request.user)
+    posts = group.attend_set.all().order_by('-pk')[:5]
 
     if request.method == 'POST':
         form = AttendConfirmForm(request.POST)
@@ -90,6 +90,7 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.attend_check = '출석'
                         attending_member.save()
                         membership.admit_attend += 1    # ㅇㅈ하나 추가
+                        membership.total_admit += 1
                         membership.save()
                         messages.success(request, '성공적으로 출석했습니다!')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
@@ -120,6 +121,7 @@ def attend_detail(request, group_id, detail_id):
         instances_absence = attend.attendconfirm_set.filter(attend_check='결석')
         form = AttendConfirmForm()
         context = {
+            'posts': posts,
             'group': group,
             'usermembership':usermembership,
             'attend': attend,
@@ -169,6 +171,7 @@ def attend_new(request, group_id):
 
             for member in group_members:
                 new_attend.attendconfirm_set.create(
+                    person=member.person,
                     attend_user=member.person.nickname,
                     attend_check='출석 정보 없음'
                 )

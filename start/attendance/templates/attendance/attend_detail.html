@@ -2,7 +2,7 @@
 
 {% block content %}
     <div>
-        <h2>{{ attend.title }}출석 체크하기</h2>
+        <h2>{{ attend.title }} 출석 체크하기</h2><br/>
         <div> {# 출석 띄우기 #}
             <div>
                 <h3>출석 정보</h3>
@@ -63,43 +63,74 @@
                         {% endfor %}
                     {% endif %}
                 </div>
-
+            </div>
+            <div>
+                {% if instances_late %}
+                    <div><strong>지각한자</strong></div>
+                    {% for instance in instances_late %}
+                        <div>
+                            {{ instance.attend_user }} | {{ instance.arrive_time }} | <p
+                                style="color: orange">{{ instance.sub_time }}분 지각</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div>
+                <div><strong>출석하지 않은 자들</strong></div>
                 <div>
-                    {% if instances_late %}
-                        <div><strong>지각한자</strong></div>
-                        {% for instance in instances_late %}
-                            <div>
-                                {{ instance.attend_user }} | {{ instance.arrive_time }} | <p
-                                    style="color: orange">{{ instance.sub_time }}분 지각</p>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
+                    <small>사정이 있다면 스터디장에게 말하기!</small>
+                    <br/>
+                    <small>출석 만료 시간이 지나면 결석으로 처리됩니다</small>
                 </div>
-                <div>
-                    <div><strong>출석하지 않은 자들</strong></div>
+                {% for instance in instances_none %}
                     <div>
-                        <small>사정이 있다면 스터디장에게 말하기!</small><br/>
-                        <small>출석 만료 시간이 지나면 결석으로 처리됩니다</small>
+                        {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                     </div>
-                    {% for instance in instances_none %}
+                {% endfor %}
+
+                {% if instances_absence %}
+                    {% for instance in instances_absence %}
                         <div>
                             {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                         </div>
                     {% endfor %}
-                    {% if instsnces_absence %}
-                        {% for instance in instance_absence %}
-                            <div>
-                                {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
-                <div>
-                    <a href="{% url "attendance:attend_edit" attend.id %}" class="btn btn-secondary">출석 수정하기</a>
-                    <a href="{% url "attendance:attend_delete" attend.id %}" class="btn btn-secondary">출석 삭제하기</a>
-                    {# 권한 한꺼번에 설정하는게 좋을거 같음 #}
-                </div>
+                {% endif %}
             </div>
+            <div>
+                <a href="{% url "attendance:attend_edit" attend.id %}" class="btn btn-secondary">출석 수정하기</a>
+                <a href="{% url "attendance:attend_delete" attend.id %}" class="btn btn-secondary">출석 삭제하기</a>
+                {# 권한 한꺼번에 설정하는게 좋을거 같음 #}
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div>
+        <div>
+            <h2>출석 내역 확인</h2>
+        </div>
+        <div>
+            <p>최근 5번 모임의 출석 내역을 확인 가능합니다</p>
+        </div>
+        <div>
+            {% for post in posts %}
+                <br/>
+                <div>
+                    <ul>
+                        <li><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></li>
+                        <li>출석 기한 : {{ post.init_datetime }}부터 {{ post.expired_datetime }}까지 출석 가능</li>
+                        <li>출석 가능 여부 : {{ post.attend_status }}</li>
+                    </ul>
+                </div>
+                <hr/>
+            {% endfor %}
+        </div>
+        <div>
+            <a href="{% url 'attendance:attend_new' group.id %}">출석 만들기(방장기능)</a>
+        </div>
+        <div>
+            <a href="{% url 'study:group_detail' group.id %}">스터디 홈으로</a>
         </div>
     </div>
 {% endblock %}
