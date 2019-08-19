@@ -2,6 +2,12 @@
 
 {% block content %}
 
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+})
+    </script>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <style>
@@ -24,21 +30,51 @@
 
     <div>
         <h4>구성원</h4>
-        <ol>
+        <ul style="list-style: none;">
             {% for member in membership_manager %}
-                <li style="color:dodgerblue;">{{ member.person.username }}(관리자)</li>
+                <li style="color:dodgerblue;">{{ member.person.nickname }}(관리자)</li>
                 <a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a>
             {% endfor %}
             {% for member in membership_staff %}
-                <li style="color:deepskyblue;">{{ member.person.username }}(스탭)</li>
+                <li style="color:deepskyblue;">{{ member.person.nickname }}(스탭)</li>
                 <a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a>
             {% endfor %}
             {% for member in membership_member %}
-                <li>{{ member.person.username }}</li>
+                <li>{{ member.person.nickname }}</li>
                 <a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a>
             {% endfor %}
-        </ol>
+            <li>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#invlinkModal">
+                +
+                </button>
+            </li>
+        </ul>
     </div>
+
+
+<div class="modal fade" id="invlinkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">링크로 새 멤버 초대하기</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>다른 회원이 링크를 통해 접속하면 그룹에 가입할 수 있습니다.
+        </p>
+        <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link"
+               readonly/>
+        <button onclick="myFunction()">초대 링크 복사</button>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
     <hr/>
 
     <div>

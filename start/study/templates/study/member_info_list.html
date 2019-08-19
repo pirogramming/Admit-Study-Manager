@@ -9,7 +9,7 @@
     <div class="card" style="width: 18rem;">
         <ul>
             {% if member.person.img_profile %}
-            <li><br/><img src="{{ user.img_profile.url }}" width="10%" height="10%"/></li>
+            <li><br/><img src="{{ member.person.img_profile.url }}" width="10%" height="10%"/></li>
             {% else %}
             <li><br/><img src="{% static 'img/anonym.jpg' %}" width="10%" height="10%"/></li>
             {% endif %}

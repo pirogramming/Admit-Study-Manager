@@ -9,6 +9,8 @@ urlpatterns = [
     path('mystudy/', views.group_mystudy, name='mystudy'),
     path('new/', views.group_new, name='group_new'),
     path('<int:id>/', views.group_detail, name='group_detail'),
+    # group_detailboard 테스트 중
+    path('<int:id>/board', views.group_detailboard, name='group_detailboard'),
     path('<int:id>/update', views.group_update, name='group_update'),
     path('<int:id>/settings_mn', views.group_settings_mn, name='group_settings_mn'),
     path('<int:id>/settings_stf', views.group_settings_stf, name='group_settings_stf'),
