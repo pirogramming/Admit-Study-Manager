@@ -68,7 +68,7 @@
         <li class="tab col s3"><a href="#test1">그룹 프로필</a></li>
         <li class="tab col s3"><a href="#test2">그룹 규칙</a></li>
         <li class="tab col s3"><a href="#test3">권한 설정</a></li>
-        <li class="tab col s3"><a href="#test4">멤버 탈퇴 관리</a></li>
+        <li class="tab col s3"><a href="#test4">멤버 탈퇴 및 그룹 삭제</a></li>
       </ul>
     </div>
 
@@ -221,7 +221,9 @@
         <form action="" method="POST">
     {% csrf_token %}
 
-    <h4>멤버 탈퇴 관리</h4>
+    <h4>멤버 탈퇴 및 그룹 삭제</h4>
+
+            <h5>멤버 탈퇴 관리</h5>
             <ul>
 <li>관리자</li>
                 {% for member in membership_manager %}
@@ -249,6 +251,21 @@
 
     </ul>
 </form>
+
+        <h5>그룹 삭제</h5>
+            {% if membership_staff or membership_member %}
+            <p>그룹을 삭제하려면 먼저 그룹 스탭과 멤버를 모두 탈퇴시켜 주세요.</p>
+            <button type="submit" disabled>그룹 삭제</button>
+            {% else %}
+            <form action="" method="POST">
+            <input type="hidden" name="dltGroup" value="dlt">
+                <button type="submit" onclick="return confirm('그룹을 삭제하면 그룹과 관련된 모든 정보가 삭제되어' +
+     '정보를 다시 열람할 수 없습니다. ' +
+      '정말 삭제하시겠습니까?');">그룹 삭제</button>
+            </input>
+            </form>
+            {% endif %}
+
     </div>
   </div>
 

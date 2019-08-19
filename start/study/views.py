@@ -7,11 +7,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
-from assignment.models import Assignment, Done
+from assignment.models import Assignment, Done, Injung_history
 from attendance.views import attend_status_function
 
 from attendance.forms import AttendConfirmForm
-
 from attendance.views import sub_timedelta_function
 
 from assignment.forms import DoneForm
@@ -557,6 +556,12 @@ def group_settings_mn(request, id):
             obj.save()
             return redirect(group)
 
+        elif request.POST.get('dltGroup', ''):
+            Membership.objects.filter(group=group).delete()
+            #관련 notice, attendance, assignment 모두 지우기
+            group.delete()
+            return redirect('home')
+
         else:
             return render(request, 'study/group_settings_mn.html', ctx)
 
@@ -672,5 +677,38 @@ def member_info_list(request, id):
         'memberships': memberships,
         'usermembership':usermembership,
     })
+
+
+
+def injung_plus(request, done_id):
+    done = get_object_or_404(Done, id=done_id)
+    original_author = Membership.objects.get(person=done.author, group=done.assignment.group)
+    injungs = Injung_history.objects.filter(done=done)
+    authors = [x.author for x in injungs]
+
+    if done.author == request.user:
+        messages.warning(request, "너무 잘하시긴 했어요.. 그렇지만 자신의 과제에는 인정을 누를 수 없습니다.")
+        return redirect(done)
+    elif request.user in authors:
+        when = injungs.get(author=request.user).created_at
+        messages.warning(request, "이미 {}에 인정하셨습니다!".format(when))
+        return redirect(done)
+    else:
+        done.injung += 1
+        original_author.admit_assign += 1
+        original_author.total_admit += 1
+        done.save()
+        original_author.save()
+        new_injung = Injung_history.objects.create(author=request.user, done=done,)
+
+        memberships = Membership.objects.filter(group=done.assignment.group)
+        for m in memberships:
+            m.rank = 1
+            for mc in memberships:
+                if m.total_admit < mc.total_admit:
+                    m.rank += 1
+            m.save()
+
+        return redirect(done)
 
 
