@@ -3,6 +3,7 @@
 
 {% block content %}
 
+<h4>모임 공지</h4>
 <table class="table table-hover table-bordered">
     <thead>
     <tr>
@@ -19,5 +20,36 @@
     {% endfor %}
     </tbody>
 </table>
+
+<h4>기타 공지</h4>
+<table class="table table-hover table-bordered">
+    <thead>
+    <tr>
+        <th>title</th>
+        <th>content</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for homework in homework_list %}
+    <tr>
+        <td><a href="{% url "studypost:homework_detail" homework.id %}">{{ homework.title }}</a></td>
+        <td>{{ homework.content }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+<div class="dropdown mt-3">
+  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    공지 올리기
+  </a>
+
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <a class="dropdown-item" href="{% url "studypost:notice_new" group.id %}">모임 공지</a>
+    <a class="dropdown-item" href="{% url "studypost:homework_new" group.id %}">기타 공지</a>
+  </div>
+</div>
+
 
 {% endblock %}

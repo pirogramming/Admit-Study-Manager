@@ -46,20 +46,25 @@ def notice_new(request, id):
 
 def notice_detail(request, id):
     notice = get_object_or_404(Notice, id=id)
+    group = notice.group
     lng, lat = map(float, notice.lnglat.split(','))
     return render(request, 'studypost/notice_detail.html', {
         'notice': notice,
         'lng': lng,
         'lat': lat,
+        'group': group,
     })
 
 
 def notice_list(request, id):
     group = Group.objects.get(id=id)
-    ns = Notice.objects.filter(group=group)
+    ns = Notice.objects.filter(group=group).order_by('-id')[:5]
+    hs = Homework.objects.filter(group=group).order_by('-id')[:5]
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
+        'homework_list': hs,
+        'group': group,
     })
 
 
@@ -114,9 +119,11 @@ def homework_new(request, id):
 
 def homework_detail(request, id):
     homework = get_object_or_404(Homework, id=id)
+    group = homework.group
 
     return render(request, 'studypost/homework_detail.html', {
         'homework': homework,
+        'group': group,
     })
 
 

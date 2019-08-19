@@ -31,6 +31,7 @@
     <a href="{% url "studypost:notice_edit" notice.id %}" class="btn btn-secondary">수정</a>
     <a href="{% url "studypost:notice_delete" notice.id %}" class="btn btn-secondary">삭제</a>
 {% endif %}
+<a href="{% url 'studypost:notice_list' group.id %}" class="btn btn-primary">글목록</a>
 
 <script>
     var base_position = new naver.maps.LatLng('{{ lat }}','{{ lng }}');
