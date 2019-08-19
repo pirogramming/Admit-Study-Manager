@@ -533,8 +533,8 @@ def group_base(request, id):
     return render(request, 'group_base.html', ctx)
 
 def member_info(request, id):
-    group = get_object_or_404(Group, id=id)
     membership = get_object_or_404(Membership, id=id)
+    group = membership.group
     user = membership.person
 
     return render(request, 'study/member_info.html', {
