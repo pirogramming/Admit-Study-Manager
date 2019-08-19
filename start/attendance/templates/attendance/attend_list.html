@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'group_base.html' %}
 
 
 {% block content %}
@@ -18,12 +18,15 @@
                         <li>출석 기한 : {{ post.init_datetime }}부터 {{ post.expired_datetime }}까지 출석 가능</li>
                         <li>출석 가능 여부 : {{ post.attend_status }}</li>
                     </ul>
-                </div><hr/>
+                </div>
+                <hr/>
             {% endfor %}
         </div>
         <div>
             <a href="{% url 'attendance:attend_new' group.id %}">출석 만들기(방장기능)</a>
         </div>
+        <div>
+            <a href="{% url 'study:group_detail' group.id %}">스터디 홈으로</a>
+        </div>
     </div>
-
 {% endblock %}

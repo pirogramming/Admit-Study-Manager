@@ -6,7 +6,6 @@ from datetime import timedelta, datetime, time
 from attendance.models import Attend
 from study.models import Membership
 
-
 def sub_timedelta_function(time_delta):
     if time_delta.days == -1:
         return (86400 - time_delta.seconds) // 60
@@ -36,6 +35,8 @@ def attend_status_function(now_time, init_time, state_time, expired_time):
 
 def attend_list(request, group_id):  # 리스트와 디테일 템플릿 거의 동일하게
     group = get_object_or_404(Group, id=group_id)
+    usermembership = Membership.objects.get(group=group, person=request.user)
+
     posts = group.attend_set.all().order_by('-pk')[:5]
     for post in posts:
         post.attend_status = attend_status_function(
@@ -45,14 +46,17 @@ def attend_list(request, group_id):  # 리스트와 디테일 템플릿 거의 �
             post.expired_datetime
         )
         post.save()
-    context = {'posts': posts, 'group': group}
+    context = {'posts': posts, 'group': group, 'usermembership':usermembership,}
     return render(request, 'attendance/attend_list.html', context)
 
 
 def attend_detail(request, group_id, detail_id):
     group = get_object_or_404(Group, id=group_id)
+    usermembership = Membership.objects.get(group=group, person=request.user)
+
     attend = group.attend_set.get(id=detail_id)
     membership = group.membership_set.get(person=request.user)
+    posts = group.attend_set.all().order_by('-pk')[:5]
 
     if request.method == 'POST':
         form = AttendConfirmForm(request.POST)
@@ -86,6 +90,7 @@ def attend_detail(request, group_id, detail_id):
                         attending_member.attend_check = '출석'
                         attending_member.save()
                         membership.admit_attend += 1    # ㅇㅈ하나 추가
+                        membership.total_admit += 1
                         membership.save()
                         messages.success(request, '성공적으로 출석했습니다!')
                         return redirect(resolve_url('attendance:attend_detail', group.id, attend.id))
@@ -116,7 +121,9 @@ def attend_detail(request, group_id, detail_id):
         instances_absence = attend.attendconfirm_set.filter(attend_check='결석')
         form = AttendConfirmForm()
         context = {
+            'posts': posts,
             'group': group,
+            'usermembership':usermembership,
             'attend': attend,
             'form': form,
             'instances_attend': instances_attend,
@@ -127,8 +134,11 @@ def attend_detail(request, group_id, detail_id):
         return render(request, 'attendance/attend_detail.html', context)
 
 
+
 def attend_new(request, group_id):
     group = get_object_or_404(Group, id=group_id)
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
+    group.membership_set.get(person=request.user)
     group_members = group.membership_set.all()
 
     if request.method == 'POST':
@@ -161,6 +171,7 @@ def attend_new(request, group_id):
 
             for member in group_members:
                 new_attend.attendconfirm_set.create(
+                    person=member.person,
                     attend_user=member.person.nickname,
                     attend_check='출석 정보 없음'
                 )
@@ -169,12 +180,17 @@ def attend_new(request, group_id):
 
     else:
         form = AttendForm()
-        return render(request, 'attendance/attend_new.html', {'form': form})
+        return render(request, 'attendance/attend_new.html', {
+            'group':group,
+            'form': form,
+        'usermembership':usermembership})
+
 
 
 def attend_edit(request, detail_id):
     attend = get_object_or_404(Attend, id=detail_id)
     group = attend.attendance
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
     membership = Membership.objects.get(person=request.user, group=group)
 
     if request.method == 'POST':
@@ -182,13 +198,17 @@ def attend_edit(request, detail_id):
         if form.is_valid():
             attend = form.save()
             return render(request, 'attendance/attend_detail.html', {
+                'group':group,
                 'attend': attend,
                 'membership': membership,
+                'usermembership':usermembership,
             })
     else:
         form = AttendForm(instance=attend)
     return render(request, 'attendance/attend_new.html', {
+        'group':group,
         'form': form,
+        'usermembership':usermembership,
     })
 
 
@@ -196,6 +216,8 @@ def attend_delete(request, detail_id):
         attend = get_object_or_404(Attend, id=detail_id)
         group = attend.attendance
         membership = Membership.objects.get(person=request.user, group=group)
+        usermembership = get_object_or_404(Membership, group=group, person=request.user)
+
         attend.delete()
 
         posts = group.attend_set.all().order_by('-pk')[:5]
@@ -204,5 +226,6 @@ def attend_delete(request, detail_id):
             'group': group,
             'posts': posts,
             'membership': membership,
+            'usermembership':usermembership,
         })
 

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'group_base.html' %}
 
 {% block content %}
 
@@ -55,6 +55,7 @@
         </div>
     </nav>
 
+
     <h1>Group Details </h1>
 
     <div>
@@ -85,19 +86,19 @@
     <hr/>
 
     <div>
-        <h4>그룹정보</h4>
+        <h4>그룹정보</h4><br/>
         <div>
-            <div>{{ group.group_name }} 그룹 소개</div>
+            <div><h5>{{ group.group_name }} 그룹 소개</h5></div>
             <div>{{ group.group_bio }}</div>
-        </div>
+        </div><br/>
         <div>
-            <div>우리의 목표</div>
+            <div><h5>우리의 목표</h5></div>
             <div>{{ group.group_goal }}</div>
-        </div>
+        </div><br/>
         <div>
-            <div>이것만은 꼭 지키자!</div>
+            <div><h5>이것만은 꼭 지키자!</h5></div>
             <div>{{ group.group_rule }}</div>
-        </div>
+        </div><br/>
     </div>
     <hr/>
 
@@ -154,7 +155,7 @@
     <hr/>
 
     <div>
-        <h4>스터디 공지</h4>
+        <h4><a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a></h4>
         <div>
             {% for notice_post in notice_posts %}
                 <br/>
@@ -170,15 +171,16 @@
     <hr/>
 
     <div>
-        <h4>출석</h4>
+        <h4><a href="{% url 'attendance:attend_list' group.id %}">출석하기</a></h4>
         <div>
             {% for attend_post in attend_posts %}
                 <br/>
                 <div>
                     <div>
-                        <a href="{% url 'attendance:attend_detail' group.id attend_post.id %}">{{ attend_post.title }}</a>
+                        <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
                     </div>
                     <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
+                    <div>출석 만료 시간 : {{ attend_post.expired_datetime }}</div>
                 </div>
                 <br/>
             {% endfor %}
@@ -187,13 +189,12 @@
     <hr/>
 
     <div>
-        <h4>과제</h4>
+        <h4><a href="{% url 'assignment:assignment_list' group.id %}">과제 인증하기</a></h4>
         <div>
             {% for assign_post in assign_posts %}
                 <br/>
                 <div>
-                    <div>{{ assignment.index_in_group }}</div>
-                    <div><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></div>
+                    <div><a href="{% url "assignment:assignment_detail" assign_post.id %}">{{ assign_post.title }}</a></div>
                     <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
                 </div>
                 <br/>
@@ -201,6 +202,12 @@
         </div>
     </div>
     <hr/>
+
+    <footer>
+        <div style="background-color: darkslategrey">
+            <p>푸터</br>푸터푸터</p>
+        </div>
+    </footer>
 
     <script>
         function myFunction() {

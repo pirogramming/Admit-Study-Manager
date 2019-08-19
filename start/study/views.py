@@ -2,13 +2,13 @@ from datetime import datetime
 import functools
 from random import randint
 
+from django.db.models import F
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
-
 from accounts.forms import LoginForm
 from accounts.models import StudyUser
-
 from assignment.models import Assignment, Done
+from attendance.views import attend_status_function
 from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership, UpdateHistory
 from django.contrib import messages
@@ -76,6 +76,7 @@ def group_list(request):
     user = request.user
     # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     # group_list = Group.objects.filter(group_member=user)
+
     groups = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
     gs = Group.objects.filter(group_name__in=groups)
     g = request.GET.get('g', '')
@@ -113,12 +114,23 @@ def group_detail(request, id):
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     usermembership = Membership.objects.get(group=group, person=user)
+
     memberships = Membership.objects.filter(group=group).order_by('-total_admit')
-    penalty_list = memberships.order_by('-total_penalty')
+    penalty_list = Membership.objects.filter(group=group).order_by('-total_penalty')
+
     latest_update = UpdateHistory.objects.filter(group=group).order_by('created_at').last()
     attend_posts = group.attend_set.all().order_by('-pk')[:3]
     notice_posts = group.notice_set.all().order_by('-pk')[:3]
-    assign_posts = group.assignment_set.all().order_by('-pk')[:3]
+    assign_posts = group.assignment_set.filter(group=group).order_by('-pk')[:3]
+
+    for post in attend_posts:
+        post.attend_status = attend_status_function(
+            datetime.now(),
+            post.init_datetime,
+            post.gather_datetime,
+            post.expired_datetime
+        )
+        post.save(update_fields=['attend_status'])
 
     context = {
         'membership_manager': membership_manager,
@@ -131,7 +143,7 @@ def group_detail(request, id):
         'latest_update': latest_update,
         'attend_posts': attend_posts,
         'notice_posts': notice_posts,
-        'assign posts': assign_posts
+        'assign_posts': assign_posts
     }
 
     return render(request, 'study/group_detail.html', context)
@@ -142,51 +154,45 @@ def group_update(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     memberships = Membership.objects.filter(group=group).order_by('-total_admit')
     members = [x.person for x in memberships]
-    # 그룹 맴버들의 모든 맴버십, 그리고 그 안에 포함된 아이디를 가져옴
 
-    # 과제 미제출 반영
+    # 과제 미제출 처리
     assignments = Assignment.objects.filter(done_checked=False, group=group, due_date__lte=datetime.now())
     for assignment in assignments:
         dones = Done.objects.filter(assignment=assignment)
-        submitters_id = [x.author.id for x in dones]
+        submitters = [x.author for x in dones]
         assignment.done_checked = True
         assignment.save(update_fields=['done_checked'])
         for member in members:
-            if member.id not in submitters_id:
-                non_submit = memberships.get(person=member, group=group)
-                non_submit.noshow_assign += 1
-                non_submit.save(update_fields=['noshow_assign'])
+            if member not in submitters:
+                non_submit = memberships.get(person=member)
+                non_submit.noshow_assign = non_submit.noshow_assign + 1
+                non_submit.save()
 
-    # 결석 반영
-    attends = group.attend_set.filter(attend_status='출석시간만료', attend_data_checked=False)
+    # 결석 처리
+
+    attends = group.attend_set.filter(attend_status='출석 시간 만료', attend_data_checked=False)
     for attend in attends:
-        instances = attend.attendconfirm_set.filter(attend_check='없음')
+        instances = attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
         for instance in instances:
             instance.attend_check = '결석'
             instance.save(update_fields=['attend_check'])
+            absense_membership = group.membership_set.get(person=instance.person)
+            absense_membership.noshow_attend += 1
+            absense_membership.save(update_fields=['noshow_attend'])
+        attend.attend_data_checked = True
+        attend.save(update_fields=['attend_data_checked'])
 
-            noshow_user = instance.attend_user
-            noshow = StudyUser.objects.get(nickname=noshow_user)
-            noshow_membership = group.membership_set.get(person=noshow.username)
-
-            noshow_membership.noshow_attend += 1
-            noshow_membership.save(update_fields=['noshow_attend'])
-
-    # 총 벌금 산출/저장
-    for membership in memberships:
-        penalty_attend = membership.late_attend * int(group.late_penalty) + \
-                         membership.noshow_attend * int(group.abscence_penalty)
-        penalty_assign = int(group.abscence_penalty) * membership.noshow_attend
-
-        membership.penalty_attend = penalty_attend
-        membership.penalty_assign = penalty_assign
-        membership.total_penalty = penalty_attend + penalty_assign
-        membership.save()
-
+    # 벌금 산출
+    memberships.update(penalty_attend= F('late_attend') * int(group.late_penalty) + \
+                         F('noshow_attend') * int(group.abscence_penalty),
+                          penalty_assign=F('noshow_assign')*int(group.notsubmit_penalty))
+    memberships.update(total_penalty=F('penalty_attend')+F('penalty_assign'))
 
     # 업데이트 기록 저장
     UpdateHistory.objects.create(group=group, created_at=datetime.now())
     return redirect(resolve_url('study:group_detail', group.id))
+
+
 
 @login_required
 def group_new(request):
@@ -517,11 +523,22 @@ def group_settings_stf(request, id):
     return render(request, 'study/group_settings_stf.html', ctx)
 
 
+def group_base(request, id):
+    group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    user = request.user
+    ctx = {
+        'group':group,
+        'user':user,
+    }
+    return render(request, 'group_base.html', ctx)
+
 def member_info(request, id):
     membership = get_object_or_404(Membership, id=id)
+    group = membership.group
     user = membership.person
 
     return render(request, 'study/member_info.html', {
+        'group':group,
         'user': user,
         'membership': membership,
     })
@@ -532,6 +549,7 @@ def member_info_list(request, id):
     memberships = Membership.objects.filter(group=group)
 
     return render(request, 'study/member_info_list.html', {
+        'group':group,
         'memberships': memberships
     })
 
