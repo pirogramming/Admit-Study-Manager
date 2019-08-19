@@ -55,17 +55,19 @@ def notice_new(request, id):
     })
 
 
-@group_required
+
 def notice_detail(request, id):
     notice = get_object_or_404(Notice, id=id)
+    group = notice.group
     lng, lat = map(float, notice.lnglat.split(','))
     return render(request, 'studypost/notice_detail.html', {
         'notice': notice,
         'lng': lng,
         'lat': lat,
+        'group':group,
     })
 
-@group_required
+
 def notice_list(request, id):
     group = get_object_or_404(Group, id=id)
     ns = Notice.objects.filter(group=group)
@@ -75,10 +77,10 @@ def notice_list(request, id):
         'group': group,
     })
 
-@group_required
-@mn_stf_required
+
 def notice_edit(request, id):
     notice = get_object_or_404(Notice, id=id)
+    group = notice.group
 
     if request.method == 'POST':
         form = NoticeForm(request.POST, request.FILES, instance=notice)
@@ -89,11 +91,10 @@ def notice_edit(request, id):
         form = NoticeForm(instance=notice)
     return render(request, 'studypost/notice_new.html', {
         'form': form,
-
+        'group':group,
     })
 
-@group_required
-@mn_stf_required
+
 def notice_delete(request, id):
     notice = get_object_or_404(Notice, id=id)
     group = notice.group
