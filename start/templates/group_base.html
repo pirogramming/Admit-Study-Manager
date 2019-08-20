@@ -42,6 +42,12 @@
     <!--  });-->
     <!--    </script>-->
 
+    <script>
+        $('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+})
+    </script>
+
     <style>
         a {
             text-decoration: None;
@@ -110,11 +116,13 @@
                 <div><h6>이것만은 꼭 지키자!</h6></div>
                 <div>{{ group.group_rule }}</div>
 
+                <hr/>
+
+                <div><h6>현재 멤버 {{ group.count }}명</h6></div>
                 <br/>
-
-
-
             </div>
+
+
             <div>
                 <ul class="list-group">
                     <li class="list-group-item">
@@ -159,6 +167,9 @@
     </div>
 </div>
 
+
 </body>
+
+
 
 </html>
