@@ -49,9 +49,9 @@ def notice_new(request, id):
     else:
         form = NoticeForm()
     return render(request, 'studypost/notice_new.html', {
-        'group':group,
+        'group': group,
         'form': form,
-        'usermembership':usermembership,
+        'usermembership': usermembership,
     })
 
 
@@ -76,6 +76,7 @@ def notice_list(request, id):
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
         'homework_list': hs,
+        'group': group,
     })
 
 
