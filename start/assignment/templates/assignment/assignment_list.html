@@ -13,7 +13,10 @@
 {% block content %}
 <h1>{{ group.group_name }}의 과제 리스트</h1>
 
+    {% if usermembership.is_mn_stf %}
     <button type="button" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    {% endif %}
+
 
     {% if num == 0 %}
         <p>등록된 과제가 없습니다.</p>

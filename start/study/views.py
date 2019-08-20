@@ -399,6 +399,10 @@ def group_register(request, id):
 def group_registerbyurl(request, invitation_url):
     group = Group.objects.get(invitation_url=invitation_url)
     membership = Membership.objects.filter(group=group, status='ACTIVE')
+    membership_manager = Membership.objects.filter(group=group, status='ACTIVE', role='MANAGER')
+    membership_staff = Membership.objects.filter(group=group, status='ACTIVE', role='STAFF')
+    membership_member = Membership.objects.filter(group=group, status='ACTIVE', role='MEMBER')
+
     memberlist = [x.person for x in Membership.objects.filter(group=group)]
     user = request.user
     if request.method == 'POST':
@@ -432,7 +436,10 @@ def group_registerbyurl(request, invitation_url):
         form = LoginForm()
         return render(request, 'study/group_registerbyurl.html', {'group':group,
                                                                   'form':form,
-                                                                  'membership':membership})
+                                                                  'membership':membership,
+                                                                  'membership_manager':membership_manager,
+                                                                  'membership_staff':membership_staff,
+                                                                  'membership_member':membership_member,})
 
 
 def group_mystudy(request):

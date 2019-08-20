@@ -96,11 +96,14 @@
                     {% endfor %}
                 {% endif %}
             </div>
+
+            {% if usermembership.is_mn_stf %}
             <div>
                 <a href="{% url "attendance:attend_edit" attend.id %}" class="btn btn-secondary">출석 수정하기</a>
                 <a href="{% url "attendance:attend_delete" attend.id %}" class="btn btn-secondary">출석 삭제하기</a>
-                {# 권한 한꺼번에 설정하는게 좋을거 같음 #}
+                {# 권한 : 매니저랑 스탭이 접속할때만 버튼 생성됨 #}
             </div>
+            {% endif %}
         </div>
     </div>
 
