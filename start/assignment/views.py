@@ -14,12 +14,14 @@ from study.views import manager_required, mn_stf_required
 def assignment_home(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     usermembership = Membership.objects.get(group=group, person=request.user)
-    assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
-    done = Done.objects.filter(assignment=assignment).order_by('created_at').last()
-    return render(request, 'assignment/assignment_home.html', {
-        'group': group, 'assignment': assignment, 'done': done,
-        'usermembership':usermembership,
-    })
+    assignments = Assignment.objects.filter(group=group).order_by('-created_at')[:5]
+    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')[:5]
+    now = datetime.now()
+
+    ctx = {
+        'group': group, 'usermembership': usermembership, 'assignments': assignments, 'dones': dones, 'now': now,
+    }
+    return render(request, 'assignment/assignment_home.html', ctx)
 
 
 def assignment_list(request, group_id):
