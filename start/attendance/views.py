@@ -1,10 +1,43 @@
+import functools
+
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from attendance.forms import AttendForm, AttendConfirmForm
 from study.models import Group, Membership
 from datetime import timedelta, datetime, time
 from attendance.models import Attend
 from study.models import Membership
+
+
+def group_required(func):
+   @functools.wraps(func)
+   def wrapper(request, **kwargs):
+       group = get_object_or_404(Group, id=kwargs['group_id'])
+       group_name = group.group_name
+       user = request.user
+       usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
+       if request.user.is_authenticated and group_name not in usergroup_list:
+           return render(request, 'study/group_reject.html', {'group_name':group_name})
+           # return HttpResponse("{}그룹 멤버가 아니므로 글을 쓸 수 없습니다.".format(group_name))
+
+       return func(request, **kwargs)
+   return wrapper
+
+
+def mn_stf_required(func):
+    @functools.wraps(func)
+    def wrapper(request, **kwargs):
+        group = get_object_or_404(Group, id=kwargs['group_id'])
+        group_name = group.group_name
+        user = request.user
+        membership = Membership.objects.get(group=group, person=user)
+        if not membership.is_mn_stf or not membership.is_active:
+            # return render(request, 'study/group_reject.html', {'group_name': group_name})
+            return HttpResponse("매니저 권한이 필요합니다.")
+        return func(request, **kwargs)
+    return wrapper
+
 
 def sub_timedelta_function(time_delta):
     if time_delta.days == -1:
@@ -32,7 +65,7 @@ def attend_status_function(now_time, init_time, state_time, expired_time):
         status = '출석 시간 만료'
     return status
 
-
+@group_required
 def attend_list(request, group_id):  # 리스트와 디테일 템플릿 거의 동일하게
     group = get_object_or_404(Group, id=group_id)
     usermembership = Membership.objects.get(group=group, person=request.user)
@@ -49,7 +82,7 @@ def attend_list(request, group_id):  # 리스트와 디테일 템플릿 거의 �
     context = {'posts': posts, 'group': group, 'usermembership':usermembership,}
     return render(request, 'attendance/attend_list.html', context)
 
-
+@group_required
 def attend_detail(request, group_id, detail_id):
     group = get_object_or_404(Group, id=group_id)
     usermembership = Membership.objects.get(group=group, person=request.user)
@@ -134,7 +167,8 @@ def attend_detail(request, group_id, detail_id):
         return render(request, 'attendance/attend_detail.html', context)
 
 
-
+@group_required
+@mn_stf_required
 def attend_new(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     usermembership = get_object_or_404(Membership, group=group, person=request.user)

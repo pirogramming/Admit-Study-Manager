@@ -161,6 +161,8 @@ def group_detailboard(request, id):
     user = request.user
     usermembership = Membership.objects.get(group=group, person=user)
 
+    now = datetime.now()
+
     latest_notice = "공지를 바로 볼 수 있음"
 
     # latest_assignment = "가장 최근 과제 instance"
@@ -246,6 +248,7 @@ def group_detailboard(request, id):
         ctx = {
             'group':group,
             'usermembership':usermembership,
+            'now':now,
             'latest_assignment':latest_assignment,
             'dones':dones,
             'doneform':doneform,

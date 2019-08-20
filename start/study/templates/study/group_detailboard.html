@@ -38,7 +38,7 @@
             <div class="latest_assignment">
                 <div><h3>{{ latest_assignment.title }}</h3></div>
                 <div>
-                        <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if assignment.due_date <= now %}(만료){% endif %}
+                        <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
                 </div>
 
 
@@ -60,12 +60,17 @@
                     </div>
                     {% endfor %}
                 </div>
+
                 {% if not user in authors %}
+                {% if not latest_assignment.due_date <= now %}
                 <div class="인증 col-4 border rounded" style="float: left; text-align: center;">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assModal">
                         내 과제 인증하기
                     </button>
                 </div>
+                {% else %}
+                <p>만료된 과제입니다.</p>
+                {% endif %}
                 {% endif %}
 
             </div>
