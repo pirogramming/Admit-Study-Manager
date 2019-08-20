@@ -26,6 +26,9 @@ class Group(models.Model):
     def get_absolute_url(self):
         return reverse('study:group_detail', args=[self.id])
 
+    def get_members(self):
+        return len(Membership.objects.filter(group=self, status='ACTIVE'))
+
 
 class Membership(models.Model):
     person = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
