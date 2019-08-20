@@ -34,7 +34,7 @@
         {% for done in dones %}
             <table>
                 <td>
-                    <a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}님의 인증</a>
+                    {{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}님의 인증</a>
                     <img src="{{ done.done_img.url }}" height="200"/>
                     <!-- TODO : 인정 버튼! -->
                 </td>
