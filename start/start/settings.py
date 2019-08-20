@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'study',
     'studypost',
     'assignment',
-    'attendance'
+    'attendance',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -110,6 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LANGUAGE_CODE = 'En'
 
