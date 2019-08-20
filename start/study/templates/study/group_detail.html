@@ -10,6 +10,50 @@
         }
     </style>
 
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">{{ group.group_name }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "studypost:notice_list" group.id %}">스터디 공지</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "study:member_info_list" group.id %}">그룹 멤버</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'study:group_update' group.id %}">랭킹 및 벌금 췍</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url "assignment:assignment_home" group.id %}">과제 제출하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내
+                        설정</a>
+                </li>
+                {% if usermembership.is_manager %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'study:group_settings_mn' group.id %}"><i
+                                class="material-icons">settings</i>그룹
+                            설정</a>
+                    </li>
+                {% endif %}
+                {% if usermembership.is_staff %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'study:group_settings_stf' group.id %}"><i
+                                class="material-icons">settings</i>그룹
+                            설정</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
 
 
     <h1>Group Details </h1>

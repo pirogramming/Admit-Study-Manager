@@ -49,9 +49,9 @@ def notice_new(request, id):
     else:
         form = NoticeForm()
     return render(request, 'studypost/notice_new.html', {
-        'group':group,
+        'group': group,
         'form': form,
-        'usermembership':usermembership,
+        'usermembership': usermembership,
     })
 
 
@@ -64,16 +64,18 @@ def notice_detail(request, id):
         'notice': notice,
         'lng': lng,
         'lat': lat,
-        'group':group,
+        'group': group,
     })
 
 
 def notice_list(request, id):
-    group = get_object_or_404(Group, id=id)
-    ns = Notice.objects.filter(group=group)
+    group = Group.objects.get(id=id)
+    ns = Notice.objects.filter(group=group).order_by('-id')[:5]
+    hs = Homework.objects.filter(group=group).order_by('-id')[:5]
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
+        'homework_list': hs,
         'group': group,
     })
 
@@ -147,7 +149,8 @@ def homework_detail(request, id):
     return render(request, 'studypost/homework_detail.html', {
         'group': group,
         'homework': homework,
-        'usermembership':usermembership,
+        'group': group,
+        'usermembership': usermembership,
     })
 
 
