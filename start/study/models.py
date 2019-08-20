@@ -60,10 +60,6 @@ class Membership(models.Model):
     admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
     rank = models.IntegerField(default=0, null=True, verbose_name='등수')
 
-    phone_number_open = models.BooleanField(default = False)
-    bio_open = models.BooleanField(default= False)
-
-
     @property
     def is_manager(self):
         if self.role == 'MANAGER':

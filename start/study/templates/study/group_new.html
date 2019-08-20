@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+<div class="row justify-content-center">
+<div class="col-6" style="text-align: center;">
+    <h5><strong>스터디 만들기</strong></h5>
 <form action="" method="post">
     {% csrf_token %}
     <table>
@@ -9,5 +11,8 @@
     </table>
     <input type="submit">
 </form>
+</div>
+</div>
+
 
 {% endblock %}

@@ -15,6 +15,7 @@ from attendance.views import sub_timedelta_function
 
 from assignment.forms import DoneForm
 from django.urls import reverse
+from django.utils.html import format_html
 
 from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership, UpdateHistory
@@ -330,7 +331,16 @@ def group_new(request):
                         pass
                 group.save()
                 m = Membership.objects.create(person=request.user, group=group, role='MANAGER')
-                messages.success(request, '새 그룹을 만들었습니다')
+
+                message = format_html("<p>새 그룹을 만들었습니다.</p>"
+                                      "<p>스터디 가입용 코드와 초대 링크를 활용하여 새로운 멤버를 초대하고</p>"
+                                      "<p>그룹 설정에서 그룹 프로필과 그룹 규칙을 추가해 보세요.</p>"
+                                      )
+                messages.success(request, message)
+
+                # messages.success(request, '새 그룹을 만들었습니다. \n'
+                #                           '스터디 가입용 코드와 초대 링크를 활용하여 새로운 멤버를 초대하고, \n'
+                #                           '그룹 설정에서 그룹 프로필과 그룹 규칙을 추가해 보세요.')
                 return redirect(group)
             else:
                 messages.error(request, '이미 존재하는 그룹입니다.')
