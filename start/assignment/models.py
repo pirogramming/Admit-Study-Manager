@@ -30,6 +30,9 @@ class Done(models.Model):
     def get_absolute_url(self):
         return reverse('assignment:done_detail', args=[self.id])
 
+    def injung_check(self):
+        return [x.author for x in Injung_history.objects.filter(done=self)]
+
 
 class Injung_history(models.Model):
     done = models.ForeignKey(Done, on_delete=models.CASCADE)

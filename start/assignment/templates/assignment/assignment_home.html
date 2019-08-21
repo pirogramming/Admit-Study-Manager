@@ -27,7 +27,7 @@
             </table>
         {% endfor %}
 
-    <h3>인증:</h3>
+    <h3>인증:</h3>     <button type="button" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
     {% if dones == None %}
         등록된 인증 없음. 1빠 해볼까요~~?
     {% else %}

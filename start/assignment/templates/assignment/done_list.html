@@ -1,0 +1,18 @@
+{% extends 'group_base.html' %}
+
+{% block content %}
+{% for done in dones %}
+    <table>
+        <td>{{ done.index_in_assignment }}</td>
+        <td>{{ done.assignment.title }} 과제에 대한 {{ done.author }}{% if user == done.author%}(나){% endif %}님의 인증</td>
+        <td>{% if user != done.author %}
+            {% if user in done.injung_check %}
+           (인정 완료)
+            {% else %}
+                (인정 미완료)
+            {% endif %}
+        {% endif %}
+        </td>
+    </table>
+{% endfor %}
+{% endblock %}

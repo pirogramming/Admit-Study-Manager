@@ -120,6 +120,13 @@ def done_new(request, assignment_id):
         'usermembership':usermembership,})
 
 
+def done_list(request, group_id):
+    group = get_object_or_404(Group, id=group_id)
+    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')
+    ctx = {'group': group, 'dones': dones, }
+    return render(request, 'assignment/done_list.html', ctx)
+
+
 def done_detail(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     group = done.assignment.group
