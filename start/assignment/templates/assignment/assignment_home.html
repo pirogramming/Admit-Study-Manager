@@ -3,21 +3,43 @@
 {% block content %}
 <h1>{{ group.group_name }}의 과제 현황 >_<</h1>
 
-가장 최근 항목만 표시됩니다. Click for details.<br/><br/>
-
-<a href="{% url "assignment:assignment_list" group.id %}">과제</a>:
-
-{% if assignment == None %}
-    등록된 과제 없음.
-{% else %}
-    <a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> - {{ assignment.due_date }}까지 <br/><br/>
-    가장 최근 인증:
-    {% if done == None %}
-        등록된 인증 없음. 1빠 해볼까요~~?
-    {% else %}
-        <a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}님의 인증</a>
-    <img src="{{ done.done_img.url }}" height="200"/>
+    {% if usermembership.is_mn_stf %}
+    <button type="button" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
     {% endif %}
 
+    <button type="button" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
+    <br/>
+
+<h3>과제:</h3>    <button type="button" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
+
+
+{% if assignments == None %}
+    등록된 과제 없음.
+{% else %}
+        {% for assignment in assignments %}
+            <table>
+              <td>
+                <a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> - {{ assignment.due_date }}까지
+                  {% if assignment.due_date <= now %}
+                      (기한 지남)
+                  {% endif %}
+               </td>
+            </table>
+        {% endfor %}
+
+    <h3>인증:</h3>
+    {% if dones == None %}
+        등록된 인증 없음. 1빠 해볼까요~~?
+    {% else %}
+        {% for done in dones %}
+            <table>
+                <td>
+                    {{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}님의 인증</a>
+                    <img src="{{ done.done_img.url }}" height="200"/>
+                    <!-- TODO : 인정 버튼! -->
+                </td>
+            </table>
+        {% endfor %}
+    {% endif %}
 {% endif %}
 {% endblock %}
