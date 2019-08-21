@@ -25,6 +25,7 @@
             <table>
                 <td>{{ assignment.index_in_group }}</td>
                 <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
+                <td>{% if user in assignment.submitters %}(인증 완료){% else %}(미인증){% endif %}</td>
                 <td>{{ assignment.due_date }} {% if assignment.due_date <= now %}(만료){% endif %}</td>
             </table>
         {% endfor %}

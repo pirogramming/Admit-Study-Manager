@@ -20,6 +20,11 @@
             <table>
               <td>
                 <a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> - {{ assignment.due_date }}까지
+                  {% if user in assignment.submitters %}
+                      (인증 완료)
+                      {% else %}
+                      (미인증)
+                    {% endif %}
                   {% if assignment.due_date <= now %}
                       (기한 지남)
                   {% endif %}

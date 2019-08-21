@@ -18,6 +18,9 @@ class Assignment(models.Model):
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])
 
+    def submitters(self):
+        return [x.author for x in Done.objects.filter(assignment=self)]
+
 
 class Done(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
