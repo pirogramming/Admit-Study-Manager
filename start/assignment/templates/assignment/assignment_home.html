@@ -4,14 +4,14 @@
 <h1>{{ group.group_name }}의 과제 현황 >_<</h1>
 
     {% if usermembership.is_mn_stf %}
-    <button type="button" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
     {% endif %}
 
-    <button type="button" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
     <br/>
 
 <h3>과제:</h3>
-    <button type="button" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
+    <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
 
 
 {% if assignments == None %}
@@ -19,7 +19,7 @@
 {% else %}
             <table class="table">
                 <thead>
-                    <tr>
+                    <tr align="center">
                         <th scope="col">과제명</th>
                         <th scope="col">기한</th>
                         <th scope="col">인증 여부</th>
@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     {% for assignment in assignments %}
-                    <tr>
+                    <tr align="center">
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> </td>
                         <td>{{ assignment.due_date }}까지
                             {% if assignment.due_date <= now %}
@@ -43,13 +43,13 @@
                 </tbody>
             </table>
 
-    <h3>인증:</h3>     <button type="button" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
+    <h3>인증:</h3>     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
     {% if dones == None %}
         등록된 인증 없음. 1빠 해볼까요~~?
     {% else %}
             <table class="table">
                 <thead>
-                    <tr>
+                    <tr align="center">
                         <th scope="col">제목</th>
                         <th scope="col">이미지</th>
                         <th scope="col">인정?</th>
@@ -57,7 +57,7 @@
                 </thead>
                 <tbody>
                         {% for done in dones %}
-                            <tr>
+                            <tr align="center">
                     <th scope="row">{{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">
                         <br>{{ done.author }}님의 인증</a></th>
                     <td><img src="{{ done.done_img.url }}" height="200"/></td>
