@@ -21,13 +21,25 @@
     {% if num == 0 %}
         <p>등록된 과제가 없습니다.</p>
     {% else %}
-        {% for assignment in assignments %}
-            <table>
-                <td>{{ assignment.index_in_group }}</td>
-                <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
-                <td>{% if user in assignment.submitters %}(인증 완료){% else %}(미인증){% endif %}</td>
-                <td>{{ assignment.due_date }} {% if assignment.due_date <= now %}(만료){% endif %}</td>
+            <table class="table">
+                <thead>
+                    <tr align="center">
+                        <th scope="col">번호</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">기한</th>
+                        <th scope="col">인증 여부</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for assignment in assignments %}
+                    <tr align="center">
+                        <th scope="row">{{ assignment.index_in_group }}</th>
+                        <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
+                        <td>{{ assignment.due_date }} {% if assignment.due_date <= now %}(만료){% endif %}</td>
+                        <td>{% if user in assignment.submitters %}인증 완료{% else %}미인증{% endif %}</td>
+                    </tr>
+                        {% endfor %}
+                </tbody>
             </table>
-        {% endfor %}
     {% endif %}
 {% endblock %}
