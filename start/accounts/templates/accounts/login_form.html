@@ -18,6 +18,12 @@
                     <br/>
                     <div>
                         <form action="" method="post">{% csrf_token %}
+                            {% for message in messages %}
+                                <div class="alert alert-info">
+                                    <a class="close" href="#" data-dismiss="alert">×</a>
+                                    {{ message.message }}
+                                </div>
+                            {% endfor %}
                             <div>
                                 {{ form.username|as_crispy_field }}
                             </div>
@@ -27,10 +33,14 @@
                             <br/>
                             <input type="submit" class="btn btn-primary" value="로그인">
                         </form>
-                    </div><br/>
+                    </div>
+                    <br/>
                     <div>
                         <a href="{% url 'accounts:signup' %}">회원가입</a>&nbsp;&nbsp;&nbsp;
-                        <a href="#">비밀번호 찾기</a>
+                        <a href="#">비밀번호찾기</a>
+                    </div><br/>
+                    <div style="margin-left: 9px">
+                        <a href="{% url 'home' %}">메인 페이지로 돌아가기</a>&nbsp;&nbsp;&nbsp;
                     </div>
                 </div>
             </div>

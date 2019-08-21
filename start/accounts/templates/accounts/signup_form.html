@@ -1,57 +1,67 @@
-{% extends 'base.html' %}
+{% extends 'account_base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <div>
-        <div>
-            <br/><h2>스터디 어드밋 회원가입</h2><br/>
+    <div class="container" style="text-align: center;">
+        <div class="row" style="background-color:white;">
+            <div class="col-lg-3 col-md-3 col-sm-2"></div>
+            <div class="col-lg-6 col-md-6 col-sm-8" style="color:black; margin:160px auto;">
+                <div style="border: #1976D2 solid 5px; padding:30px; border-radius: 20px; box-shadow: 3px 3px 20px 1px darkgray;">
+                    <div>
+                        <strong style="color: #1976D2; font-family: yg-jalnan; font-size: 40px">Study Admit</strong>
+                    </div>
+                    <br/>
+                    <div style="font-size: 17px">
+                        <h2>스터디 어드밋 회원가입</h2><br/>
+                    </div>
+                    <br/>
+
+                    <div>
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <div style="background-color: whitesmoke; padding-bottom: 5px"><br/>
+                                <h5>기본 로그인 정보를 입력해주세요</h5>
+                                <small>*표시된 항목은 필수항목 입니다</small><br/><br/>
+                                <div class="signup-form">
+                                    {{ form.username|as_crispy_field }}
+                                </div>
+                                 <div class="signup-form">
+                                    {{ form.password1|as_crispy_field }}
+                                </div>
+                                 <div class="signup-form">
+                                    {{ form.password2|as_crispy_field }}
+                                </div>
+                            </div>
+
+                            <div style="background-color: whitesmoke; margin-top: 20px; padding-bottom: 5px"><br/>
+                                <h5>프로필 정보를 입력해주세요</h5><br/>
+                                <div class="signup-form">
+                                    {{ form.email|as_crispy_field }}
+                                </div>
+                                 <div class="signup-form">
+                                    {{ form.nickname|as_crispy_field }}
+                                </div>
+                                 <div class="signup-form">
+                                    {{ form.phone_number|as_crispy_field }}
+                                </div>
+                            </div><br/>
+
+                            <input type="submit" class="btn btn-primary" style="width: 300px" value="회원가입">
+                        </form>
+                    </div>
+
+                    <br/>
+                    <div>
+                        <a href="{% url 'home' %}">메인 페이지로 돌아가기</a>&nbsp;&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-2"></div>
         </div>
-        <form action="" method="post">
-            {% csrf_token %}
+    </div>
 
-            <div style="background-color: whitesmoke"><br/>
-                <h5>기본 로그인 정보를 입력해주세요</h5><br/>
-                <div>
-                    <div><strong>{{ form.username.label_tag }}</strong></div>
-                    <div>{{ form.username }}</div>
-                    <div><small>{{ form.username.errors }}</small></div>
-                </div><br/>
-                <div>
-                    <div><strong>{{ form.password1.label_tag }}</strong></div>
-                    <div>{{ form.password1 }}</div>
-                    <div><small>비밀번호는 8자리 이상, 특수문자(.,-,= 제외)/영문/숫자를 섞어주세요</small></div>
-                    <div><small>{{ form.password1.errors }}</small></div>
-                </div><br/>
-                <div>
-                    <div><strong>{{ form.password2.label_tag }}</strong></div>
-                    <div>{{ form.password2 }}</div>
-                    <div><small>확인을 위해 비밀번호를 한번 더 입력해주세요</small></div>
-                    <div><small>{{ form.password2.errors }}</small></div>
-                </div><br/>
-                <div>
-                    <div><strong>{{ form.email.label_tag }}</strong></div>
-                    <div>{{ form.email }}</div>
-                    <div><small>이메일 형식에 맞게 입력해주세요</small></div>
-                    <div><small>{{ form.email.errors }}</small></div>
-                </div><br/>
-            </div>
+    <div>
 
-            <div style="background-color: antiquewhite">
-                <br/><h5>프로필에 들어갈 정보를 입력해주세요</h5><br/>
-                <div>
-                    <div><strong>{{ form.nickname.label_tag }}</strong></div>
-                    <div>{{ form.nickname }}</div>
-                    <div><small>작성된 닉네임은 프로필에 보여집니다</small></div>
-                    <div><small>특수문자를 사용할 수 없습니다</small></div>
-                    <div><small>{{ form.nickname.errors }}</small></div>
-                </div><br/>
-                <div>
-                    <div><strong>{{ form.phone_number.label_tag }}</strong></div>
-                    <div>{{ form.phone_number }}</div>
-                    <div><small>'-' 를 포함하여 작성해주세요</small></div>
-                    <div><small>{{ form.phone_number.errors }}</small></div>
-                </div><br/>
-            </div>
-            <input type="submit">
-        </form>
+
     </div>
 {% endblock %}

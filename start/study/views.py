@@ -66,7 +66,7 @@ def manager_required(func):
         return func(request, id)
     return wrapper
 
-
+@login_required
 def all_group_list(request):
     gs = Group.objects.all()
     g = request.GET.get('g', '')
@@ -78,7 +78,7 @@ def all_group_list(request):
         'all_group_list': gs,
     })
 
-
+@login_required
 def group_list(request):
     user = request.user
     # usergroup_list = [x.group.group_name for x in Membership.objects.filter(person=user, status='ACTIVE')]
@@ -94,7 +94,7 @@ def group_list(request):
         'group_list': gs,
     })
 
-
+@login_required
 def all_group_detail(request,id):
     group = get_object_or_404(Group, id=id)
     # membership_manager = [x.person for x in Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')]
@@ -441,10 +441,12 @@ def group_registerbyurl(request, invitation_url):
                                                                   'membership_staff':membership_staff,
                                                                   'membership_member':membership_member,})
 
-
+@login_required
 def group_mystudy(request):
     return render(request, 'study/group_mystudy.html')
 
+
+@login_required
 def mystudy_list(request,id):
     user = get_object_or_404(StudyUser,id=id)
     groups = Membership.objects.filter(person=user, status='ACTIVE')
@@ -452,6 +454,7 @@ def mystudy_list(request,id):
     return render(request, 'study/mystudy_list.html',{
         'user': user, 'groups': groups,
     })
+
 
 @login_required
 @group_required
