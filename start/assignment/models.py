@@ -18,6 +18,17 @@ class Assignment(models.Model):
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])
 
+    def done_list(self):
+        done_list = []
+        for member in self.group.prefetch_related('group_member').all():
+            if member in self.done_set.all().author:
+                done_list.append(member.username)
+            else:
+                pass
+            # else:
+            #     done_dict['{}'.format(membership.person.username)]='F'
+        return done_list
+
 
 class Done(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)

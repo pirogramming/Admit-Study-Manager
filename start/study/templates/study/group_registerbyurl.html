@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-{{ group.group_name }}초대 링크입니다!
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-6" style="text-align: center;">
+{{ group.group_name }}에서 {{request.user.nickname}}님을 초대했습니다!
 
 <br/>
 
 그룹 소개 : {{ group.group_bio }}
 
-<h3>구성원</h3>
-<ol>
+<h5>구성원</h5>
+<ul style="list-style: none;">
 
         {% for member in membership_manager %}
             <li style="color:dodgerblue;">{{ member.person.username }}(관리자)</li>
@@ -24,7 +23,7 @@
         {% for member in membership_member %}
             <li>{{ member.person.username }}</li>
         {% endfor %}
-    </ol>
+    </ul>
 
 {% if user.is_authenticated %}
     <form action="" method="POST">
@@ -34,5 +33,8 @@
         </input>
     </form>
 {% endif %}
-</body>
-</html>
+        </div>
+
+    </div>
+
+{% endblock %}
