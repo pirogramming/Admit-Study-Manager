@@ -78,6 +78,7 @@ def assignment_new(request, group_id):
 def assignment_detail(request, assignment_id):
     assignment = get_object_or_404(Assignment, id=assignment_id)
     group = assignment.group
+    assignments = Assignment.objects.filter(group=group).order_by('-created_at')
     user = request.user
     usermembership = Membership.objects.get(group=group, person=request.user)
     membership = Membership.objects.get(person=user, group=group)
@@ -85,7 +86,8 @@ def assignment_detail(request, assignment_id):
     authors = [x.author for x in dones]
     now = datetime.now()
 
-    ctx = {'assignment': assignment, 'group': group, 'dones': dones, 'authors': authors,
+    ctx = {'assignment': assignment, 'assignments': assignments,
+        'group': group, 'dones': dones, 'authors': authors,
           'num': len(dones), 'usermembership': usermembership, 'membership': membership,
           'now': now, 'user': user, }
     return render(request, 'assignment/assignment_detail.html', ctx)
