@@ -14,7 +14,7 @@
 <h1>{{ group.group_name }}의 과제 리스트</h1>
 
     {% if usermembership.is_mn_stf %}
-    <button type="button" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    <button type="button" class="btn btn-primary" style="float: right", onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
     {% endif %}
 
 

@@ -81,19 +81,14 @@ def assignment_detail(request, assignment_id):
     user = request.user
     usermembership = Membership.objects.get(group=group, person=request.user)
     membership = Membership.objects.get(person=user, group=group)
-
     dones = Done.objects.filter(assignment=assignment)
     authors = [x.author for x in dones]
     now = datetime.now()
-    return render(request, 'assignment/assignment_detail.html', {
-        'group': group,
-        'assignment': assignment,
-        'dones': dones,
-        'authors': authors,
-        'num': len(dones),
-        'membership': membership,
-        'usermembeship':usermembership,
-    })
+
+    ctx = {'assignment': assignment, 'group': group, 'dones': dones, 'authors': authors,
+          'num': len(dones), 'usermembership': usermembership, 'membership': membership,
+          'now': now, 'user': user, }
+    return render(request, 'assignment/assignment_detail.html', ctx)
 
 
 def done_new(request, assignment_id):

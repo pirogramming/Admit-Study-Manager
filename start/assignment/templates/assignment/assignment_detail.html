@@ -16,7 +16,7 @@
     {% if user in authors %}
         <p>이미 인증하셨습니다! 멋져요~>_<</p>
     {% else %}
-        <button type="button" onclick="location.href='{% url "assignment:done_new" assignment.id %}'">인증하기</button>
+        <button type="button" class="btn btn-primary" onclick="location.href='{% url "assignment:done_new" assignment.id %}'">인증하기</button>
     {% endif %}
 
 
@@ -28,18 +28,30 @@
 <h2>인증한 사람들 </h2>
 
 {% if num == 0 %}
-    아직 아무도 과제를 끝내지 못했어요! 얼른 앞서나가 볼까요~?
+    아무도 인증하지 않았어요 ㅠ_ㅠ
 {% else %}
-    {% for done in dones %}
-        <table>
-            <td>{{ done.index_in_assignment }}등</td>
-            <td><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}</a></td>
+        <table class="table">
+            <thead>
+                <tr align="center">
+                    <th scope="col">등수</th>
+                    <th scope="col">이름</th>
+                    <th scope="col">인증 시간</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for done in dones %}
+                <tr align="center">
+                    <th scope="row">{{ done.index_in_assignment }}등</th>
+                    <td><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}</a></td>
+                    <td>{{ done.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-    {% endfor %}
 {% endif %}
 
 <br><br>
-    <button type="button" onclick="location.href='{% url "assignment:assignment_list" assignment.group.id %}'">과제 목록으로</button>
+    <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url "assignment:assignment_list" assignment.group.id %}'">과제 목록으로</button>
 
 
 {% endblock %}
