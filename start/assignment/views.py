@@ -16,7 +16,7 @@ def assignment_home(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     usermembership = Membership.objects.get(group=group, person=request.user)
     assignments = Assignment.objects.filter(group=group).order_by('-created_at')[:5]
-    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')[:5]
+    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')[:3]
     now = datetime.now()
 
     ctx = {

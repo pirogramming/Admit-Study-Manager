@@ -22,7 +22,7 @@
                     <tr align="center">
                         <th scope="col">과제명</th>
                         <th scope="col">기한</th>
-                        <th scope="col">인증 여부</th>
+                        <th scope="col">인증</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,10 +33,9 @@
                             {% if assignment.due_date <= now %}
                              (기한 지남)
                             {% endif %}</td>
-                        <td>{% if user in assignment.submitters %}
-                            인증 완료
+                        <td>{% if user in assignment.submitters %}인증 완료
                             {% else %}
-                            미인증
+                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary">인증하기</a>
                             {% endif %}</td>
                     </tr>
                     {% endfor %}
