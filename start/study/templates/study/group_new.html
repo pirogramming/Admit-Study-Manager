@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-lg-1"></div>
-            <div class="col-lg-10"style="text-align: left;font-size: 30px;padding:10px 0px">
+            <div class="col-lg-10" style="text-align: left;font-size: 30px;padding:20px 0px;margin:0px 18px;color: #1976D2">
                 <strong>스터디 만들기</strong>
             </div>
             <div class="col-lg-1"></div>
@@ -15,6 +16,9 @@
             <div class="col-lg-5">
                 <div style="text-align: left; background-color: #ffdbad; padding:3px;">
                     <div style="font-size: 30px"><strong>*스터디 만들기 유의사항*</strong></div>
+                    <div>
+                        <img src="{% static 'img/caution.png' %}" style="width:200px;height: 210px;"/>
+                    </div>
                     <br/>
                     <p style="font-size: 15px; margin-left: 10px"><strong>- 스터디를 만들면 자동으로 스터디장이 됩니다<br/>
                     - 스터디장 권한은 그룹 관리 탭의 그룹 설정에서 위임할 수 있습니다<br/>

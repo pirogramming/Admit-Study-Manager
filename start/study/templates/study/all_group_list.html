@@ -6,7 +6,9 @@
             <div class="col-lg-1"></div>
             <div class="col-lg-10">
                 <div style="text-align: left">
-                    <h3>전체 스터디그룹 보기</h3>
+                    <div style="text-align: left;font-size: 30px;color: #1976D2">
+                        <strong>전체 스터디그룹 보기</strong>
+                    </div>
                     <div class="search_bar" style="text-align: right">
                         <form action="" method="get">
                             <input type="text" name="g" value="{{ g }}"/>
@@ -24,7 +26,8 @@
                         <thead>
                         <tr>
                             <th>그룹명</th>
-                            <td>그룹 목표</td>
+                            <th>그룹 소개</th>
+                            <th>그룹 목표</th>
                         </tr>
                         </thead>
 
@@ -32,8 +35,8 @@
 
                         {% for group in all_group_list %}
                             <tr>
-                                <td><a href="{% url "study:group_register" group.id %}">{{ group.group_name }}</a>
-                                </td>
+                                <td><a href="{% url "study:group_register" group.id %}">{{ group.group_name }}</a></td>
+                                <td>{{ group.group_bio }}</td>
                                 <td>{{ group.group_goal }}</td>
                             </tr>
                         {% endfor %}

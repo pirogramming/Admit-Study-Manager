@@ -15,11 +15,11 @@
             <div class="col-lg-4">
                 {% if user.img_profile %}
                     <div style="margin-left: 50px; margin-top:10px; border-radius: 120px">
-                        <img src="{{ user.img_profile.url }}" style="width:230px; height: 230px"/>
+                        <img class="img_profile" src="{{ user.img_profile.url }}" style="width:230px; height: 230px"/>
                     </div>
                 {% else %}
                     <div style="margin-left: 50px;margin-top:10px; border-radius: 120px">
-                        <img src="{% static 'img/anonym.jpg' %}" style="width:230px; height: 230px"/>
+                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}" style="width:230px; height: 230px"/>
                     </div>
                 {% endif %}
                 <div style="text-align: center; margin-top:15px; margin-left: 80px">

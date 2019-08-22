@@ -2,66 +2,57 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container" style="text-align: center;">
-        <div class="row" style="background-color:white;">
-            <div class="col-lg-3 col-md-2 col-sm-1"></div>
-            <div class="col-lg-6 col-md-8 col-sm-10" style="color:black; margin:160px auto;">
-                <div style="border: #1976D2 solid 5px; padding:30px; border-radius: 20px; box-shadow: 3px 3px 20px 1px darkgray;">
-                    <div>
-                        <strong style="color: #1976D2; font-family: yg-jalnan; font-size: 40px">Study Admit</strong>
-                    </div>
-                    <br/>
-                    <div style="font-size: 17px">
-                        <h2>스터디 어드밋 회원가입</h2><br/>
-                    </div>
-                    <br/>
 
-                    <div>
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            <div style="background-color: whitesmoke; padding-bottom: 5px"><br/>
-                                <h5>기본 로그인 정보를 입력해주세요</h5>
-                                <small>*표시된 항목은 필수항목 입니다</small><br/><br/>
-                                <div class="signup-form">
-                                    {{ form.username|as_crispy_field }}
-                                </div>
-                                 <div class="signup-form">
-                                    {{ form.password1|as_crispy_field }}
-                                </div>
-                                 <div class="signup-form">
-                                    {{ form.password2|as_crispy_field }}
-                                </div>
-                            </div>
-
-                            <div style="background-color: whitesmoke; margin-top: 20px; padding-bottom: 5px"><br/>
-                                <h5>프로필 정보를 입력해주세요</h5><br/>
-                                <div class="signup-form">
-                                    {{ form.email|as_crispy_field }}
-                                </div>
-                                 <div class="signup-form">
-                                    {{ form.nickname|as_crispy_field }}
-                                </div>
-                                 <div class="signup-form">
-                                    {{ form.phone_number|as_crispy_field }}
-                                </div>
-                            </div><br/>
-
-                            <input type="submit" class="btn btn-primary" style="width: 300px" value="회원가입">
-                        </form>
-                    </div>
-
-                    <br/>
-                    <div>
-                        <a href="{% url 'home' %}">메인 페이지로 돌아가기</a>&nbsp;&nbsp;&nbsp;
-                    </div>
-                </div>
+    <div class="col-lg-6 col-md-8 col-sm-10" style="color:black; margin:160px auto;">
+        <div style="background-color: white;border: #1976D2 solid 5px; padding:30px; border-radius: 20px; box-shadow: 3px 3px 20px 1px darkgray;">
+            <div>
+                <strong style="color: #1976D2; font-family: yg-jalnan; font-size: 40px">Study Admit</strong>
             </div>
-            <div class="col-lg-3 col-md-2 col-sm-1"></div>
+            <br/>
+            <div style="font-size: 17px">
+                <h2>스터디 어드밋 회원가입</h2><br/>
+            </div>
+            <br/>
+
+            <div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div style="background-color: whitesmoke; padding-bottom: 5px"><br/>
+                        <h5>기본 로그인 정보를 입력해주세요</h5>
+                        <small>*표시된 항목은 필수항목 입니다</small><br/><br/>
+                        <div class="signup-form">
+                            {{ form.username|as_crispy_field }}
+                        </div>
+                        <div class="signup-form">
+                            {{ form.password1|as_crispy_field }}
+                        </div>
+                        <div class="signup-form">
+                            {{ form.password2|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div style="background-color: whitesmoke; margin-top: 20px; padding-bottom: 5px"><br/>
+                        <h5>프로필 정보를 입력해주세요</h5><br/>
+                        <div class="signup-form">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+                        <div class="signup-form">
+                            {{ form.nickname|as_crispy_field }}
+                        </div>
+                        <div class="signup-form">
+                            {{ form.phone_number|as_crispy_field }}
+                        </div>
+                    </div>
+                    <br/>
+
+                    <input type="submit" class="btn btn-primary" style="width: 300px" value="회원가입">
+                </form>
+            </div>
+
+            <br/>
+            <div>
+                <a href="{% url 'home' %}">메인 페이지로 돌아가기</a>&nbsp;&nbsp;&nbsp;
+            </div>
         </div>
-    </div>
-
-    <div>
-
-
     </div>
 {% endblock %}

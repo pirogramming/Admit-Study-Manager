@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -21,9 +22,9 @@
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
                              data-parent="#accordionExample">
                             <div class="card-body">
-                                <div style="text-align: left">
-                                    <small></small>
-                                </div>
+                                <div>
+                                    <img src="{% static 'img/mystudy.png' %}" style="width:175px;height: 210px"/>
+                                </div><br/>
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                     <tr>
