@@ -129,13 +129,16 @@ def done_list(request, group_id):
 def done_detail(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     group = done.assignment.group
+    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')
     usermembership = Membership.objects.get(group=group, person=request.user)
-
-    return render(request, 'assignment/done_detail.html', {
-        'group':group,
+    ctx = {
+        'dones': dones,
+        'group': group,
         'done': done,
-        'usermembership':usermembership,
-    })
+        'usermembership': usermembership,
+    }
+
+    return render(request, 'assignment/done_detail.html', ctx )
 
 
 def injung_plus(request, done_id):

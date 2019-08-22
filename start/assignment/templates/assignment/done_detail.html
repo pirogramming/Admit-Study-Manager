@@ -4,14 +4,69 @@
 
     {{ message.message }}
 
-<h1>{{ done.author }}님의 {{ done.assignment.title }} 과제 인증</h1>
+    <div class="card mb-3 text-center">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="{{ done.done_img.url }}" class="card-img">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h2 class="card-title">{{ done.author }}님의 인증</h2>
+        <p class="card-text">{{ done.assignment.title }} 과제에 대한 인증입니다 :)</p>
+        <p class="card-text"><small class="text-muted">{{ done.created_at }} 에 인증함</small></p>
+      </div>
+      <div class="card-footer">
+          {% if user != done.author %}
+                    {% if user in done.injung_check %}
+                        <a href="#" class="btn btn-primary disabled">인정</a>
+                        <small class="text-muted">이미 인정하셨습니다.</small>
+                     {% else %}
+                        <a href="{% url "assignment:injung_plus" done.id %}" class="btn btn-primary btn-lg">인정</a>
+                    {% endif %}
+          {% else %}
+              <a href="#" class="btn btn-primary disabled">인정</a>
+              <small class="text-muted">자추할 수 없습니다.</small>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 
-<img src="{{ done.done_img.url }}" height="300"/>{{ done.created_at }} 에 인증!
 
-
-<h3>인정?</h3>
-
-
-    <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
+        <div class="done_list" style="margin-top: 150px">
+        <table class="table">
+                <thead>
+                    <tr align="center" style="border-top:3px solid #1976D2; border-bottom:3px solid #1976D2">
+                        <th scope="col">번호</th>
+                        <th scope="col">과제명</th>
+                        <th scope="col">인증자</th>
+                        <th scope="col">인정</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for group_done in dones %}
+                    <tr {% if group_done == done %} style="background-color: rgba(25,118,210,0.1);"{% endif %} align="center">
+                        <th scope="row">
+                            {% if group_done == done %}
+                                현재글
+                            {% else %}
+                                {{ group_done.index_in_group }}
+                            {% endif %}</th>
+                        <td><a href="{% url "assignment:assignment_detail" group_done.assignment.id %}">{{ group_done.assignment.title }}</a></td>
+                        <td>{{ group_done.author }}</td>
+                        <td>{% if user != group_done.author %}
+                            {% if user in group_done.injung_check %}
+                                이미 ㅇㅈ함
+                            {% else %}
+                                <a href="{% url "assignment:done_detail" group_done.id %}" class="btn btn-primary">인정하러 가기</a>
+                            {% endif %}
+                        {% else %}
+                            자추 ㄴㄴ
+                        {% endif %}</td>
+                    </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+    </div>
 
 {% endblock %}
