@@ -10,7 +10,7 @@
     <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
     <br/>
 
-<h3>과제:</h3>
+<h3>과제</h3>
     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
 
 
@@ -43,7 +43,7 @@
                 </tbody>
             </table>
 
-    <h3>인증:</h3>     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
+    <h3>인증</h3>     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
     {% if dones == None %}
         등록된 인증 없음. 1빠 해볼까요~~?
     {% else %}

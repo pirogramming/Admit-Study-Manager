@@ -7,7 +7,7 @@
     <div class="card mb-3 text-center">
   <div class="row no-gutters">
     <div class="col-md-4">
-      <img src="{{ done.done_img.url }}" class="card-img">
+      <img src="{{ done.done_img.url }}" class="card-img" height="220">
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -34,6 +34,7 @@
 
 
         <div class="done_list" style="margin-top: 150px">
+        <a href="{% url "assignment:assignment_home" group.id %}" class="btn btn-primary" style="float: right; margin-bottom: 5px;">과제 홈으로</a>
         <table class="table">
                 <thead>
                     <tr align="center" style="border-top:3px solid #1976D2; border-bottom:3px solid #1976D2">
