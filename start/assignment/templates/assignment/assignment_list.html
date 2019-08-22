@@ -27,7 +27,7 @@
                         <th scope="col">번호</th>
                         <th scope="col">제목</th>
                         <th scope="col">기한</th>
-                        <th scope="col">인증 여부</th>
+                        <th scope="col">인증</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +36,10 @@
                         <th scope="row">{{ assignment.index_in_group }}</th>
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
                         <td>{{ assignment.due_date }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
-                        <td>{% if user in assignment.submitters %}인증 완료{% else %}미인증{% endif %}</td>
+                        <td>{% if user in assignment.submitters %}인증 완료
+                            {% else %}
+                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary">인증하기</a>
+                            {% endif %}</td>
                     </tr>
                         {% endfor %}
                 </tbody>

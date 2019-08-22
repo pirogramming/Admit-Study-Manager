@@ -100,7 +100,8 @@ def done_new(request, assignment_id):
     usermembership = Membership.objects.get(group=group, person=request.user)
     if datetime.now() >= assignment.due_date:
         messages.warning(request, '제출기한이 지났습니다.')
-        return redirect('assignment:assignment_detail', assignment_id)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     elif request.method == 'POST':
         form = DoneForm(request.POST, request.FILES)
         if form.is_valid():
