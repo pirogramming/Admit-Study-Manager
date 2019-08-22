@@ -9,6 +9,8 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/font-kopub/1.0/kopubdotum.css'>
+
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -52,6 +54,14 @@
         a {
             text-decoration: None;
         }
+
+        @font-face {
+    font-family: 'yg-jalnan';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
     </style>
 </head>
 <body>
@@ -139,7 +149,9 @@
                     </li>
                     <li class="list-group-item">
                         <a href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
-
+                    </li>
+                    <li class="list-group-item">
+                        <a href="{% url 'table:table' group.id %}">히스토리</a>
                     </li>
                     <li class="list-group-item"><a href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내
                         설정</a>

@@ -71,23 +71,6 @@
     <hr/>
 
     <div>
-        <h4>그룹정보</h4><br/>
-        <div>
-            <div><h5>{{ group.group_name }} 그룹 소개</h5></div>
-            <div>{{ group.group_bio }}</div>
-        </div><br/>
-        <div>
-            <div><h5>우리의 목표</h5></div>
-            <div>{{ group.group_goal }}</div>
-        </div><br/>
-        <div>
-            <div><h5>이것만은 꼭 지키자!</h5></div>
-            <div>{{ group.group_rule }}</div>
-        </div><br/>
-    </div>
-    <hr/>
-
-    <div>
         <div>
             <h4>{{ group.group_name }}의 현황</h4>
             <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>

@@ -492,12 +492,15 @@ def group_mysettings(request, id):
 def group_settings_mn(request, id):
     user = request.user
     group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    usermembership = get_object_or_404(Membership, person=user, group=group)
+
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     groupprofileform = GroupProfileForm(instance=group)
 
     ctx = {'user': user, 'group': group,
+           'usermembership':usermembership,
            'groupprofileform': groupprofileform,
            'membership_manager': membership_manager,
            'membership_staff': membership_staff,

@@ -13,13 +13,13 @@ class Group(models.Model):
     group_code = models.CharField(max_length=20)
     invitation_url = models.CharField(max_length=20, unique=True, default=uuid.uuid1)
 
-    group_bio = models.CharField(max_length=300, blank=True, null=True, default='그룹 설정에서 수정하세요')
+    group_bio = models.CharField(max_length=300, blank=True, null=True, default='{}그룹입니다!'.format(group_name))
     group_goal = models.CharField(max_length=300, blank=True, null=True, default='그룹 설정에서 수정하세요')
 
     group_rule = models.CharField(max_length=600, blank=True, null=True, default='그룹 설정에서 수정하세요')
-    late_penalty = models.CharField(max_length=10, default="0")
-    abscence_penalty = models.CharField(max_length=10, default="0")
-    notsubmit_penalty = models.CharField(max_length=10, default="0")
+    late_penalty = models.IntegerField(default="0")
+    abscence_penalty = models.IntegerField(default="0")
+    notsubmit_penalty = models.IntegerField(default="0")
     group_member = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                           through='Membership',
                                           related_name='joined_groups',)
@@ -91,12 +91,6 @@ class Membership(models.Model):
             return True
         else:
             return False
-
-    # def is_notself(request, self):
-    #     if self == request.user:
-    #         return True
-    #     else :
-    #         False
 
 
 class UpdateHistory(models.Model):
