@@ -2,10 +2,78 @@
 
 {% block content %}
 
-    <br/>
-    <div>
-        <div><a href="{% url 'study:all_group_list' %}">스터디 찾기</a></div>
-        <div><a href="{% url 'study:group_new' %}">스터디 만들기</a></div>
-    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+
+                <div class="accordion" id="accordionExample">
+
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                                <button style="font-size: 25px" class="btn btn-link" type="button" data-toggle="collapse"
+                                        data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    나의 스터디 보기
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                             data-parent="#accordionExample">
+                            <div class="card-body">
+                                <div style="text-align: left">
+                                    <small></small>
+                                </div>
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>스터디명</th>
+                                        <th>스터디 목표</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for group in group_list %}
+                                        <tr>
+                                            <td>
+                                                <a href="{% url "study:group_detail" group.id %}">{{ group.group_name }}</a>
+                                            </td>
+                                            <td>{{ group.group_goal }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                            data-target="#collapseTwo" aria-expanded="false"
+                                            aria-controls="collapseTwo">
+                                        <a href="{% url 'study:all_group_list' %}" style="font-size: 25px">스터디 찾기</a>
+                                    </button>
+                                </h2>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                                <h2 class="mb-0">
+                                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                                            data-target="#collapseThree" aria-expanded="false"
+                                            aria-controls="collapseThree">
+                                        <a href="{% url 'study:group_new' %}" style="font-size: 25px">스터디 만들기</a>
+                                    </button>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+            </div>
 
 {% endblock %}

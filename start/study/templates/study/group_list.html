@@ -15,17 +15,17 @@
     <thead>
         <tr>
             <th>그룹명</th>
+            <th>그룹 소개</th>
         </tr>
     </thead>
 
     <tbody>
-
         {% for group in group_list %}
         <tr>
             <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
+            <td>{{ group.group_bio }}</td>
         </tr>
         {% endfor %}
-
     </tbody>
 </table>
 

@@ -1,38 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-{{ group.group_name }}초대 링크입니다!
+{% block content %}
 
-<br/>
-
-그룹 소개 : {{ group.group_bio }}
-
-<h3>구성원</h3>
-<ol>
-
-        {% for member in membership_manager %}
-            <li style="color:dodgerblue;">{{ member.person.username }}(관리자)</li>
-        {% endfor %}
-        {% for member in membership_staff %}
-            <li style="color:deepskyblue;">{{ member.person.username }}(스탭)</li>
-        {% endfor %}
-        {% for member in membership_member %}
-            <li>{{ member.person.username }}</li>
-        {% endfor %}
-    </ol>
-
-{% if user.is_authenticated %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="register">
-        <button>{{ group.group_name }}에 가입하기</button>
-        </input>
-    </form>
-{% endif %}
-</body>
-</html>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4" style="border:4px solid #1976D2; border-radius: 20px">
+                <br/>
+                <div style="font-size: 20px; font-family: yg-jalnan">
+                    {{ group.group_name }} 초대 링크입니다!
+                </div>
+                <br/>
+                <div style="font-size: 20px; text-align: left; background-color: #F2F2F2; padding: 10px">
+                    <strong>그룹 이름</strong> : {{ group.group_name }}<br/>
+                    <strong>그룹 소개</strong> : {{ group.group_bio }}<br/>
+                    <strong>그룹 목표</strong> : {{ group.group_goal }}
+                </div>
+                <br/>
+                <div>
+                    {% for member in membership_manager %}
+                        <div style="color:dodgerblue; font-size: 20px">
+                            <strong>스터디장:</strong> {{ member.person.nickname }}({{ member.person.username }})
+                        </div>
+                    {% endfor %}
+                </div>
+                <br/>
+                <div>
+                    {% if user.is_authenticated %}
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="register">
+                            <button>{{ group.group_name }}에 가입하기</button>
+                            </input>
+                        </form>
+                    {% endif %}
+                </div>
+                <br/>
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+    </div>
+{% endblock %}
