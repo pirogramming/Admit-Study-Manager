@@ -18,6 +18,9 @@ class Assignment(models.Model):
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])
 
+    def submitters(self):
+        return [x.author for x in Done.objects.filter(assignment=self)]
+
 
 class Done(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
@@ -29,6 +32,13 @@ class Done(models.Model):
 
     def get_absolute_url(self):
         return reverse('assignment:done_detail', args=[self.id])
+
+    def injung_check(self):
+        return [x.author for x in Injung_history.objects.filter(done=self)]
+
+    def index_in_group(self):
+        dones = [x for x in Done.objects.filter(assignment__group=self.assignment.group).order_by('created_at')]
+        return dones.index(self)+1
 
 
 class Injung_history(models.Model):

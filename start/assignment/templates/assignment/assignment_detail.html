@@ -4,42 +4,98 @@
 
 {{ message.message }}
 
-    <h1>{{ assignment.title }}</h1>
-
-{{ assignment.content|linebreaks }}
-{{ assignment.due_date }} 까지
-
-    {% if assignment.due_date <= now %}
-        (기한 지남) <br/>
+    <div class="jumbotron">
+    {% if membership.role != 'MEMBER' %}
+        <a href="{% url "assignment:assignment_delete" assignment.id %}" class="btn btn-primary" style="float:right; margin-left: 2px">삭제</a>
+        <a href="{% url "assignment:assignment_edit" assignment.id %}" class="btn btn-primary" style="float:right">수정</a>
     {% endif %}
+    <h1 class="display-4">{{ assignment.title }}</h1>
+        <p class="lead">{{ assignment.content|linebreaks }}</p>
+        <p class="lead">{{ assignment.due_date }} 까지 {% if assignment.due_date <= now %}(기한 지남){% endif %}</p>
+    <hr class="my-4">
 
-    {% if user in authors %}
+        {% if user in authors %}
         <p>이미 인증하셨습니다! 멋져요~>_<</p>
-    {% else %}
-        <button type="button" onclick="location.href='{% url "assignment:done_new" assignment.id %}'">인증하기</button>
-    {% endif %}
+        {% else %}
+        <a href="{% url "assignment:done_new" assignment.id %}"
+           class="btn btn-primary {% if assignment.due_date <= now %}disabled{% endif %}">인증하기</a>
+        {% endif %}
+    </div>
 
-
-{% if membership.role != 'MEMBER' %}
-    <a href="{% url "assignment:assignment_edit" assignment.id %}" class="btn btn-primary">수정</a>
-    <a href="{% url "assignment:assignment_delete" assignment.id %}" class="btn btn-primary">삭제</a>
-{% endif %}
 
 <h2>인증한 사람들 </h2>
 
 {% if num == 0 %}
-    아직 아무도 과제를 끝내지 못했어요! 얼른 앞서나가 볼까요~?
+    <hr/>
+    아무도 인증하지 않았어요 ㅠ_ㅠ
 {% else %}
-    {% for done in dones %}
-        <table>
-            <td>{{ done.index_in_assignment }}등</td>
-            <td><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}</a></td>
+        <table class="table" >
+            <thead>
+                <tr align="center" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
+                    <th scope="col">등수</th>
+                    <th scope="col">이름</th>
+                    <th scope="col">인증 시간</th>
+                    <th scope="col">인정?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for done in dones %}
+                <tr align="center">
+                    <th scope="row">{{ done.index_in_assignment }}등</th>
+                    <td>{{ done.author }}</td>
+                    <td>{{ done.created_at }}</td>
+                    <td>{% if user != done.author %}
+                            {% if user in done.injung_check %}
+                                이미 ㅇㅈ함
+                            {% else %}
+                                <a href="{% url "assignment:done_detail" done.id %}" class="btn btn-primary">인정하러 가기</a>
+                            {% endif %}
+                        {% else %}
+                            자추 ㄴㄴ
+                        {% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
-    {% endfor %}
 {% endif %}
 
-<br><br>
-    <button type="button" onclick="location.href='{% url "assignment:assignment_list" assignment.group.id %}'">과제 목록으로</button>
+<br>
+
+    <button type="button" class="btn btn-primary" style="float: right; margin-left: 2px" onclick="location.href='{% url "assignment:assignment_list" assignment.group.id %}'">목록으로</button>
+
+   {% if usermembership.is_mn_stf %}
+    <button type="button" class="btn btn-primary" style="float: right", onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    {% endif %}
+
+
+    <!-- 과제 리스트 -->
+    <div class="assignment_list" style="margin-top: 130px">
+        <table class="table">
+                <thead>
+                    <tr align="center" style="border-top:3px solid #1976D2; border-bottom:3px solid #1976D2">
+                        <th scope="col">번호</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">기한</th>
+                        <th scope="col">인증 여부</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for assign_ment in assignments %}
+                    <tr {% if assign_ment == assignment %} style="background-color: rgba(25,118,210,0.1);"{% endif %} align="center">
+                        <th scope="row">
+                            {% if assign_ment == assignment %}
+                                현재글
+                            {% else %}
+                                {{ assign_ment.index_in_group }}
+                            {% endif %}</th>
+                        <td><a href="{% url "assignment:assignment_detail" assign_ment.id %}">{{ assign_ment.title }}</a></td>
+                        <td>{{ assign_ment.due_date }}{% if assign_ment.due_date <= now %}(만료){% endif %}</td>
+                        <td>{% if user in assign_ment.submitters %}인증 완료{% else %}미인증{% endif %}</td>
+                    </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+    </div>
 
 
 {% endblock %}
