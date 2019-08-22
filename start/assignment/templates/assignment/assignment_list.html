@@ -38,7 +38,8 @@
                         <td>{{ assignment.due_date }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
                         <td>{% if user in assignment.submitters %}인증 완료
                             {% else %}
-                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary">인증하기</a>
+                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary
+                                {% if assignment.due_date <= now %}disabled{% endif %}">인증하기</a>
                             {% endif %}</td>
                     </tr>
                         {% endfor %}

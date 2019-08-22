@@ -7,7 +7,7 @@
     <div class="card-group">
     {% for done in dones %}
         <div class="col-4 mt-2">
-            <div class="card">
+            <div class="card text-center">
                 <img src="{{ done.done_img.url }}" class="card-img-top">
                 <div class="card-body">
                     <h5 class="card-title" style="font-weight: bold"><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}{% if user == done.author%}(나){% endif %}님의 인증</a></h5>

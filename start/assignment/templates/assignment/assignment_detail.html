@@ -17,7 +17,8 @@
         {% if user in authors %}
         <p>이미 인증하셨습니다! 멋져요~>_<</p>
         {% else %}
-        <button type="button" class="btn btn-primary" onclick="location.href='{% url "assignment:done_new" assignment.id %}'">인증하기</button>
+        <a href="{% url "assignment:done_new" assignment.id %}"
+           class="btn btn-primary {% if assignment.due_date <= now %}disabled{% endif %}">인증하기</a>
         {% endif %}
     </div>
 
@@ -25,6 +26,7 @@
 <h2>인증한 사람들 </h2>
 
 {% if num == 0 %}
+    <hr/>
     아무도 인증하지 않았어요 ㅠ_ㅠ
 {% else %}
         <table class="table" >
@@ -33,14 +35,24 @@
                     <th scope="col">등수</th>
                     <th scope="col">이름</th>
                     <th scope="col">인증 시간</th>
+                    <th scope="col">인정?</th>
                 </tr>
             </thead>
             <tbody>
                 {% for done in dones %}
                 <tr align="center">
                     <th scope="row">{{ done.index_in_assignment }}등</th>
-                    <td><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}</a></td>
+                    <td>{{ done.author }}</td>
                     <td>{{ done.created_at }}</td>
+                    <td>{% if user != done.author %}
+                            {% if user in done.injung_check %}
+                                이미 ㅇㅈ함
+                            {% else %}
+                                <a href="{% url "assignment:done_detail" done.id %}" class="btn btn-primary">인정하러 가기</a>
+                            {% endif %}
+                        {% else %}
+                            자추 ㄴㄴ
+                        {% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
