@@ -1,6 +1,7 @@
 import random
 from datetime import datetime, time
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 from attendance.views import gather_time_hour_function
@@ -15,7 +16,7 @@ def assignment_home(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     usermembership = Membership.objects.get(group=group, person=request.user)
     assignments = Assignment.objects.filter(group=group).order_by('-created_at')[:5]
-    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')[:5]
+    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')[:3]
     now = datetime.now()
 
     ctx = {
@@ -99,7 +100,8 @@ def done_new(request, assignment_id):
     usermembership = Membership.objects.get(group=group, person=request.user)
     if datetime.now() >= assignment.due_date:
         messages.warning(request, '제출기한이 지났습니다.')
-        return redirect('assignment:assignment_detail', assignment_id)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     elif request.method == 'POST':
         form = DoneForm(request.POST, request.FILES)
         if form.is_valid():
@@ -127,13 +129,16 @@ def done_list(request, group_id):
 def done_detail(request, done_id):
     done = get_object_or_404(Done, id=done_id)
     group = done.assignment.group
+    dones = Done.objects.filter(assignment__group=group).order_by('-created_at')
     usermembership = Membership.objects.get(group=group, person=request.user)
-
-    return render(request, 'assignment/done_detail.html', {
-        'group':group,
+    ctx = {
+        'dones': dones,
+        'group': group,
         'done': done,
-        'usermembership':usermembership,
-    })
+        'usermembership': usermembership,
+    }
+
+    return render(request, 'assignment/done_detail.html', ctx )
 
 
 def injung_plus(request, done_id):
@@ -165,7 +170,7 @@ def injung_plus(request, done_id):
                     m.rank += 1
             m.save()
 
-        return redirect(done)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 

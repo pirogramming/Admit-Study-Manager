@@ -1,13 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-
-<form action="" method="post">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit">
-</form>
-
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10" style="text-align: left;font-size: 30px;padding:20px 0px;margin:0px 18px;color: #1976D2">
+                <strong>스터디 만들기</strong>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-5">
+                <div style="text-align: left; background-color: #ffdbad; padding:3px;">
+                    <div style="font-size: 30px"><strong>*스터디 만들기 유의사항*</strong></div>
+                    <div>
+                        <img src="{% static 'img/caution.png' %}" style="width:200px;height: 210px;"/>
+                    </div>
+                    <br/>
+                    <p style="font-size: 15px; margin-left: 10px"><strong>- 스터디를 만들면 자동으로 스터디장이 됩니다<br/>
+                    - 스터디장 권한은 그룹 관리 탭의 그룹 설정에서 위임할 수 있습니다<br/>
+                        - 스터디원이 그룹에 가입하기 위해서는 그룹 코드를 알아야 합니다</strong></p>
+                </div>
+            </div>
+            <div class="col-lg-5" style="text-align: left">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <div style="text-align: left; font-size: 20px">그룹이름</div>
+                        {{ form.group_name|as_crispy_field }}
+                    </div>
+                    <div>
+                        <div style="text-align: left; font-size: 20px">그룹코드</div>
+                        {{ form.group_code|as_crispy_field }}
+                    </div>
+                    <div>
+                        <div style="text-align: left; font-size: 20px">한줄그룹소개</div>
+                        {{ form.group_bio|as_crispy_field }}
+                    </div>
+                    <div>
+                        <div style="text-align: left; font-size: 20px">한줄그룹목표</div>
+                        {{ form.group_goal|as_crispy_field }}
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="그룹 만들기">
+                </form>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </div>
 {% endblock %}

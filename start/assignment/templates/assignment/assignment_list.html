@@ -11,14 +11,20 @@
 {% endif %}
 
 {% block content %}
+
 <h1>{{ group.group_name }}의 과제 리스트</h1>
 
+
+    <a href="{% url "assignment:assignment_home" group.id %}" class="btn btn-primary" style="float: right; margin-bottom: 5px; margin-left: 2px">과제 홈으로</a>
+
+
     {% if usermembership.is_mn_stf %}
-    <button type="button" class="btn btn-primary" style="float: right", onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    <a href="{% url 'assignment:assignment_new' group.id%}" class="btn btn-primary" style="float: right; margin-bottom: 5px;">새 과제 등록</a>
     {% endif %}
 
 
     {% if num == 0 %}
+        <hr/>
         <p>등록된 과제가 없습니다.</p>
     {% else %}
             <table class="table">
@@ -27,7 +33,7 @@
                         <th scope="col">번호</th>
                         <th scope="col">제목</th>
                         <th scope="col">기한</th>
-                        <th scope="col">인증 여부</th>
+                        <th scope="col">인증</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +42,11 @@
                         <th scope="row">{{ assignment.index_in_group }}</th>
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
                         <td>{{ assignment.due_date }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
-                        <td>{% if user in assignment.submitters %}인증 완료{% else %}미인증{% endif %}</td>
+                        <td>{% if user in assignment.submitters %}인증 완료
+                            {% else %}
+                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary
+                                {% if assignment.due_date <= now %}disabled{% endif %}">인증하기</a>
+                            {% endif %}</td>
                     </tr>
                         {% endfor %}
                 </tbody>

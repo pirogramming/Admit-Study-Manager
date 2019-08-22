@@ -2,51 +2,45 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container" style="text-align: center;">
-        <div class="row" style="background-color:white;">
-            <div class="col-lg-4 col-md-3 col-sm-2"></div>
-            <div class="col-lg-4 col-md-6 col-sm-8" style="color:black; margin:160px auto;">
-                <div style="border: #1976D2 solid 5px; padding:30px; border-radius: 20px; box-shadow: 3px 3px 20px 1px darkgray;">
-                    <div>
-                        <strong style="color: #1976D2; font-family: yg-jalnan; font-size: 40px">Study Admit</strong>
-                    </div>
-                    <br/>
-                    <div style="font-size: 17px">
-                        오프라인 스터디 관리 서비스<br/>
-                        스터디 어드밋에 로그인하세요
-                    </div>
-                    <br/>
-                    <div>
-                        <form action="" method="post">{% csrf_token %}
-                            {% for message in messages %}
-                                <div class="alert alert-info">
-                                    <a class="close" href="#" data-dismiss="alert">×</a>
-                                    {{ message.message }}
-                                </div>
-                            {% endfor %}
-                            <div>
-                                {{ form.username|as_crispy_field }}
-                            </div>
-                            <div>
-                                {{ form.password|as_crispy_field }}
-                            </div>
-                            <br/>
-                            <input type="submit" class="btn btn-primary" value="로그인">
-                        </form>
-                    </div>
-                    <br/>
-                    <div>
-                        <a href="{% url 'accounts:signup' %}">회원가입</a>&nbsp;&nbsp;&nbsp;
-                        <a href="#">비밀번호찾기</a>
-                    </div><br/>
-                    <div style="margin-left: 9px">
-                        <a href="{% url 'home' %}">메인 페이지로 돌아가기</a>&nbsp;&nbsp;&nbsp;
-                    </div>
-                </div>
+    <div class="col-lg-3 col-md-6 col-sm-9 col-xs-12" style="color:black; margin:160px auto;">
+        <div style="background-color: white;border: #1976D2 solid 5px; padding:30px; border-radius: 20px; box-shadow: 3px 3px 20px 1px darkgray;">
+            <div>
+                <strong style="color: #1976D2; font-family: yg-jalnan; font-size: 40px">Study Admit</strong>
             </div>
-            <div class="col-lg-4 col-md-3 col-sm-2"></div>
+            <br/>
+            <div style="font-size: 17px">
+                오프라인 스터디 관리 서비스<br/>
+                스터디 어드밋에 로그인하세요
+            </div>
+            <br/>
+            <div style="margin: 0px 70px">
+                <form action="" method="post">{% csrf_token %}
+                    {% for message in messages %}
+                        <div class="alert alert-info">
+                            <a class="close" href="#" data-dismiss="alert">×</a>
+                            {{ message.message }}
+                        </div>
+                    {% endfor %}
+                    <div>
+                        {{ form.username|as_crispy_field }}
+                    </div>
+                    <div>
+                        {{ form.password|as_crispy_field }}
+                    </div>
+                    <br/>
+                    <input type="submit" class="btn btn-primary" value="로그인">
+                </form>
+            </div>
+            <br/>
+            <div>
+                <a href="{% url 'accounts:signup' %}">회원가입</a>&nbsp;&nbsp;&nbsp;
+                <a href="#">비밀번호찾기</a>
+            </div>
+            <br/>
+            <div style="margin-left: 9px">
+                <a href="{% url 'home' %}">메인 페이지로 돌아가기</a>&nbsp;&nbsp;&nbsp;
+            </div>
         </div>
-    </div>
 {% endblock %}
 
 
