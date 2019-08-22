@@ -64,24 +64,24 @@
 
 <body>
 
-<div class="navbar navbar-light fixed-top">
+<div class="navbar navbar-expand-lg fixed-top" style="background-color: white; box-shadow: 0px 1px 9px 1px #b7b7b7">
     <div class="container d-flex justify-content-between" style="background-color: white">
         <div>
-            <a href="#" class="navbar-brand d-flex align-items-center">
+            <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
                 <strong style="color: #1976D2; font-family: yg-jalnan">Study Admit</strong>
             </a>
         </div>
         <div class="d-flex flex-row-reverse">
-                <span>
-                    <a href="{% url 'accounts:signup' %}" class="d-flex ml-3">
-                        <strong style="color:#1976D2; font-size: 20px">회원가입</strong>
-                    </a>
-                </span>
-                <span>
-                    <a href="{% url 'accounts:login' %}" class="d-flex ml-3">
-                        <strong style="color:#1976D2; font-size: 20px">로그인</strong>
-                    </a>
-                </span>
+            <span>
+                <a href="{% url 'accounts:signup' %}" class="d-flex ml-3">
+                    <strong style="color:#1976D2; font-size: 20px">회원가입</strong>
+                </a>
+            </span>
+            <span>
+                <a href="{% url 'accounts:login' %}" class="d-flex ml-3">
+                    <strong style="color:#1976D2; font-size: 20px">로그인</strong>
+                </a>
+            </span>
         </div>
     </div>
 </div>
@@ -199,7 +199,6 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="col-lg-12"
              style="background-color: white; text-align: center; background-image: url(/static/img/background.png);">
@@ -216,7 +215,7 @@
 </div>
 
 <footer>
-    <div class="pt-3 row" style="background-color: #F2F2F2;">
+    <div class="pt-3 pb-3 row" style="background-color: #F2F2F2;">
         <div class="col-lg-12">
             <div><strong style="color: #1976D2; font-family: yg-jalnan; font-size: 20px">Study Admit</strong></div>
             <div style="font-family: sans-serif">Study Admit ⓒ 2019 All Right Reserved, Pirogramming 11</div>
