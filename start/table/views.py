@@ -19,8 +19,6 @@ def attendtable(request, id):
 
     memberships = Membership.objects.filter(group=group, status='ACTIVE')
 
-    ass1 = Assignment.objects.latest('due_date')
-
     ctx = {
         'group':group,
         'usermembership':usermembership,

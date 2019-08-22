@@ -22,7 +22,6 @@ class Attend(models.Model):     # 모델폼으로 구현
     def get_set(self):
         return self.attendconfirm_set.all()
 
-
 class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현
     ATTEND_CHANCE = [
         ('출석 정보 없음', '출석 정보 없음'),

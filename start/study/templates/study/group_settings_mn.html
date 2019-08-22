@@ -243,9 +243,6 @@
             <div class="tab-pane fade" id="pills-members" role="tabpanel" aria-labelledby="pills-members-tab">
 
                     <br/>
-
-                    <form action="" method="POST">
-                    {% csrf_token %}
                     <h5 style="font-weight: bold;">멤버 탈퇴 관리</h5>
 
                     <ul class="list-group">
@@ -258,11 +255,14 @@
                             {% if membership_staff %}
                             {% for member in membership_staff %}
                         <li class="list-group-item" style="color:deepskyblue">{{ member.person.nickname }}({{ member.person.username }})
-                            <input type="hidden" name="out" value="{{ member.person.username }}">
+                        <form action="" method="POST">
+                    {% csrf_token %}
+                        <input type="hidden" name="out" value="{{ member.person.username }}">
                             <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
                             </input>
+                        </form>
                         </li>
                         {% endfor %}
                         {% else %}
@@ -272,11 +272,14 @@
                         {% if membership_member %}
                         {% for member in membership_member %}
                         <li class="list-group-item">{{ member.person.nickname }}({{ member.person.username }})
+                            <form action="" method="POST">
+                    {% csrf_token %}
                             <input type="hidden" name="out" value="{{ member.person.username }}">
                             <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
                             </input>
+                            </form>
                         </li>
                         {% endfor %}
                         {% else %}
@@ -284,7 +287,6 @@
                         {% endif %}
 
                     </ul>
-                </form>
 
 
                 <hr/>
