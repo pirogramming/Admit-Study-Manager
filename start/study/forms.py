@@ -4,16 +4,21 @@ from .models import Group
 class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ['group_name', 'group_code']
+
+        fields = ['group_name', 'group_code', 'group_bio', 'group_goal']
         labels = {
-            'group_name':'스터디 이름',
-            'group_code':'스터디 가입용 코드'
-        }
-        help_texts = {
-            'group_code' : '스터디 이름을 검색 후 가입용 코드를 입력하여 스터디에 가입할 수 있습니다!'
+            'group_name': '',
+            'group_code':'',
+            'group_bio': '',
+            'group_goal': '',
         }
 
 class RegisterForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.fields['group_code'].label = ''
+
     group_code = forms.CharField()
 
 class GroupProfileForm(forms.ModelForm):

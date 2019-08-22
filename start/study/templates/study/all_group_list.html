@@ -1,38 +1,55 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                <div style="text-align: left">
+                    <div style="text-align: left;font-size: 30px;color: #1976D2">
+                        <strong>전체 스터디그룹 보기</strong>
+                    </div>
+                    <div class="search_bar" style="text-align: right">
+                        <form action="" method="get">
+                            <input type="text" name="g" value="{{ g }}"/>
+                            <input type="submit" value="검색" class="btn btn-primary"
+                                   style="width: 52px; height: 35px">
+                        </form>
+                    </div>
+                    <br/>
+                    <div style="text-align: left">
+                        <small>그룹명을 클릭하면 스터디에 가입할 수 있습니다</small>
+                    </div>
+                </div>
+                <div>
+                    <table class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>그룹명</th>
+                            <th>그룹 소개</th>
+                            <th>그룹 목표</th>
+                        </tr>
+                        </thead>
 
-<h1>Group List</h1>
+                        <tbody>
 
-<div class="search_bar">
-    <form action="" method="get">
-        <input type="text" name="g" value="{{ g }}"/>
-        <input type="submit" value="검색" class="btn btn-primary">
-    </form>
-</div>
+                        {% for group in all_group_list %}
+                            <tr>
+                                <td><a href="{% url "study:group_register" group.id %}">{{ group.group_name }}</a></td>
+                                <td>{{ group.group_bio }}</td>
+                                <td>{{ group.group_goal }}</td>
+                            </tr>
+                        {% endfor %}
 
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>그룹명</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        {% for group in all_group_list %}
-        <tr>
-            <td><a href="{% url "study:all_group_detail" group.id %}">{{group.group_name}}</a></td>
-        </tr>
-        {% endfor %}
-
-    </tbody>
-</table>
-
-
-
-<hr>
-
-<a href="{% url 'study:group_new' %}" class="btn btn-primary">스터디 만들기</a>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <a href="{% url 'study:group_new' %}" class="btn btn-primary">스터디 만들기</a>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </div>
 
 {% endblock %}

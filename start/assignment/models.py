@@ -36,6 +36,10 @@ class Done(models.Model):
     def injung_check(self):
         return [x.author for x in Injung_history.objects.filter(done=self)]
 
+    def index_in_group(self):
+        dones = [x for x in Done.objects.filter(assignment__group=self.assignment.group).order_by('created_at')]
+        return dones.index(self)+1
+
 
 class Injung_history(models.Model):
     done = models.ForeignKey(Done, on_delete=models.CASCADE)

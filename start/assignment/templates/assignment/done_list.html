@@ -1,18 +1,32 @@
 {% extends 'group_base.html' %}
 
 {% block content %}
-{% for done in dones %}
-    <table>
-        <td>{{ done.index_in_assignment }}</td>
-        <td>{{ done.assignment.title }} 과제에 대한 {{ done.author }}{% if user == done.author%}(나){% endif %}님의 인증</td>
-        <td>{% if user != done.author %}
-            {% if user in done.injung_check %}
-           (인정 완료)
-            {% else %}
-                (인정 미완료)
-            {% endif %}
-        {% endif %}
-        </td>
-    </table>
-{% endfor %}
+
+<h1>인증의 전당<a href="{% url "assignment:assignment_home" group.id %}" class="btn btn-primary" style="float: right">과제 홈으로</a></h1>
+
+    <div class="card-group">
+    {% for done in dones %}
+        <div class="col-4 mt-2">
+            <div class="card text-center">
+                <img src="{{ done.done_img.url }}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-weight: bold"><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}{% if user == done.author%}(나){% endif %}님의 인증</a></h5>
+                <p class="card-text">{{ done.assignment.title }} 과제에 대한 인증입니다 :) </p>
+                <p class="card-text">인증 시간: {{ done.created_at }}</p>
+
+            </div>
+            {% if user != done.author %}
+            <div class="card-footer">
+                    {% if user in done.injung_check %}
+                        이미 ㅇㅈ하셨습니다
+                     {% else %}
+                        <div style="text-align: center"><a href="{% url "assignment:injung_plus" done.id %}" class="btn btn-primary">인정</a></div>
+                    {% endif %}
+                </div>{% endif %}
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+
+
 {% endblock %}
