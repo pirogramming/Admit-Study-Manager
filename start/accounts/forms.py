@@ -1,30 +1,41 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
-from .models import StudyUser, Profile
+from .models import StudyUser
 
 
 class SignupForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].label = '비밀번호'
+        self.fields['password2'].label = '비밀번호 확인'
+        self.fields['email'].label = '이메일*'
+
+        self.fields['password1'].help_text = "8자 이상, 영문 숫자 특수문자를 섞어주세요"
+        self.fields['password2'].help_text = "비밀번호를 한번 더 입력해주세요"
+        self.fields['username'].help_text = "8자 이상, 영문/숫자만 가능합니다"
+
     class Meta(UserCreationForm.Meta):
         model = StudyUser
-        fields = ['username',
-                  'password1',
-                  'password2',
-                  'email',
-                  'nickname',
-                  'phone_number'
-                  ]
+        fields = [
+            'username',
+            'password1',
+            'password2',
+            'email',
+            'nickname',
+            'phone_number'
+        ]
 
         labels = {
             'username': '아이디',
-            'password': '비밀번호',
             'email': '이메일',
             'nickname': '닉네임',
             'phone_number': '전화번호',
         }
         help_texts = {
-            'password' : (''),
+            'email': ('이메일 형식에 맞게 적어주세요'),
             'nickname': ('다섯자 이하로 입력하세요'),
-            'phone_number' : ('"-" 를 포함해서 입력해주세요')
+            'phone_number': ('"-" 를 포함해서 입력해주세요')
         }
 
     def saved(self):
@@ -38,14 +49,17 @@ class SignupForm(UserCreationForm):
 
 
 class LoginForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = '아이디'
+        self.fields['password'].label = '비밀번호'
+        self.fields['username'].help_text = " "
+
     class Meta:
         model = StudyUser
         widgets = {'password': forms.PasswordInput}
         fields = ['username', 'password']
-        labels = {
-            'username': '아이디',
-            'password': '비밀번호',
-        }
 
 
 class UserEditForm(UserChangeForm):
