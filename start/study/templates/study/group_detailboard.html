@@ -48,7 +48,22 @@
 
                         <h4>{{ done.author.nickname }}님</h4>
 
-                        <img src="{{ done.done_img.url }}" height="100"/>
+                        <img class="scale" src="{{ done.done_img.url }}" height="100"
+                        data-toggle="modal" data-target="#imgModal"/>
+
+                        <div class="modal fade" id="imgModal" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <img class="scale" src="{{ done.done_img.url }}" height="600"/>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <br/>
                         {{ done.created_at }} 에 인증!
                         <br/>

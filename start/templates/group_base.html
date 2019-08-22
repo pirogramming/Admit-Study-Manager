@@ -55,6 +55,18 @@
             text-decoration: None;
         }
 
+        .settings {
+            display: table-cell;
+        }
+
+        .settings > i {
+            vertical-align: middle;
+        }
+
+        .settings > span {
+            vertical-align: middle;
+        }
+
         @font-face {
     font-family: 'yg-jalnan';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
@@ -126,7 +138,7 @@
                 <hr/>
 
                 <div><h6>이것만은 꼭 지키자!</h6></div>
-                <div>{{ group.group_rule }}</div>
+                <div style="white-space:pre-line;">{{ group.group_rule }}</div>
 
                 <hr/>
 
@@ -153,20 +165,19 @@
                     <li class="list-group-item">
                         <a href="{% url 'table:table' group.id %}">히스토리</a>
                     </li>
-                    <li class="list-group-item"><a href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내
-                        설정</a>
+                    <li class="list-group-item">
+                        <a class="settings" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i><span> 내 설정</span></a>
                     </li>
 
                     {% if usermembership.is_manager %}
                     <li class="list-group-item">
-                        <a href="{% url 'study:group_settings_mn' group.id %}"><i class="material-icons">settings</i>그룹
-                            설정</a>
+                        <a class="settings" href="{% url 'study:group_settings_mn' group.id %}" style="display: table-cell"><i class="material-icons" style="vertical-align: middle;">settings</i><span style="vertical-align: middle;"> 그룹
+                            설정</span></a>
                     </li>
                     {% endif %}
                     {% if usermembership.is_staff %}
                     <li class="list-group-item">
-                        <a href="{% url 'study:group_settings_stf' group.id %}"><i class="material-icons">settings</i>그룹
-                            설정</a>
+                        <a class="settings" href="{% url 'study:group_settings_stf' group.id %}"><i class="material-icons">settings</i><span> 그룹 설정</span></a>
                     </li>
                     {% endif %}
                 </ul>

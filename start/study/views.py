@@ -456,19 +456,6 @@ def group_registerbyurl(request, invitation_url):
         else:
             return render(request, 'study/group_registerbyurl_fail.html')
 
-        # except:
-        #     form = LoginForm(request.POST)
-        #     id = request.POST['username']
-        #     pw = request.POST['password']
-        #     u = authenticate(username=id, password=pw)
-
-        # if u:
-        #     login(request, user=u)
-        #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'membership':membership})
-        # else:
-        #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'error':'아이디나 비밀번호가 일치하지 않습니다.', 'membership':membership})
-        # return render(request, 'study/group_registerbyurl.html', {'group':group})
-
     else:
         group = Group.objects.get(invitation_url=invitation_url)
         form = LoginForm()
@@ -557,16 +544,21 @@ def group_settings_mn(request, id):
                 # return redirect('study:group_settings', id)
 
         elif request.POST.get('rulerevise', ''):
-            group_rule = request.POST.get('group_rule', '')
-            late_penalty = request.POST.get('late_penalty', '')
-            abscence_penalty = request.POST.get('abscence_penalty', '')
-            notsubmit_penalty = request.POST.get('notsubmit_penalty', '')
+            try:
+                group_rule = request.POST.get('group_rule', '')
+                late_penalty = request.POST.get('late_penalty', '')
+                abscence_penalty = request.POST.get('abscence_penalty', '')
+                notsubmit_penalty = request.POST.get('notsubmit_penalty', '')
 
-            group.group_rule = group_rule
-            group.late_penalty = late_penalty
-            group.abscence_penalty = abscence_penalty
-            group.notsubmit_penalty = notsubmit_penalty
-            group.save()
+                group.group_rule = group_rule
+                group.late_penalty = late_penalty
+                group.abscence_penalty = abscence_penalty
+                group.notsubmit_penalty = notsubmit_penalty
+                group.save()
+
+            except ValueError:
+                messages.warning(request, '벌금은 숫자로만 입력 가능합니다.')
+                return render(request, 'study/group_settings_mn.html', ctx)
 
             return render(request, 'study/group_settings_mn.html', ctx)
 
@@ -640,12 +632,15 @@ def group_settings_mn(request, id):
 def group_settings_stf(request, id):
     user = request.user
     group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    usermembership = get_object_or_404(Membership, person=user,group=group)
+
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     groupprofileform = GroupProfileForm(instance=group)
 
     ctx = {'user': user, 'group': group,
+           'usermembership':usermembership,
            'groupprofileform': groupprofileform,
            'membership_manager': membership_manager,
            'membership_staff': membership_staff,

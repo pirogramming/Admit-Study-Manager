@@ -11,9 +11,6 @@
   <li class="nav-item">
     <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-assignment" role="tab" aria-controls="pills-assignment" aria-selected="false">과제</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
-  </li>
 </ul>
 <div class="tab-content" id="pills-tabContent">
   <div class="tab-pane fade show active" id="pills-attendtable" role="tabpanel" aria-labelledby="pills-attendtable-tab">
@@ -31,7 +28,7 @@
       <tbody>
           {% for attend in attends %}
         <tr>
-          <th>{{ attend.gather_datetime }}</th>
+          <th>{{ attend.gather_datetime }}({{ attend.title }})</th>
             {% for attendconfirm in attend.get_set %}
             {% if usermembership.is_mn_stf %}
             <td>
@@ -83,7 +80,7 @@
       <tbody>
           {% for assignment in assignments %}
         <tr>
-          <th>{{ assignment.due_date }}</th>
+          <th>{{ assignment.due_date }}({{ assignment.title }})</th>
             {% if usermembership.is_mn_stf %}
             {% for membership in memberships %}
             <td>
@@ -114,7 +111,6 @@
     </table>
 
   </div>
-  <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
 </div>
 
 {% endblock %}
