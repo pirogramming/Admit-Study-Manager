@@ -18,17 +18,6 @@ class Assignment(models.Model):
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])
 
-    # def done_list(self):
-    #     done_list = []
-    #     for member in settings.AUTH_USER_MODEL.objects.filter(joined_groups=self.group):
-    #         if member in [x.author for x in Done.objects.filter(assignment=self)]:
-    #             done_list.append(member.username)
-    #         else:
-    #             pass
-    #         # else:
-    #         #     done_dict['{}'.format(membership.person.username)]='F'
-    #     return done_list
-
     def submitters(self):
         return [x.author for x in Done.objects.filter(assignment=self)]
 
@@ -43,6 +32,9 @@ class Done(models.Model):
 
     def get_absolute_url(self):
         return reverse('assignment:done_detail', args=[self.id])
+
+    def injung_check(self):
+        return [x.author for x in Injung_history.objects.filter(done=self)]
 
 
 class Injung_history(models.Model):

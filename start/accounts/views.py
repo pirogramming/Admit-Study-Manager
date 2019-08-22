@@ -1,21 +1,42 @@
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, authenticate, login as auth_login
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib import messages
-
-from .forms import SignupForm, UserEditForm
+from .forms import SignupForm, UserEditForm, LoginForm
 from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
 
 
-class UserCreateView(CreateView):
+class UserCreateView(SuccessMessageMixin, CreateView):
     template_name = 'accounts/signup_form.html'
     form_class = SignupForm
     success_url = reverse_lazy('accounts:login')
+    success_message = '회원가입 성공! 로그인해주세요'
+
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                auth_login(request, user)
+                return redirect('study:mystudy')
+        else:
+            messages.error(request,'아이디나 비밀번호를 확인해주세요')
+            return redirect('accounts:login')
+
+    else:
+        form = LoginForm()
+    return render(request, 'accounts/login_form.html', {'form': form})
 
 
 @login_required

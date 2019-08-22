@@ -1,0 +1,241 @@
+{% load static %}
+
+<!doctype html>
+
+<html lang="kr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>스터디 어드밋</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/font-kopub/1.0/kopubdotum.css'>
+    <style>
+
+        a:hover {
+            color: yellow;
+        }
+
+        a {
+            text-decoration: None;
+            color: white;
+        }
+
+        .white_hr {
+            border: 0;
+            border-radius: 5px;
+            height: 6px;
+            background: white;
+        }
+
+        .blue_hr {
+            border: 0;
+            border-radius: 5px;
+            height: 8px;
+            width: 500px;
+            background: #1976D2;
+        }
+
+        div {
+            font-family: 'KoPub Dotum';
+            text-align: center;
+            font-size: 14px;
+        }
+
+
+        div:nth-of-type(1) {
+            font-weight: 500;
+        }
+
+        @font-face {
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar navbar-expand-lg fixed-top" style="background-color: white; box-shadow: 0px 1px 9px 1px #b7b7b7">
+    <div class="container d-flex justify-content-between" style="background-color: white">
+        <div>
+            <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
+                <strong style="color: #1976D2; font-family: yg-jalnan">Study Admit</strong>
+            </a>
+        </div>
+        <div class="d-flex flex-row-reverse">
+            <span>
+                <a href="{% url 'accounts:signup' %}" class="d-flex ml-3">
+                    <strong style="color:#1976D2; font-size: 20px">회원가입</strong>
+                </a>
+            </span>
+            <span>
+                <a href="{% url 'accounts:login' %}" class="d-flex ml-3">
+                    <strong style="color:#1976D2; font-size: 20px">로그인</strong>
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container justify-content-between">
+    <div class="row" style="background-color:#1976D2 ">
+        <div class="col-lg-8" style="color:white; margin-top: 150px">
+            <div style="font-size:44px; font-family: 'yg-jalnan', cursive; line-height: 55px; text-align: left">
+                스터디 어드밋<br/>개꿀 ㅇㅈ? 어 ㅇㅈ~
+            </div>
+            <div class='flex-row'>
+                <hr class="white_hr">
+            </div>
+            <div style="font-size:20px;text-align: left">
+                스터디 어드밋의 <strong>체계적인 관리 기능</strong>으로<br/>
+                당신의 스터디, 업무 모임을<br/>효과적으로 관리하세요
+            </div>
+        </div>
+        <div class="col-lg-4 d-flex flex-row-reverse" style="margin-top: 40px">
+            <img src="{% static 'img/header.png' %}" style="width:340px;height:460px"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12" style="background-color: white; background-image: url(/static/img/background.png)">
+            <div style="margin-top: 100px">
+                <div style="font-size:30px; font-family: 'yg-jalnan', cursive; color:#115293">
+                    스터디원들의 출석, 벌금, 과제
+                </div>
+                <div style="font-size:30px; font-family: 'yg-jalnan', cursive; color:#1976D2">
+                    이거 언제 다 기록하지?
+                </div>
+            </div>
+            <div>
+                <hr class="blue_hr">
+            </div>
+            <div style="font-size:30px; font-weight: bold; margin-bottom: 100px">
+                스터디 어드밋은 알아서 해줍니다
+            </div>
+        </div>
+    </div>
+
+    <div data-aos='fade-right'>
+        <div class="row">
+            <div class="col-lg-12" style="background-color: #F2F2F2; text-align: center;">
+                <div class="mt-5 mb-5">
+                    <div style="color:#1976D2; font-size:38px; font-family: 'yg-jalnan', cursive;">
+                        당신의 스터디를 관리해드릴게요
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background-color: #F2F2F2; padding:50px 0px">
+            <div class="col-4 mb-5">
+                <div><img src="{% static 'img/clock.png' %}" style="width:120px;height:120px"/></div>
+                <br/>
+                <div style="font-weight: bold; font-size: 30px; color: #115293">출석 체크</div>
+                <br/>
+                <div style="font-weight: bold; font-size: 20px; color:#1976D2">
+                    실제 시간 연동을 통한<br/>리얼타임 출석체크
+                </div>
+            </div>
+
+            <div class="col-4 mb-5">
+                <div><img src="{% static 'img/checkboard.png' %}" style="width:120px;height:120px"/></div>
+                <br/>
+                <div style="font-weight: bold; font-size: 30px; color: #115293">벌금 기록</div>
+                <br/>
+                <div style="font-weight: bold; font-size: 20px; color:#1976D2">
+                    출석, 과제와 연동된<br/>효과적인 벌금 누적 기능
+                </div>
+            </div>
+
+            <div class="col-4 mb-5">
+                <div><img src="{% static 'img/book.png' %}" style="width:120px;height:120px"/></div>
+                <br/>
+                <div style="font-weight: bold; font-size: 30px; color: #115293">과제 인증</div>
+                <br/>
+                <div style="font-weight: bold; font-size: 20px; color:#1976D2">
+                    스터디원들이 서로<br/>평가하는 서로의 과제
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div data-aos='fade-left'>
+        <div class="row">
+            <div class="col-lg-12" style="background-color: #1976D2; text-align: center;">
+                <div class="mt-5 mb-4">
+                    <div style="color:white; font-size:38px; font-family: 'yg-jalnan', cursive;">
+                        당신의 ㅇㅈ을 날려주세요
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="background-color: #1976D2; padding:50px 0px">
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                <div><img src="{% static 'img/thumbsup.png' %}" style="width:280px;height:250px"/></div>
+            </div>
+
+            <div class="col-lg-4 col-sm-6 col-sm-12 mt-4 mb-3">
+                <div style="font-weight: bold; font-size: 20px; color:white">
+                    스터디원들의 과제와 출석을<br/>스터디원들이 평가하여<br/>인정 포인트를 누적합니다
+                </div>
+                <br/>
+                <div style="font-weight: bold; font-size: 20px; color:white">
+                    스터디원들에게 최대한 많은<br/>인정을 받아보세요
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-3 ">
+                <div><img src="{% static 'img/thumbsup_right.png' %}" style="width:280px;height:250px"/></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12"
+             style="background-color: white; text-align: center; background-image: url(/static/img/background.png);">
+            <div class="mt-5 mb-5"
+                 style="background-color: #1976D2; border-radius: 20px; width:400px; margin:0 auto">
+                <div style="color:white; font-size:30px; font-family: 'yg-jalnan', cursive;">
+                    <a href="{% url 'accounts:signup' %}">
+                        지금 가입하기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="pt-3 pb-3 row" style="background-color: #F2F2F2;">
+        <div class="col-lg-12">
+            <div><strong style="color: #1976D2; font-family: yg-jalnan; font-size: 20px">Study Admit</strong></div>
+            <div style="font-family: sans-serif">Study Admit ⓒ 2019 All Right Reserved, Pirogramming 11</div>
+            <div style="font-family: sans-serif">박소윤 곽진현 김종혁 김소현 이승환</div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    AOS.init()
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -3,21 +3,69 @@
 {% block content %}
 <h1>{{ group.group_name }}의 과제 현황 >_<</h1>
 
-가장 최근 항목만 표시됩니다. Click for details.<br/><br/>
-
-<a href="{% url "assignment:assignment_list" group.id %}">과제</a>:
-
-{% if assignment == None %}
-    등록된 과제 없음.
-{% else %}
-    <a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> - {{ assignment.due_date }}까지 <br/><br/>
-    가장 최근 인증:
-    {% if done == None %}
-        등록된 인증 없음. 1빠 해볼까요~~?
-    {% else %}
-        <a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}님의 인증</a>
-    <img src="{{ done.done_img.url }}" height="200"/>
+    {% if usermembership.is_mn_stf %}
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
     {% endif %}
 
+    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
+    <br/>
+
+<h3>과제:</h3>
+    <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
+
+
+{% if assignments == None %}
+    등록된 과제 없음.
+{% else %}
+            <table class="table">
+                <thead>
+                    <tr align="center">
+                        <th scope="col">과제명</th>
+                        <th scope="col">기한</th>
+                        <th scope="col">인증 여부</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assignment in assignments %}
+                    <tr align="center">
+                        <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> </td>
+                        <td>{{ assignment.due_date }}까지
+                            {% if assignment.due_date <= now %}
+                             (기한 지남)
+                            {% endif %}</td>
+                        <td>{% if user in assignment.submitters %}
+                            인증 완료
+                            {% else %}
+                            미인증
+                            {% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+    <h3>인증:</h3>     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
+    {% if dones == None %}
+        등록된 인증 없음. 1빠 해볼까요~~?
+    {% else %}
+            <table class="table">
+                <thead>
+                    <tr align="center">
+                        <th scope="col">제목</th>
+                        <th scope="col">이미지</th>
+                        <th scope="col">인정?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for done in dones %}
+                            <tr align="center">
+                    <th scope="row">{{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">
+                        <br>{{ done.author }}님의 인증</a></th>
+                    <td><img src="{{ done.done_img.url }}" height="200"/></td>
+                    <td>인정버튼 커밍순</td>
+                            </tr>
+                        {% endfor %}
+                </tbody>
+            </table>
+    {% endif %}
 {% endif %}
 {% endblock %}
