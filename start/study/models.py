@@ -1,6 +1,8 @@
 import uuid
 from django.db import models
-from accounts.models import StudyUser
+
+from django.conf import settings
+# from accounts.models import StudyUser
 from django.urls import reverse
 
 # Create your models here.
@@ -18,7 +20,9 @@ class Group(models.Model):
     late_penalty = models.CharField(max_length=10, default="0")
     abscence_penalty = models.CharField(max_length=10, default="0")
     notsubmit_penalty = models.CharField(max_length=10, default="0")
-    group_member = models.ManyToManyField(StudyUser, through='Membership')
+    group_member = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                          through='Membership',
+                                          related_name='joined_groups',)
 
     def __str__(self):
         return self.group_name
@@ -31,7 +35,7 @@ class Group(models.Model):
 
 
 class Membership(models.Model):
-    person = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
+    person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     ROLE_CHOICES = [
         ('MANAGER', 'MANAGER'),

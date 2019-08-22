@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 
-from accounts.models import StudyUser
+from django.conf import settings
 from study.models import Group
 
 
@@ -18,22 +18,25 @@ class Assignment(models.Model):
     def get_absolute_url(self):
         return reverse('assignment:assignment_detail', args=[self.id])
 
-    def done_list(self):
-        done_list = []
-        for member in self.group.prefetch_related('group_member').all():
-            if member in self.done_set.all().author:
-                done_list.append(member.username)
-            else:
-                pass
-            # else:
-            #     done_dict['{}'.format(membership.person.username)]='F'
-        return done_list
+    # def done_list(self):
+    #     done_list = []
+    #     for member in settings.AUTH_USER_MODEL.objects.filter(joined_groups=self.group):
+    #         if member in [x.author for x in Done.objects.filter(assignment=self)]:
+    #             done_list.append(member.username)
+    #         else:
+    #             pass
+    #         # else:
+    #         #     done_dict['{}'.format(membership.person.username)]='F'
+    #     return done_list
+
+    def submitters(self):
+        return [x.author for x in Done.objects.filter(assignment=self)]
 
 
 class Done(models.Model):
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='dones')
     index_in_assignment = models.IntegerField()
-    author = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     done_img = models.ImageField(upload_to='AssignmentsDone')
     injung = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

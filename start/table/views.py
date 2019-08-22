@@ -20,13 +20,13 @@ def attendtable(request, id):
     memberships = Membership.objects.filter(group=group, status='ACTIVE')
 
     ass1 = Assignment.objects.latest('due_date')
-    print(ass1.done_list)
+
     ctx = {
         'group':group,
         'usermembership':usermembership,
         'attends':attends,
         'assignments':assignments,
 
-        'memberships':memberships
+        'memberships':memberships,
     }
     return render(request, 'table/table.html', ctx)

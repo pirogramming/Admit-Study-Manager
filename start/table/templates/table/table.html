@@ -9,7 +9,7 @@
     <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-attendtable" role="tab" aria-controls="pills-attendtable" aria-selected="true">출석</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
+    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-assignment" role="tab" aria-controls="pills-assignment" aria-selected="false">과제</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
@@ -68,7 +68,7 @@
     </table>
 
   </div>
-  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+  <div class="tab-pane fade" id="pills-assignment" role="tabpanel" aria-labelledby="pills-assignment-tab">
 
       <table class="table">
       <caption>과제 현황</caption>
@@ -88,7 +88,7 @@
             {% for membership in memberships %}
             <td>
                 <a href="수정 url">
-                    {% if membership.person.username in assignment.done_list %}
+                    {% if membership.person in assignment.submitters %}
                     <p style="color:green;">제출</p>
                     {% else %}
                     <p style="color:red;">미제출</p>
@@ -100,7 +100,7 @@
             {% else %}
             {% for membership in memberships %}
             <td>
-                {% if membership.person.username in assignment.done_list %}
+                {% if membership.person in assignment.submitters %}
                     <p style="color:green;">제출</p>
                     {% else %}
                     <p style="color:red;">미제출</p>
@@ -116,7 +116,6 @@
   </div>
   <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
 </div>
-
 
 
 
