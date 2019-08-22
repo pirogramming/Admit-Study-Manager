@@ -61,7 +61,15 @@
                     <th scope="row">{{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">
                         <br>{{ done.author }}님의 인증</a></th>
                     <td><img src="{{ done.done_img.url }}" height="200"/></td>
-                    <td>인정버튼 커밍순</td>
+                    <td>{% if user != done.author %}
+                            {% if user in done.injung_check %}
+                                이미 ㅇㅈ함
+                            {% else %}
+                                <a href="{% url "assignment:injung_plus" done.id %}" class="btn btn-primary">인정</a>
+                            {% endif %}
+                        {% else %}
+                            자추 ㄴㄴ
+                        {% endif %}</td>
                             </tr>
                         {% endfor %}
                 </tbody>

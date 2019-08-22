@@ -1,6 +1,7 @@
 import random
 from datetime import datetime, time
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 from attendance.views import gather_time_hour_function
@@ -165,7 +166,7 @@ def injung_plus(request, done_id):
                     m.rank += 1
             m.save()
 
-        return redirect(done)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 

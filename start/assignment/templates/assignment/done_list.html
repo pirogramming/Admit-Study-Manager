@@ -20,7 +20,7 @@
                     {% if user in done.injung_check %}
                         이미 ㅇㅈ하셨습니다
                      {% else %}
-                        <a href="#" class="btn btn-primary">인정</a> {{ done.injung }}
+                        <a href="{% url "assignment:injung_plus" done.id %}" class="btn btn-primary">인정</a>
                     {% endif %}
                 </div>{% endif %}
         </div>
