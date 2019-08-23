@@ -4,35 +4,64 @@
 {% block content %}
 
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=d0vornngin&submodules=geocoder"></script>
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
+<style>
+
+    span {
+        color: #a6a6a6;
+        font-size: 12px;
+    }
+</style>
 
 
-<h1>{{ notice.title }}</h1>
+<div class="d-flex justify-content-start">
+<h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ notice.title }}</h3>
 
-{{ notice.content|linebreaks }}
+<div class="info d-flex align-items-center">
+    {% if notice.sub_time == 0 %}
+    <span class="ml-3">| 방금 | {{ notice.author.nickname }}</span>
+    {% elif notice.sub_time < 60 %}
+    <span class="ml-3">| {{ notice.sub_time }}분 전 | {{ notice.author.nickname }}</span>
+    {% else %}
+    <span class="ml-3">| {{ notice.created_at|date:"Y-m-d h:i" }} | {{ notice.author.nickname }}</span>
+    {% endif %}
+</div>
+</div>
+<br>
 
-{% if notice.photo %}
-    {% thumbnail "100x100" notice.photo %}
-{% endif %}
+<div class="content-wrapper">
+    {{ notice.content|linebreaks }}
+</div>
+<div class="photo-wrapper">
+    {% if notice.photo %}
+        {% thumbnail "400x300" notice.photo %}
+    {% endif %}
+</div>
 
-{% if notice.file %}
-    <a href="{% url 'studypost:notice_download' notice.file.path %}" class="btn btn-secondary">첨부파일</a>
-{% endif %}
-
-{{ notice.created_at }}
-
-
-<div id="map" style="width: 500px; height: 500px;">
-
+<div class="border border-primary rounded mt-3" id="map" style="width: 500px; height: 500px;">
 </div>
 
 <hr>
 
-{% if notice.author == request.user %}
-    <a href="{% url "studypost:notice_edit" notice.id %}" class="btn btn-secondary">수정</a>
-    <a href="{% url "studypost:notice_delete" notice.id %}" class="btn btn-secondary">삭제</a>
-{% endif %}
-<a href="{% url 'studypost:notice_list' group.id %}" class="btn btn-primary">글목록</a>
+<div class="d-flex justify-content-between">
+    <div class="wrapper">
+        {% if notice.author == request.user %}
+        <a href="{% url 'studypost:notice_edit' notice.id %}" style="color: #a6a6a6;
+        font-size: 14px;">수정</a>
+        <a href="{% url 'studypost:notice_delete' notice.id %}" style="color: #a6a6a6;
+        font-size: 14px; margin-left: 10px;">삭제</a>
+        {% endif %}
+        <a href="{% url 'studypost:notice_list' group.id %}" style="margin-left: 10px;">글목록</a>
+    </div>
 
+    <div class="file-wrapper">
+        {% if notice.file %}
+        <a href="{% url 'studypost:notice_download' notice.file.path %}" style="margin-left: 10px;"><i
+                class="fas fa-file-download">첨부파일</i></a>
+        {% endif %}
+    </div>
+</div>
 <script>
     var base_position = new naver.maps.LatLng('{{ lat }}','{{ lng }}');
     var dom = document.getElementById('map');
@@ -89,7 +118,7 @@
 
             infoWindow.setContent([
                 '<div style="padding:10px;min-width:200px;line-height:150%;">',
-                '<h4 style="margin-top:5px;">모임 장소</h4><br />',
+                '<h4 style="margin-top:5px; font-family: \'KoPub Dotum\'; font-weight: bold;">모임 장소</h4><br />',
                 htmlAddresses.join('<br />'),
                 '</div>'
             ].join('\n'));

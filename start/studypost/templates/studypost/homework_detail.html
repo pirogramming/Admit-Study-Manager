@@ -3,23 +3,60 @@
 
 {% block content %}
 
-<h1>{{ homework.title }}</h1>
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
 
-{{ homework.content|linebreaks }}
+<style>
 
-{% if homework.photo %}
-    {% thumbnail "100x100" homework.photo %}
-{% endif %}
+    span {
+        color: #a6a6a6;
+        font-size: 12px;
+    }
+</style>
 
-{% if homework.file %}
-    <a href="{% url 'studypost:homework_download' homework.file.path %}" class="btn btn-secondary">첨부파일</a>
-{% endif %}
+
+<div class="d-flex justify-content-start">
+<h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ homework.title }}</h3>
+
+<div class="info d-flex align-items-center">
+    {% if homework.sub_time == 0 %}
+    <span class="ml-3">| 방금 | {{ homework.author.nickname }}</span>
+    {% elif homework.sub_time < 60 %}
+    <span class="ml-3">| {{ homework.sub_time }}분 전 | {{ homework.author.nickname }}</span>
+    {% else %}
+    <span class="ml-3">| {{ homework.created_at|date:"Y-m-d h:i" }} | {{ homework.author.nickname }}</span>
+    {% endif %}
+</div>
+</div>
+<br>
+
+<div class="content-wrapper">
+    {{ homework.content|linebreaks }}
+</div>
+<div class="photo-wrapper">
+    {% if homework.photo %}
+        {% thumbnail "400x300" homework.photo %}
+    {% endif %}
+</div>
 
 <hr>
 
-{% if homework.author == request.user %}
-    <a href="{% url "studypost:homework_edit" homework.id %}" class="btn btn-secondary">수정</a>
-    <a href="{% url "studypost:homework_delete" homework.id %}" class="btn btn-secondary">삭제</a>
-{% endif %}
-<a href="{% url 'studypost:notice_list' group.id %}" class="btn btn-primary">글목록</a>
+<div class="d-flex justify-content-between">
+    <div class="wrapper">
+        {% if homework.author == request.user %}
+        <a href="{% url 'studypost:homework_edit' homework.id %}" style="color: #a6a6a6;
+        font-size: 14px;">수정</a>
+        <a href="{% url 'studypost:homework_delete' homework.id %}" style="color: #a6a6a6;
+        font-size: 14px; margin-left: 10px;">삭제</a>
+        {% endif %}
+        <a href="{% url 'studypost:notice_list' group.id %}" style="margin-left: 10px;">글목록</a>
+    </div>
+
+    <div class="file-wrapper">
+        {% if homework.file %}
+        <a href="{% url 'studypost:homework_download' homework.file.path %}" style="margin-left: 10px;"><i
+                class="fas fa-file-download">첨부파일</i></a>
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}
