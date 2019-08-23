@@ -186,6 +186,7 @@
 <div class="container">
     <div class="row">
         <div class="notice col-6 border rounded">
+            <h4 style="float:right;"><a href="{% url 'studypost:notice_list' group.id %}">공지로 가기</a></h4>
             <h5>최신 공지</h5>
             {% if not latest_notice %}
             <p>등록된 공지가 없습니다.</p>
@@ -200,16 +201,16 @@
             {% endif %}
 
             <div>
-        {% for notice_post in notice_posts %}
-        <br/>
-        <div>
-            <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
-            <div>게시일: {{ notice_post.created_at }}</div>
-            <div>글쓴이: {{ notice_post.author.nickname }}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
+                {% for notice_post in notice_posts %}
+                <br/>
+                <div>
+                    <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
+                    <div>게시일: {{ notice_post.created_at }}</div>
+                    <div>글쓴이: {{ notice_post.author.nickname }}</div>
+                </div>
+                <br/>
+                {% endfor %}
+            </div>
 
 
         </div>
@@ -323,10 +324,10 @@
                     </div>
                     {% endif %}
 
-                    {% endif %}
 
                 </div>
             </div>
+            {% endif %} <!--혹시 conflict생기면 이 부분이 옳으니 이 부분을 남겨주세요-->
         </div>
     </div>
     <div class="row">
@@ -384,7 +385,7 @@
                 </button>
                 {% else %}
                 <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
-                    <p>이미 만료된 과제입니다.</p>
+                    <p>인증 기간이 끝났습니다.</p>
                 </div>
                 {% endif %}
                 {% endif %}
@@ -421,12 +422,6 @@
         </div>
     </div>
 </div>
-
-<footer>
-    <div style="background-color: darkslategrey">
-        <p>푸터</br>푸터푸터</p>
-    </div>
-</footer>
 
 
 <script>
