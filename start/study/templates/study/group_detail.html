@@ -202,7 +202,7 @@
             </div>
             {% else %}
             <div class="latest_attendance">
-            <a href="#"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_attend.title }}</h4></a>
+            <a href="{% url 'attendance:attend_detail' group.id latest_attend.id %}"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_attend.title }}</h4></a>
                 <div> {# 출석 띄우기 #}
                         <strong>모임시간 | {{ latest_attend.gather_datetime|date:"Y-m-d h:i" }} ({{ latest_attend.sub_time}}분 허용)</strong>
                 </div>
@@ -354,7 +354,7 @@
 
                 {% if not user in authors %}
                 {% if not latest_assignment.due_date <= now %}
-                <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;" data-toggle="modal" data-target="#assModal">
+                <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:300px;" data-toggle="modal" data-target="#assModal">
                     내 과제 인증하기
                 </button>
                 {% else %}
