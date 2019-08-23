@@ -5,6 +5,7 @@
 
 <script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
 
+
 <style>
     form {
         font-family: 'KoPub Dotum';
@@ -23,9 +24,13 @@
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <input type="text" name="title" style="width: 820px; height: 50px; font-weight: bold; padding: 5px;" placeholder="글 제목">
+    <input type="text" name="title" style="width: 820px; height: 50px; font-weight: bold; padding: 5px;" placeholder="글 제목" value="{{ form.title }}">
 
-    <textarea type="text" name="content" style="width: 820px; height: 500px; padding: 5px;" placeholder="글 내용"></textarea>
+    <textarea type="text" name="content" style="width: 820px; height: 500px; padding: 5px;" placeholder="여기를 눌러서 글을 작성하세요.
+
+스터디 모임에 대해 공지를 할 수 있는 공간입니다.
+모임 시간, 모임 장소, 준비물 등을 스터디원들에게 알려주세요!
+필요하다면 첨부파일을 업로드할 수도 있습니다." value="{{ form.content }}"></textarea>
 
     <div class="input-group mt-3" style="width: 820px;">
         <div class="custom-file">
