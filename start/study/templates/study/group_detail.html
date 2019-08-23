@@ -248,20 +248,20 @@
                     </div>
 
                     {% elif latest_attend.attend_status == '출석 시작 전' %}
-                        <p>모임 시작 전입니다. 늦지 마세요:)</p>
+                        <p>출석 체크 시작 전입니다. 늦지 마세요:)</p>
 
                     {% elif not confirm_value %}
                     <p>이미 출석하셨습니다:)</p>
                     <div>
                         <ul class="list-group">
-                            <li class="list-group-item" style="color:green;">출석함!</li>
+                            <li class="list-group-item" style="color:green; font-weight: bold">출석함!</li>
 
                             <li class="list-group-item">
                                 {% for instance_attend in instances_attend %}
                                 <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
                                 {% endfor %}
                             </li>
-                            <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
+                            <li class="list-group-item " style="color:darkorange; font-weight: bold">지각ㅠ</li>
 
                             <li class="list-group-item">
                                 {% for instance_late in instances_late %}
@@ -269,7 +269,7 @@
                                 {% endfor %}
                             </li>
 
-                            <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
+                            <li class="list-group-item" style="color:red; font-weight: bold">결석ㅠㅠ</li>
 
                             <li class="list-group-item">
                                 {% for instance_absence in instances_absence %}
@@ -288,7 +288,7 @@
                             <div>{{ attendform.as_p }}</div>
                             <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                             <div>현재 정상 출석 가능합니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
+                            <input type="submit" name="attendance" value="출석하기" class="btn btn-primary"/>
                         </form>
                     </div>
                     {% elif latest_attend.attend_status == '지각 출석 가능' %}
@@ -298,7 +298,7 @@
                             <div>{{ attendform.as_p }}</div>
                             <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                             <div>현재 지각 출석입니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
+                            <input type="submit" name="attendance" value="출석하기" class="btn btn-primary"/>
                         </form>
                     </div>
                     {% endif %}
@@ -351,7 +351,7 @@
                         {% if done.author == request.user %}
                         <div >나의 ㅇㅈ수:{{ done.injung }}</div>
                         {% else %}
-                        <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
+                        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
                         {% endif %}
                     </div>
                     {% endfor %}
