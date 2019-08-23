@@ -170,15 +170,23 @@
         <div class="notice col-6" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
             <br/>
             <h4 style="float:right;"><a href="{% url 'studypost:notice_list' group.id %}">+</a></h4>
-            {% if not latest_notice %}
-            <h5>등록된 공지가 없습니다.</h5>
+
+            {% if latest_notice %}
+                <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h4></a>
+                <h6>{{ latest_notice.created_at|date:"Y-m-d H:i" }} | {{ latest_notice.author.nickname }}</h6>
+                <hr/>
+                <div class="content-wrapper">
+                    <h5>{{ latest_notice.content|linebreaks }}</h5>
+                </div>
+            {% elif latest_hw %}
+                <a href="{% url 'studypost:homework_detail' latest_hw.id %}"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_hw.title }}</h4></a>
+                <h6>{{ latest_hw.created_at|date:"Y-m-d H:i" }} | {{ latest_hw.author.nickname }}</h6>
+                <hr/>
+                <div class="content-wrapper">
+                    <h5>{{ latest_hw.content|linebreaks }}</h5>
+                </div>
             {% else %}
-            <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h4></a>
-            <h6>{{ latest_notice.created_at|date:"Y-m-d h:i" }} | {{ latest_notice.author.nickname }}</h6>
-            <hr/>
-            <div class="content-wrapper">
-                <h5>{{ latest_notice.content|linebreaks }}</h5>
-            </div>
+                <h5>등록된 공지가 없습니다.</h5>
             {% endif %}
 
 
@@ -273,7 +281,7 @@
                             <div>{{ attendform.as_p }}</div>
                             <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                             <div>현재 정상 출석 가능합니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
+                            <input type="submit" name="attendance" value="출석하기" class="btn btn-primary"/>
                         </form>
                     </div>
                     {% elif latest_attend.attend_status == '지각 출석 가능' %}
@@ -283,7 +291,7 @@
                             <div>{{ attendform.as_p }}</div>
                             <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                             <div>현재 지각 출석입니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
+                            <input type="submit" name="attendance" value="출석하기" class="btn btn-primary"/>
                         </form>
                     </div>
                     {% endif %}

@@ -17,7 +17,7 @@ from assignment.forms import DoneForm
 from django.urls import reverse
 from django.utils.html import format_html
 
-from studypost.models import Notice
+from studypost.models import Notice, Homework
 from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership, UpdateHistory
 from django.contrib import messages
@@ -151,6 +151,7 @@ def group_detail(request, id):
     now = datetime.now()
 
     latest_notice = Notice.objects.filter(group=group).order_by('created_at').last()
+    latest_hw = Homework.objects.filter(group=group).order_by('created_at').last()
 
     # latest_assignment = "가장 최근 과제 instance"
     latest_assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
@@ -206,12 +207,16 @@ def group_detail(request, id):
         'authors': authors,
 
         'latest_notice':latest_notice,
+        'latest_hw': latest_hw,
 
         'instances_attend':instances_attend,
         'instances_late':instances_late,
         'instances_none':instances_none,
         'instances_absence':instances_absence,
     }
+
+    print(latest_notice)
+    print(latest_hw)
 
     if request.method == 'POST':
         if request.POST.get('assignment', ''):
