@@ -3,51 +3,94 @@
 
 {% block content %}
 
-<h4>모임 공지</h4>
-<table class="table table-hover table-bordered">
-    <thead>
-    <tr>
-        <th>title</th>
-        <th>content</th>
-    </tr>
-    </thead>
+<style>
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .table a {
+        font-family: 'KoPub Dotum';
+        font-size: 14px;
+        color: #292929;
+    }
+
+    .btn-default {
+        background-color: #1976D2;
+        color: #ebebeb;
+    }
+
+    .table p {
+        width: 800px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        display: block;
+        font-size: 14px;
+        color: #a6a6a6;
+    }
+
+    span {
+        color: #a6a6a6;
+        font-size: 12px;
+    }
+
+</style>
+
+<h4 style="font-family: 'yg-jalnan', cursive;">모임 공지</h4>
+<hr>
+<table class="table table-hover table-borderless">
     <tbody>
     {% for notice in notice_list %}
     <tr>
-        <td><a href="{% url "studypost:notice_detail" notice.id %}">{{ notice.title }}</a></td>
-        <td>{{ notice.content }}</td>
+        <td><h5><a href="{% url "studypost:notice_detail" notice.id %}">{{ notice.title }}</a></h5>
+            <p>{{ notice.content }}</p>
+            {% if notice.sub_time == 0 %}
+            <span>방금 | {{ notice.author.nickname }}</span>
+            {% elif notice.sub_time < 60 %}
+            <span>{{ notice.sub_time }}분 전 | {{ notice.author.nickname }}</span>
+            {% else %}
+            <span>{{ notice.created_at|date:"Y-m-d h:i" }} | {{ notice.author.nickname }}</span>
+            {% endif %}
+            <hr></td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
 
-<h4>기타 공지</h4>
-<table class="table table-hover table-bordered">
-    <thead>
-    <tr>
-        <th>title</th>
-        <th>content</th>
-    </tr>
-    </thead>
+
+<h4 style="font-family: 'yg-jalnan', cursive;">기타 공지</h4>
+<hr>
+<table class="table table-hover table-borderless">
     <tbody>
     {% for homework in homework_list %}
     <tr>
-        <td><a href="{% url "studypost:homework_detail" homework.id %}">{{ homework.title }}</a></td>
-        <td>{{ homework.content }}</td>
+        <td><h5><a href="{% url "studypost:homework_detail" homework.id %}">{{ homework.title }}</a></h5>
+            <p>{{ homework.content }}</p>
+            {% if homework.sub_time == 0 %}
+            <span>방금 | {{ homework.author.nickname }}</span>
+            {% elif homework.sub_time < 60 %}
+            <span>{{ homework.sub_time }}분 전 | {{ homework.author.nickname }}</span>
+            {% else %}
+            <span>{{ homework.created_at|date:"Y-m-d h:i" }} | {{ homework.author.nickname }}</span>
+            {% endif %}
+            <hr></td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
 
-<hr>
+
 <div class="dropdown mt-3">
-  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a class="btn btn-default dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     공지 올리기
   </a>
 
   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    <a class="dropdown-item" href="{% url "studypost:notice_new" group.id %}">모임 공지</a>
-    <a class="dropdown-item" href="{% url "studypost:homework_new" group.id %}">기타 공지</a>
+    <a class="dropdown-item" href="{% url 'studypost:notice_new' group.id %}" style="color:  #1976D2;">모임 공지</a>
+    <a class="dropdown-item" href="{% url 'studypost:homework_new' group.id %}" style="color:  #1976D2;">기타 공지</a>
   </div>
 </div>
 
