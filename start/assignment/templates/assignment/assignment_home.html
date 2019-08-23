@@ -45,7 +45,7 @@
                     {% for assignment in assignments %}
                     <tr align="center">
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> </td>
-                        <td>{{ assignment.due_date|date:"Y-m-d h:i" }}까지
+                        <td>{{ assignment.due_date|date:"Y-m-d H:i" }}까지
                             {% if assignment.due_date <= now %}
                              (기한 지남)
                             {% endif %}</td>
