@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'studypost',
     'assignment',
     'attendance',
-    'crispy_forms'
+    'table',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

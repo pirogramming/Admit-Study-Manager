@@ -1,5 +1,9 @@
 import uuid
+from datetime import datetime, date, time
+
 from django.db import models
+
+from django.conf import settings
 from accounts.models import StudyUser
 from django.urls import reverse
 
@@ -10,13 +14,16 @@ class Group(models.Model):
     group_name = models.CharField(max_length=20, unique=True)
     group_code = models.CharField(max_length=20)
     invitation_url = models.CharField(max_length=20, unique=True, default=uuid.uuid1)
-    group_bio = models.CharField(max_length=300, blank=True, null=True, default='그룹 설정에서 수정하세요')
+
+    group_bio = models.CharField(max_length=200, blank=True, null=True, default='그룹 소개를 50자 이내(한줄)로 작성해주세요')
     group_goal = models.CharField(max_length=50, blank=True, null=True, default='그룹 목표를 50자 이내(한줄)로 작성해주세요')
-    group_rule = models.CharField(max_length=50, blank=True, null=True, default='그룹 소개를 50자 이내(한줄)로 작성해주세요')
-    late_penalty = models.CharField(max_length=10, default="0")
-    abscence_penalty = models.CharField(max_length=10, default="0")
-    notsubmit_penalty = models.CharField(max_length=10, default="0")
+    group_rule = models.TextField(max_length=50, blank=True, null=True, default='그룹 규칙을 작성해주세요')
+    late_penalty = models.IntegerField(default="0")
+    abscence_penalty = models.IntegerField(default="0")
+    notsubmit_penalty = models.IntegerField(default="0")
+
     group_member = models.ManyToManyField(StudyUser, through='Membership')
+
 
     def __str__(self):
         return self.group_name
@@ -29,8 +36,10 @@ class Group(models.Model):
 
 
 class Membership(models.Model):
-    person = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
+    person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(default=datetime.combine(date(2019, 5, 1), time(11, 0)))   #auto_now_add=True,
+
     ROLE_CHOICES = [
         ('MANAGER', 'MANAGER'),
         ('STAFF', 'STAFF'),
@@ -57,9 +66,6 @@ class Membership(models.Model):
     noshow_assign = models.IntegerField(default=0, verbose_name='과제 미제출 횟수')
     admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
     rank = models.IntegerField(default=0, null=True, verbose_name='등수')
-
-    phone_number_open = models.BooleanField(default = False)
-    bio_open = models.BooleanField(default= False)
 
 
     @property
@@ -89,12 +95,6 @@ class Membership(models.Model):
             return True
         else:
             return False
-
-    # def is_notself(request, self):
-    #     if self == request.user:
-    #         return True
-    #     else :
-    #         False
 
 
 class UpdateHistory(models.Model):

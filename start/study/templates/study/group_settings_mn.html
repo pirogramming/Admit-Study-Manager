@@ -1,36 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-    <script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-     <!-- Compiled and minified CSS -->
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- Compiled and minified JavaScript -->
+{% extends 'group_base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
 
 
+<style>
+    * {
+        font-family: 'KoPub Dotum';
+        font-size: 14px;
+        font-weight: bold;
+    }
 
-    <script
-  src="https://code.jquery.com/jquery-3.4.1.min.js"
-  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-  crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    * > h3 {
+       font-family: 'KoPub Dotum';
+    }
 
-    <script>
-            $(document).ready(function(){
-    $('.tabs').tabs();
-    $('.dropdown-trigger').dropdown();
-    $('.collapsible').collapsible();
-  });
-    </script>
+    * > h5 {
+        font-weight: bold;
+    }
 
-    <script>
+    * > h6 {
+        font-weight: normal;
+    }
+</style>
 
-        $(function() {
-            $('#staffin').attr('disabled', 'disabled');
+<script>
+    $('.collapse').collapse()
+
+</script>
+
+<script>
+    $(function() {
+        $('#staffin').attr('disabled', 'disabled');
 
         $('.stfin_checkbox').click(function(){
             if($(this).prop('checked')  === false){
@@ -50,259 +50,268 @@
             }
         });
 
-        });
-    </script>
-
-</head>
-<body>
+    });
+</script>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<div class="row">
+    <h3 style="font-weight: bold; "><i class="material-icons">settings</i>그룹 설정</h3>
+</div>
 
-<h3><i class="material-icons">settings</i>그룹 설정</h3>
-(for manager)
 
 <div class="row">
-    <div class="col s12">
-      <ul class="tabs">
-        <li class="tab col s3"><a href="#test1">그룹 프로필</a></li>
-        <li class="tab col s3"><a href="#test2">그룹 규칙</a></li>
-        <li class="tab col s3"><a href="#test3">권한 설정</a></li>
-        <li class="tab col s3"><a href="#test4">멤버 탈퇴 및 그룹 삭제</a></li>
-      </ul>
+    <div class="col-12">
+
+        <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-groupprofile-tab" data-toggle="pill" href="#pills-groupprofile" role="tab" aria-controls="pills-groupprofile" aria-selected="true">그룹 프로필 수정</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-grouprule-tab" data-toggle="pill" href="#pills-grouprule" role="tab" aria-controls="pills-grouprule" aria-selected="false">그룹 규칙 수정</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-stf-tab" data-toggle="pill" href="#pills-stf" role="tab" aria-controls="pills-stf" aria-selected="false">권한 설정</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-members-tab" data-toggle="pill" href="#pills-members" role="tab" aria-controls="pills-members" aria-selected="false">멤버 탈퇴 및 그룹 삭제</a>
+            </li>
+        </ul>
+
     </div>
+</div>
+<div class="row justify-content-center">
 
-<!--    {% if messages %}-->
-<!--        <div class="container">-->
-<!--            {% for message in messages %}-->
-<!--                <div class="alert alert-info mt-3" role="alert">-->
-<!--                    {{ message.message }}-->
-<!--                </div>-->
-<!--            {% endfor %}-->
-<!--        </div>-->
-<!--    {% endif %}-->
+        <div class="col-10 tab-content justify-content-center" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-groupprofile" role="tabpanel" aria-labelledby="pills-groupprofile-tab">
+                <br/>
+
+                <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                    <div>
+                        <div>
+                            <div>{{ groupprofileform.group_name | as_crispy_field }}</div>
+                            <div><small>그룹 이름을 다시 설정할 수 있습니다.</small></div>
+                        </div><br/>
+                        <div>
+                            <div>{{ groupprofileform.group_bio | as_crispy_field}}</div>
+                            <div><small>한줄 그룹 소개를 쓰면 그룹 초대 url에 보여집니다.</small></div>
+                        </div><br/>
+                        <div>
+                            <div>{{ groupprofileform.group_goal | as_crispy_field}}</div>
+                        </div><br/>
+
+                        <input type="hidden" name="groupprofilerevise" value="revise">
+                        <button type="submit">수정하기</button>
+                        </input>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="pills-grouprule" role="tabpanel" aria-labelledby="pills-grouprule-tab">
+
+                    <br/>
+
+                    <form action="" method="POST">
+                    {% csrf_token %}
+
+                    <label for="grouprule_textarea">그룹 규칙</label>
+                        <textarea class="form-control" rows="8" id="grouprule_textarea"
+                        name="group_rule" value="{{ group.group_rule }}">{{ group.group_rule }}</textarea>
+
+                    <br/>
+                    모임 1회 지각시 벌금 : <input class="form-control" type="number" name="late_penalty" value="{{ group.late_penalty }}" style="width:150px;">
+                    <div><small>벌금은 숫자로만 써 주세요!</small></div>
+                    <br/>
+                    모임 1회 결석시 벌금 : <input class="form-control" type="number" name="abscence_penalty" value="{{ group.abscence_penalty }}" style="width:150px;">
+                    <div><small>벌금은 숫자로만 써 주세요!</small></div>
+                    <br/>
+                    과제 1회 미제출시 벌금 : <input class="form-control" type="number" name="notsubmit_penalty" value="{{ group.notsubmit_penalty }}" style="width:150px;">
+                    <div><small>벌금은 숫자로만 써 주세요!</small></div>
+                    <br/>
 
 
-    <div id="test1" class="col s12">
-        <h4>그룹프로필 수정하기</h4>
-    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
-        <div>
-            <div>
-                <div>
-                    <strong>{{ groupprofileform.group_name.label_tag }}<strong></strong></strong>
+                    <input type="hidden" name="rulerevise" value="revise">
+                    <button type="submit">수정하기</button>
+                    </input>
+
+                </form>
+
+            </div>
+            <div class="tab-pane fade" id="pills-stf" role="tabpanel" aria-labelledby="pills-stf-tab">
+                    <br/>
+
+                    <h5>스탭 권한 설정</h5>
+                <br/>
+                <h6>스탭 권한을 가진 구성원은 그룹 설정 메뉴에서 그룹 프로필 수정, 그룹 규칙 수정, 권한 설정(스탭 추가/ 스탭 권한 취소는 스터디장만 가능), 멤버 탈퇴 관리(스터디장과 스탭을 제외한 멤버)를 할 수 있으며,
+                공지, 과제, 출석을 생성할 수 있습니다.</h6>
+                <br/>
+                <ul class="list-group">
+
+                    <li class="list-group-item list-group-item-secondary">스터디장</li>
+                    {% for member in membership_manager %}
+                    <li class="list-group-item" style="color:dodgerblue;">{{ member.person.nickname }}({{ member.person.username }})</li>
+                    {% endfor %}
+                    <li class="list-group-item list-group-item-secondary">
+                        스탭
+                    </li>
+
+                    {% for member in membership_staff %}
+                    <li class="list-group-item" style="color:deepskyblue;">
+
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ member.person.nickname }}({{ member.person.username }})
+                            <input type="hidden" name="staffout" value="{{ member.person.username }}">
+                            <button style="float: right;" type="submit" onclick="return confirm('선택한 멤버의 스탭 권한을 취소하겠습니까?');">스탭 권한 취소</button>
+                            </input>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+
+                <br/>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseSTF" aria-expanded="false" aria-controls="collapseSTF">
+                    +스탭 추가하기
+                </button>
+                </p>
+                <div class="collapse" id="collapseSTF">
+                    <div class="card card-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {% for member in membership_member %}
+                            <p>
+                                <label>
+                                    <input class="stfin_checkbox" type="checkbox" name="staffin{{ forloop.counter }}" value="{{ member.person.username }}"/>
+                                    <span>{{ member.person.nickname }}({{ member.person.username }})</span>
+                                </label>
+                            </p>
+                            <!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
+                            {% endfor %}
+                            <input type="hidden" name="staffin" value="staffin">
+                            <button type="submit"  id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
+                                선택한 구성원을 스탭으로 추가
+                            </button>
+                            </input>
+                        </form>
+                    </div>
+
+                    </div>
+
+                <hr/>
+
+                <h5>스터디장 권한 위임</h5>
+                <br/>
+                <h6>스터디장 권한을 위임하면 그룹 설정 메뉴에서 가능한 모든 조작(그룹 프로필 수정, 그룹 규칙 수정, 권한 설정, 멤버 탈퇴 관리 및 그룹 삭제 등)을 할 수 없습니다.</h6>
+                <br/>
+
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseMN" aria-expanded="false" aria-controls="collapseMN">
+                    스터디장 권한을 위임할 구성원 선택
+                </button>
+                <div class="collapse" id="collapseMN">
+                    <div class="card card-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {% for member in membership_staff %}
+                            <p>
+                                <label>
+                                    <input type="radio" class="mgin_radio" name="managerin" value="{{ member.person.username }}"/>
+                                    <span>{{ member.person.nickname }}({{ member.person.username }})</span>
+                                </label>
+                            </p>
+                            {% endfor %}
+                            {% for member in membership_member %}
+                            <p>
+                                <label>
+                                    <input type="radio" class="mgin_radio" name="managerin" value="{{ member.person.username }}"/>
+                                    <span>{{ member.person.nickname }}({{ member.person.username }})</span>
+                                </label>
+                            </p>
+                            <!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
+                            {% endfor %}
+                            <input type="hidden">
+                            <button type="submit" id="managerin" onclick="return confirm('선택한 멤버에게 스터디장 권한을 위임하겠습니까?');">
+                                선택한 구성원에게 스터디장 권한 위임</button>
+                            </input>
+
+                        </form>
+                    </div>
                 </div>
-                <div>{{ groupprofileform.group_name }}</div>
-                <div><small>그룹 이름을 다시 설정할 수 있습니다.</small></div>
-            </div><br/>
-            <div>
-                <div><strong>{{ groupprofileform.group_bio.label_tag }}</strong></div>
-                <div>{{ groupprofileform.group_bio }}</div>
-<!--                <div><small></small></div>-->
-            </div><br/>
-            <div>
-                <div><strong>{{ groupprofileform.group_goal.label_tag }}</strong></div>
-                <div>{{ groupprofileform.group_goal }}</div>
-<!--                <div><small></small></div>-->
-            </div><br/>
-
-            <input type="hidden" name="groupprofilerevise" value="revise">
-            <button type="submit">수정하기</button>
-            </input>
-        </div>
-    </form>
-    </div>
-    <div id="test2" class="col s12">
-        <h4>그룹 규칙 수정하기</h4>
-        <form action="" method="POST">
-            {% csrf_token %}
-
-            그룹 규칙 : <input type="text" name="group_rule" value="{{ group.group_rule }}"></input>
-            모임 1회 지각시 벌금 : <input type="text" name="late_penalty" value="{{ group.late_penalty }}">
-            모임 1회 결석시 벌금 : <input type="text" name="abscence_penalty" value="{{ group.abscence_penalty }}">
-
-            과제 1회 미제출시 벌금 : <input type="text" name="notsubmit_penalty" value="{{ group.notsubmit_penalty }}">
-
-            <input type="hidden" name="rulerevise" value="revise">
-            <button type="submit">수정하기</button>
-            </input>
-
-        </form>
-
-    </div>
-    <div id="test3" class="col s12">
-
-        관리자
-        <ul>
-        {% for member in membership_manager %}
-            <li style="color:dodgerblue;">{{ member.person.username }}</li>
-        {% endfor %}
-            </ul>
-        스탭
-        <ul>
-        {% for member in membership_staff %}
-            <li style="color:deepskyblue;">{{ member.person.username }}
-        <form action="" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="staffout" value="{{ member.person.username }}">
-                <button type="submit" onclick="return confirm('선택한 멤버의 스탭 권한을 취소하겠습니까?');">스탭 권한 취소</button>
-            </input>
-        </form>
-                </li>
-        {% endfor %}
-            </ul>
-
-<ul class="collapsible">
-    <li>
-      <div class="collapsible-header">+스탭 추가하기</div>
-      <div class="collapsible-body">
-          <form action="" method="POST">
-              {% csrf_token %}
-              {% for member in membership_member %}
-    <p>
-      <label>
-        <input class="stfin_checkbox" type="checkbox" name="staffin{{ forloop.counter }}" value="{{ member.person.username }}"/>
-        <span>{{ member.person.username }}</span>
-      </label>
-    </p>
-<!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
-              {% endfor %}
-              <input type="hidden" name="staffin" value="staffin">
-              <button type="submit"  id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
-                  선택한 구성원을 스탭으로 추가
-              </button>
-              </input>
-          </form>
 
 
-      </div>
-    </li>
-</ul>
-        관리자 권한 위임
-        <br/>
-        관리자 권한을 위임하면 그룹 설정 메뉴에서 가능한 모든 조작(그룹 프로필 수정, 그룹 규칙 수정, 권한 설정, 멤버 탈퇴 관리 및 그룹 삭제 등)을 할 수 없습니다.
-        <ul class="collapsible">
-    <li>
-      <div class="collapsible-header">관리자 권한을 위임할 구성원 선택</div>
-      <div class="collapsible-body">
-          <form action="" method="POST">
-              {% csrf_token %}
-              {% for member in membership_staff %}
-              <p>
-      <label>
-        <input type="radio" class="mgin_radio" name="managerin" value="{{ member.person.username }}"/>
-        <span>{{ member.person.username }}</span>
-      </label>
-    </p>
-              {% endfor %}
-              {% for member in membership_member %}
-    <p>
-      <label>
-        <input type="radio" class="mgin_radio" name="managerin" value="{{ member.person.username }}"/>
-        <span>{{ member.person.username }}</span>
-      </label>
-    </p>
-<!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
-              {% endfor %}
-              <input type="hidden">
-              <button type="submit" id="managerin" onclick="return confirm('선택한 멤버에게 관리자 권한을 위임하겠습니까?');">
-                  선택한 구성원에게 관리자 권한 위임</button>
-              </input>
 
-          </form>
+            </div>
+            <div class="tab-pane fade" id="pills-members" role="tabpanel" aria-labelledby="pills-members-tab">
 
+                    <br/>
+                    <h5 style="font-weight: bold;">멤버 탈퇴 관리</h5>
 
-      </div>
-    </li>
-</ul>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-secondary">스터디장</li>
+                        {% for member in membership_manager %}
+                        <li class="list-group-item" style="color: dodgerblue;">{{ member.person.nickname }}({{ member.person.username }})</li>
+                        {% endfor %}
 
-    </div>
-
-    <div id="test4" class="col s12">
-        <form action="" method="POST">
-    {% csrf_token %}
-
-    <h4>멤버 탈퇴 및 그룹 삭제</h4>
-
-            <h5>멤버 탈퇴 관리</h5>
-            <ul>
-<li>관리자</li>
-                {% for member in membership_manager %}
-    <li style="color: dodgerblue;">{{ member.person.username }}</li>
-                {% endfor %}
-
-                <li>스탭</li>
-                {% for member in membership_staff %}
-    <li style="color:deepskyblue">{{ member.person.username }}</li>
-    <input type="hidden" name="out" value="{{ member.person.username }}">
-    <button onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
+                        <li class="list-group-item list-group-item-secondary">스탭
+                            {% if membership_staff %}
+                            {% for member in membership_staff %}
+                        <li class="list-group-item" style="color:deepskyblue">
+                        <form action="" method="POST">
+                    {% csrf_token %}
+                            {{ member.person.nickname }}({{ member.person.username }})
+                        <input type="hidden" name="out" value="{{ member.person.username }}">
+                            <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
-    </input>
-    {% endfor %}
-                <li>멤버</li>
-    {% for member in membership_member %}
-    <li>{{ member.person.username }}</li>
-    <input type="hidden" name="out" value="{{ member.person.username }}">
-    <button onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
+                            </input>
+                        </form>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li class="list-group-item">등록된 스탭이 없습니다.</li>
+                        {% endif %}
+                        <li class="list-group-item list-group-item-secondary">멤버</li>
+                        {% if membership_member %}
+                        {% for member in membership_member %}
+                        <li class="list-group-item">
+                            <form action="" method="POST">
+                    {% csrf_token %}
+                                {{ member.person.nickname }}({{ member.person.username }})
+                            <input type="hidden" name="out" value="{{ member.person.username }}">
+                            <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
-    </input>
-    {% endfor %}
+                            </input>
+                            </form>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li class="list-group-item">등록된 멤버가 없습니다.</li>
+                        {% endif %}
 
-    </ul>
-</form>
+                    </ul>
 
-        <h5>그룹 삭제</h5>
-            {% if membership_staff or membership_member %}
-            <p>그룹을 삭제하려면 먼저 그룹 스탭과 멤버를 모두 탈퇴시켜 주세요.</p>
-            <button type="submit" disabled>그룹 삭제</button>
-            {% else %}
-            <form action="" method="POST">
-            <input type="hidden" name="dltGroup" value="dlt">
-                <button type="submit" onclick="return confirm('그룹을 삭제하면 그룹과 관련된 모든 정보가 삭제되어' +
+
+                <hr/>
+
+
+                <h5>그룹 삭제</h5>
+                {% if membership_staff or membership_member %}
+                <h6>그룹을 삭제하려면 먼저 그룹 스탭과 멤버를 모두 탈퇴시켜 주세요.</h6>
+                <button type="submit" disabled>그룹 삭제</button>
+                {% else %}
+                <form action="" method="POST">
+                    <input type="hidden" name="dltGroup" value="dlt">
+                    <button type="submit" onclick="return confirm('그룹을 삭제하면 그룹과 관련된 모든 정보가 삭제되어' +
      '정보를 다시 열람할 수 없습니다. ' +
       '정말 삭제하시겠습니까?');">그룹 삭제</button>
-            </input>
-            </form>
-            {% endif %}
+                    </input>
+                </form>
+                {% endif %}
 
+
+            </div>
+        </div>
     </div>
-  </div>
 
 
-<a href="{% url 'study:group_detail' group.id %}"><button>그룹 홈으로 돌아가기</button></a>
-
-
-
-
-<!--    {% for member in membership_manager %}-->
-<!--    <li style="color:deepskyblue;">{{ member.person.username }}(관리자)</li>-->
-<!--    {% endfor %}-->
-
-
-
-
-
-
-
-</body>
-</html>
-
-
-<!--        <script>-->
-<!--            $(function () {-->
-
-<!--    $(".addstaff_content").hide();-->
-<!--    // $(".tab_content:first").show();-->
-
-<!--    $(".addbtn").click(function () {-->
-<!--        $(".addstaff").removeClass("active").css("color", "#333");-->
-<!--        //$(this).addClass("active").css({"color": "darkred","font-weight": "bolder"});-->
-<!--        $(this).addClass("active").css("color", "darkred");-->
-<!--        $(".addstafftab_content").hide()-->
-<!--        var activeTab = $(this).attr("rel");-->
-<!--        $("#" + activeTab).fadeIn()-->
-<!--    });-->
-<!--});-->
-
-<!--        </script>-->
+{% endblock %}

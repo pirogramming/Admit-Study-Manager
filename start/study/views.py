@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, date, time
 import functools
 from random import randint
 
@@ -15,6 +15,7 @@ from attendance.views import sub_timedelta_function
 
 from assignment.forms import DoneForm
 from django.urls import reverse
+from django.utils.html import format_html
 
 from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership, UpdateHistory
@@ -146,6 +147,31 @@ def group_detail(request, id):
         )
         post.save(update_fields=['attend_status'])
 
+    now = datetime.now()
+
+    latest_notice = "공지를 바로 볼 수 있음"
+
+    # latest_assignment = "가장 최근 과제 instance"
+    latest_assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
+    dones = Done.objects.filter(assignment=latest_assignment)
+    authors = [x.author for x in dones]
+    doneform = DoneForm()
+    latest_attend = group.attend_set.all().order_by('pk').last()
+    # "가장 최근 출석"
+    confirm_value = latest_attend.attendconfirm_set.filter(
+        attend_user=request.user.nickname,
+        attend_check='출석 정보 없음'
+    )
+    # 출석 여부
+    attendform = AttendConfirmForm()
+    # "출석코드 입력해서 출석완료하는 form"
+    # attend_history = "표로 이 출석에 대한 출석 결과 나옴"
+
+    instances_attend = latest_attend.attendconfirm_set.filter(attend_check='출석').order_by('arrive_time')
+    instances_late = latest_attend.attendconfirm_set.filter(attend_check='지각').order_by('arrive_time')
+    instances_none = latest_attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
+    instances_absence = latest_attend.attendconfirm_set.filter(attend_check='결석')
+
     context = {
         'membership_manager': membership_manager,
         'membership_staff': membership_staff,
@@ -157,10 +183,88 @@ def group_detail(request, id):
         'latest_update': latest_update,
         'attend_posts': attend_posts,
         'notice_posts': notice_posts,
-        'assign_posts': assign_posts
+        'assign_posts': assign_posts,
+
+        'now': now,
+        'latest_assignment': latest_assignment,
+        'dones': dones,
+        'doneform': doneform,
+        'latest_attend': latest_attend,
+        'confirm_value': confirm_value,
+        'attendform': attendform,
+        'authors': authors,
+
+        'instances_attend':instances_attend,
+        'instances_late':instances_late,
+        'instances_none':instances_none,
+        'instances_absence':instances_absence,
     }
 
-    return render(request, 'study/group_detail.html', context)
+    if request.method == 'POST':
+        if request.POST.get('assignment', ''):
+            doneform = DoneForm(request.POST, request.FILES)
+            if doneform.is_valid():
+                done = doneform.save(commit=False)
+                done.author = request.user
+                done.assignment = latest_assignment
+                done.index_in_assignment = len(Done.objects.filter(assignment=latest_assignment)) + 1
+                done.save()
+                return redirect('study:group_detail', id)
+
+
+        elif request.POST.get('attendance', ''):
+            attendform = AttendConfirmForm(request.POST)
+            if attendform.is_valid():
+                input_attend_number = attendform.cleaned_data['input_number']
+                attend_number = latest_attend.attendance_number
+
+                if attend_number == input_attend_number:
+
+                    # 결석 인스턴스 가져오기
+                    attending_member = latest_attend.attendconfirm_set.get(attend_user=request.user.nickname)
+
+                    # 시간처리
+                    state_time = latest_attend.gather_datetime
+                    arrive_time = datetime.now()
+                    sub_time_arrange = state_time - arrive_time
+                    sub_time = sub_timedelta_function(sub_time_arrange)
+
+                    # 지각, 출석 기록
+                    if latest_attend.attend_status == '정상 출석 가능':
+                        attending_member.arrive_time = arrive_time
+                        attending_member.sub_time = sub_time
+                        attending_member.attend_check = '출석'
+                        attending_member.save()
+                        usermembership.admit_attend += 1  # ㅇㅈ하나 추가
+                        usermembership.total_admit += 1
+                        usermembership.save()
+                        messages.success(request, '성공적으로 출석했습니다!')
+
+                        return redirect('study:group_detail', id)
+
+
+                    elif latest_attend.attend_status == '지각 출석 가능':
+                        attending_member.arrive_time = arrive_time
+                        attending_member.sub_time = sub_time
+                        attending_member.attend_check = '지각'
+                        attending_member.save()
+                        usermembership.late_attend += 1  # 지각 횟수 한번 추가
+                        usermembership.save()
+                        messages.success(request, '지각입니다ㅜㅜ')
+                        return redirect('study:group_detail', id)
+
+
+                else:
+                    messages.error(request, '출석 코드가 일치하지 않습니다')
+                    return redirect('study:group_detailboard', id)
+
+            else:
+                messages.error(request, '출석 코드에는 숫자만 입력해주세요')
+                return redirect('study:group_detail', id)
+
+        # elif request.get('assignment', ''):
+    else:
+        return render(request, 'study/group_detail.html', context)
 
 
 def group_detailboard(request, id):
@@ -330,7 +434,16 @@ def group_new(request):
                         pass
                 group.save()
                 m = Membership.objects.create(person=request.user, group=group, role='MANAGER')
-                messages.success(request, '새 그룹을 만들었습니다')
+
+                message = format_html("<p>새 그룹을 만들었습니다.</p>"
+                                      "<p>스터디 가입용 코드와 초대 링크를 활용하여 새로운 멤버를 초대하고</p>"
+                                      "<p>그룹 설정에서 그룹 프로필과 그룹 규칙을 추가해 보세요.</p>"
+                                      )
+                messages.success(request, message)
+
+                # messages.success(request, '새 그룹을 만들었습니다. \n'
+                #                           '스터디 가입용 코드와 초대 링크를 활용하여 새로운 멤버를 초대하고, \n'
+                #                           '그룹 설정에서 그룹 프로필과 그룹 규칙을 추가해 보세요.')
                 return redirect(group)
             else:
                 messages.error(request, '이미 존재하는 그룹입니다.')
@@ -446,19 +559,6 @@ def group_registerbyurl(request, invitation_url):
         else:
             return render(request, 'study/group_registerbyurl_fail.html')
 
-        # except:
-        #     form = LoginForm(request.POST)
-        #     id = request.POST['username']
-        #     pw = request.POST['password']
-        #     u = authenticate(username=id, password=pw)
-
-        # if u:
-        #     login(request, user=u)
-        #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'membership':membership})
-        # else:
-        #     return render(request, 'study/group_registerbyurl.html', {'group': group, 'form': form, 'error':'아이디나 비밀번호가 일치하지 않습니다.', 'membership':membership})
-        # return render(request, 'study/group_registerbyurl.html', {'group':group})
-
     else:
         group = Group.objects.get(invitation_url=invitation_url)
         form = LoginForm()
@@ -521,12 +621,15 @@ def group_mysettings(request, id):
 def group_settings_mn(request, id):
     user = request.user
     group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    usermembership = get_object_or_404(Membership, person=user, group=group)
+
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     groupprofileform = GroupProfileForm(instance=group)
 
     ctx = {'user': user, 'group': group,
+           'usermembership':usermembership,
            'groupprofileform': groupprofileform,
            'membership_manager': membership_manager,
            'membership_staff': membership_staff,
@@ -544,16 +647,21 @@ def group_settings_mn(request, id):
                 # return redirect('study:group_settings', id)
 
         elif request.POST.get('rulerevise', ''):
-            group_rule = request.POST.get('group_rule', '')
-            late_penalty = request.POST.get('late_penalty', '')
-            abscence_penalty = request.POST.get('abscence_penalty', '')
-            notsubmit_penalty = request.POST.get('notsubmit_penalty', '')
+            try:
+                group_rule = request.POST.get('group_rule', '')
+                late_penalty = request.POST.get('late_penalty', '')
+                abscence_penalty = request.POST.get('abscence_penalty', '')
+                notsubmit_penalty = request.POST.get('notsubmit_penalty', '')
 
-            group.group_rule = group_rule
-            group.late_penalty = late_penalty
-            group.abscence_penalty = abscence_penalty
-            group.notsubmit_penalty = notsubmit_penalty
-            group.save()
+                group.group_rule = group_rule
+                group.late_penalty = late_penalty
+                group.abscence_penalty = abscence_penalty
+                group.notsubmit_penalty = notsubmit_penalty
+                group.save()
+
+            except ValueError:
+                messages.warning(request, '벌금은 숫자로만 입력 가능합니다.')
+                return render(request, 'study/group_settings_mn.html', ctx)
 
             return render(request, 'study/group_settings_mn.html', ctx)
 
@@ -627,12 +735,15 @@ def group_settings_mn(request, id):
 def group_settings_stf(request, id):
     user = request.user
     group = get_object_or_404(Group.objects.prefetch_related(), id=id)
+    usermembership = get_object_or_404(Membership, person=user,group=group)
+
     membership_manager = Membership.objects.filter(group=group, role='MANAGER', status='ACTIVE')
     membership_staff = Membership.objects.filter(group=group, role='STAFF', status='ACTIVE')
     membership_member = Membership.objects.filter(group=group, role='MEMBER', status='ACTIVE')
     groupprofileform = GroupProfileForm(instance=group)
 
     ctx = {'user': user, 'group': group,
+           'usermembership':usermembership,
            'groupprofileform': groupprofileform,
            'membership_manager': membership_manager,
            'membership_staff': membership_staff,
