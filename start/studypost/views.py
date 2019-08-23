@@ -60,11 +60,14 @@ def notice_detail(request, id):
     notice = get_object_or_404(Notice, id=id)
     group = notice.group
     lng, lat = map(float, notice.lnglat.split(','))
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
+
     return render(request, 'studypost/notice_detail.html', {
         'notice': notice,
         'lng': lng,
         'lat': lat,
         'group': group,
+        'usermembership': usermembership,
     })
 
 
@@ -72,17 +75,20 @@ def notice_list(request, id):
     group = Group.objects.get(id=id)
     ns = Notice.objects.filter(group=group).order_by('-id')[:3]
     hs = Homework.objects.filter(group=group).order_by('-id')[:3]
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
         'homework_list': hs,
         'group': group,
+        'usermembership': usermembership,
     })
 
 
 def notice_edit(request, id):
     notice = get_object_or_404(Notice, id=id)
     group = notice.group
+    usermembership = get_object_or_404(Membership, group=group, person=request.user)
 
     if request.method == 'POST':
         form = NoticeForm(request.POST, request.FILES, instance=notice)
@@ -94,6 +100,7 @@ def notice_edit(request, id):
     return render(request, 'studypost/notice_new.html', {
         'form': form,
         'group':group,
+        'usermembership': usermembership,
     })
 
 
@@ -140,7 +147,6 @@ def homework_new(request, id):
 
 
 def homework_detail(request, id):
-
     homework = get_object_or_404(Homework, id=id)
     group = homework.group
 
