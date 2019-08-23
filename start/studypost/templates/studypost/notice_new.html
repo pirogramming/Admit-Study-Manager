@@ -3,12 +3,53 @@
 
 {% block content %}
 
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
+<style>
+    form {
+        font-family: 'KoPub Dotum';
+    }
+
+    .btn-default {
+        background-color: #1976D2;
+        color: #ebebeb;
+    }
+
+    #id_lnglat {
+        display: none;
+    }
+</style>
+
 <form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit">
+
+    <input type="text" name="title" style="width: 820px; height: 50px; font-weight: bold; padding: 5px;" placeholder="글 제목">
+
+    <textarea type="text" name="content" style="width: 820px; height: 500px; padding: 5px;" placeholder="글 내용"></textarea>
+
+    <div class="input-group mt-3" style="width: 820px;">
+        <div class="custom-file">
+            <input type="file" name="photo" class="custom-file-input" id="inputGroupFile01">
+            <label class="custom-file-label" for="inputGroupFile01" aria-describedby="inputGroupFileAddon01">사진 업로드</label>
+        </div>
+    </div>
+
+    <div class="input-group mt-3 mb-3" style="width: 820px;">
+        <div class="custom-file">
+            <input type="file" name="file" class="custom-file-input" id="inputGroupFile02">
+            <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">첨부 파일</label>
+        </div>
+    </div>
+
+
+
+    <div class="submit-wrapper d-flex justify-content-between">
+        <div class="fieldWrapper">{{ form.lnglat }}</div>
+        <div>
+            <input type="submit" class="btn btn-default mt-3" value="글 올리기">
+        </div>
+    </div>
 </form>
+
 
 {% endblock %}

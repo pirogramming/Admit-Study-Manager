@@ -3,26 +3,67 @@
 
 {% block content %}
 
+<style>
 
-<div class="d-flex flex-row justify-content-start mt-3">
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .card ul {
+        padding: 0 20px;
+    }
+
+    .card ul li {
+        list-style: none;
+        font-family: 'KoPub Dotum';
+        font-weight: bold;
+    }
+
+    #profile_img {
+        border: 3px solid #1976D2;
+        border-radius: 100%;
+        width: 130px;
+        height: 130px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .card ul li p {
+        text-align: center;
+        font-family: 'yg-jalnan', cursive
+    }
+
+</style>
+
+<h3 style="font-family: 'yg-jalnan', cursive;">그룹 멤버</h3>
+
+<div class="d-flex flex-row justify-content-start flex-wrap mt-3">
     {% for member in memberships %}
-    <div class="card" style="width: 18rem;">
+    {% if member.is_active %}
+    <div class="card m-3" style="width: 18rem; border: 5px solid #1976D2;">
         <ul>
             {% if member.person.img_profile %}
-            <li><br/><img src="{{ member.person.img_profile.url }}" width="10%" height="10%"/></li>
+            <li><br/><img src="{{ member.person.img_profile.url }}" id="profile_img"/><br>
+                <p>{{ member.person.nickname }}</p></li>
             {% else %}
-            <li><br/><img src="{% static 'img/anonym.jpg' %}" width="10%" height="10%"/></li>
+            <li><br/><img src="{% static 'img/anonym.jpg' %}" id="profile_img"/><br>
+                <p>{{ member.person.nickname }}</p></li>
             {% endif %}
-            <li>그룹 권한 : {{ member.role }}</li>
-            <li>닉네임 : {{ member.person.nickname }}</li>
-            <li>이메일 : {{ member.person.email }}</li>
-            <li>자기소개 : {{ member.person.bio }}</li>
-            <li>전화번호 : {{ member.person.phone_number }}</li>
-            <li>{{ member.person.nickname }}님의 ㅇㅈ : {{ member.total_admit }}</li>
-            <li>{{ member.person.nickname }}님의 벌금 : {{ member.total_penalty }}</li>
-            <li>{{ member.person.nickname }}님의 ㅇㅈ 랭킹 : {{ member.rank }}</li>
+            <li>그룹 권한  {{ member.role }}</li>
+            <li>{{ member.person.email }}</li>
+            <li>{{ member.person.nickname }} 님의 ㅇㅈ : {{ member.total_admit }}</li>
+            <li>{{ member.person.nickname }} 님의 벌금 : {{ member.total_penalty }}</li>
+            <li>{{ member.person.nickname }} 님의 ㅇㅈ 랭킹 : {{ member.rank }}</li>
+            <hr>
+            <li style="font-weight: lighter;">자기소개
+                <br>
+                {{ member.person.bio }}</li>
         </ul>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 

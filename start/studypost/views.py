@@ -70,8 +70,8 @@ def notice_detail(request, id):
 
 def notice_list(request, id):
     group = Group.objects.get(id=id)
-    ns = Notice.objects.filter(group=group).order_by('-id')[:5]
-    hs = Homework.objects.filter(group=group).order_by('-id')[:5]
+    ns = Notice.objects.filter(group=group).order_by('-id')[:3]
+    hs = Homework.objects.filter(group=group).order_by('-id')[:3]
 
     return render(request, 'studypost/notice_list.html', {
         'notice_list': ns,
