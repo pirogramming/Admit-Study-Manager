@@ -206,10 +206,10 @@
                 <div><h5>{{ latest_attend.title }}</h5></div>
                 <div> {# 출석 띄우기 #}
                     <div>
-                        <strong>모임일시:</strong>{{ latest_attend.gather_datetime }}
+                        <strong>모임일시:</strong>{{ latest_attend.gather_datetime|date:"Y-m-d H:i" }}
                     </div>
                     <div>
-                        <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime }}
+                        <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime|date:"Y-m-d H:i" }}
                     </div>
                 </div>
                 <hr/>
@@ -315,7 +315,7 @@
             <div class="latest_assignment">
                 <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}"><h5>{{ latest_assignment.title }}</h5></a></div>
                 <div>
-                    <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
+                    <strong>제출 기한:</strong>{{ latest_assignment.due_date|date:"Y-m-d H:i" }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
                 </div>
 
 
