@@ -5,37 +5,12 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
-    span {
-        color: blue;
-    }
 
-    * {
-        font-family: 'KoPub Dotum';
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    * > h3 {
-        font-family: 'KoPub Dotum';
-    }
-
-    * > h5 {
-        font-weight: bold;
-    }
-
-    * > h6 {
-        font-weight: normal;
-    }
-
-    .notice, .attendance, .assignment {
-        padding: 10px;
-    }
 
 </style>
 
 
-<h1>Group Details </h1>
-<!--jumbotron이랑 div묶어야돼??-->
+
 <p>
     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
             aria-expanded="false" aria-controls="collapseExample">
@@ -182,46 +157,6 @@
     </div>
 </div>
 <hr/>
-
-<div>
-    <h4><a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a></h4>
-
-</div>
-<hr/>
-
-<div>
-    <h4><a href="{% url 'attendance:attend_list' group.id %}">출석하기</a></h4>
-    <div>
-        {% for attend_post in attend_posts %}
-        <br/>
-        <div>
-            <div>
-                <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
-            </div>
-            <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
-            <div>출석 만료 시간 : {{ attend_post.expired_datetime }}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
-</div>
-<hr/>
-
-<div>
-    <h4><a href="{% url 'assignment:assignment_list' group.id %}">과제 인증하기</a></h4>
-    <div>
-        {% for assign_post in assign_posts %}
-        <br/>
-        <div>
-            <div><a href="{% url "assignment:assignment_detail" assign_post.id %}">{{ assign_post.title }}</a></div>
-            <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
-</div>
-<hr/>
-
 
 <div class="container">
     <div class="row">
@@ -370,7 +305,7 @@
             {% endif %} <!--혹시 conflict생기면 이 부분이 옳으니 이 부분을 남겨주세요-->
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-5">
         <div class="assignment col-12 border rounded">
             <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">과제로 가기</a></h4>
             <h5>최신 과제</h5>
