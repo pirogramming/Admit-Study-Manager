@@ -273,7 +273,7 @@
                             <div>{{ attendform.as_p }}</div>
                             <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                             <div>현재 정상 출석 가능합니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
+                            <input type="submit" name="attendance" value="출석하기" class="btn btn-primary"/>
                         </form>
                     </div>
                     {% elif latest_attend.attend_status == '지각 출석 가능' %}
@@ -283,7 +283,7 @@
                             <div>{{ attendform.as_p }}</div>
                             <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                             <div>현재 지각 출석입니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
+                            <input type="submit" name="attendance" value="출석하기" class="btn btn-primary"/>
                         </form>
                     </div>
                     {% endif %}
