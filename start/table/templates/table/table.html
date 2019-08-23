@@ -41,7 +41,7 @@
                     {% elif member.person in attend.absent %}
                     <p style="color:red;">결석</p>
                     {% else %}
-                    <p>출석 정보 없음</p>
+                    <p style="color:grey;">출석 정보 없음</p>
                     {% endif %}
                 </a>
             </td>
@@ -57,7 +57,7 @@
                     {% elif member.person in attend.absent %}
                     <p style="color:red;">결석</p>
                     {% else %}
-                    <p>출석 정보 없음</p>
+                    <p style="color:grey;">출석 정보 없음</p>
                     {% endif %}
             </td>
             {% endfor %}
@@ -89,7 +89,9 @@
             {% for membership in memberships %}
             <td>
                 <a href="수정 url">
-                    {% if membership.person in assignment.submitters %}
+                    {% if assignment.due_date <= membership.joined_at %}
+                    <p style="color:grey;">제출 정보 없음</p>
+                    {% elif membership.person in assignment.submitters %}
                     <p style="color:green;">제출</p>
                     {% else %}
                     <p style="color:red;">미제출</p>
@@ -101,7 +103,9 @@
             {% else %}
             {% for membership in memberships %}
             <td>
-                {% if membership.person in assignment.submitters %}
+                {% if assignment.due_date <= membership.joined_at %}
+                    <p style="color:grey;">제출 정보 없음</p>
+                {% elif membership.person in assignment.submitters %}
                     <p style="color:green;">제출</p>
                     {% else %}
                     <p style="color:red;">미제출</p>

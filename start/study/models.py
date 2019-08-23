@@ -1,4 +1,6 @@
 import uuid
+from datetime import datetime, date, time
+
 from django.db import models
 
 from django.conf import settings
@@ -35,6 +37,8 @@ class Group(models.Model):
 class Membership(models.Model):
     person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(default=datetime.combine(date(2019, 5, 1), time(11, 0)))   #auto_now_add=True,
+
     ROLE_CHOICES = [
         ('MANAGER', 'MANAGER'),
         ('STAFF', 'STAFF'),
@@ -61,6 +65,7 @@ class Membership(models.Model):
     noshow_assign = models.IntegerField(default=0, verbose_name='과제 미제출 횟수')
     admit_assign = models.IntegerField(default=0, verbose_name='과제 인정')
     rank = models.IntegerField(default=0, null=True, verbose_name='등수')
+
 
     @property
     def is_manager(self):
