@@ -8,8 +8,11 @@
     <title>Title</title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<<<<<<< Updated upstream
 
     <link rel='stylesheet' href='//cdn.jsdelivr.net/font-kopub/1.0/kopubdotum.css'>
+=======
+>>>>>>> Stashed changes
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -21,9 +24,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-
-
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId={{ naver_client_id }}"></script>
+    <script type="text/javascript"
+            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId={{ naver_client_id }}"></script>
 
 
     <!--     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
@@ -44,8 +46,8 @@
 
     <script>
         $('#myModal').on('shown.bs.modal', function () {
-  $('#myInput').trigger('focus')
-})
+            $('#myInput').trigger('focus')
+        })
     </script>
 
     <style>
@@ -53,128 +55,151 @@
             text-decoration: None;
         }
 
+<<<<<<< Updated upstream
         ul li {
         list-style: none;
         font-family: 'KoPub Dotum';
         font-weight: bold;
     }
+=======
+        @font-face {
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+>>>>>>> Stashed changes
     </style>
 </head>
 <body>
-<header>
 
-    <br/>
-    <div class="container">
-    <div style="width: 100%;">
-
-        <div style="display: inline-block">
-            <a href="{% url 'study:mystudy' %}"><h2>스터디 어드밋(study admit)</h2></a>
-            <p>당신의 스터디를 관리해드리겠습니다</p>
-        </div>
-
-        <div class="dropdown" style="float: right;">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdown_user" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {% if user.img_profile %}
-                <div style="display:inline-block"><img src="{{ user.img_profile.url }}" width="50px" height="50px"/></div>
-                {% else %}
-                <div style="display:inline-block"><img src="{% static 'img/anonym.jpg' %}" width="50px" height="50px"/></div>
-                {% endif %}
-                <div style="display:inline-block"><p><strong>{{ user.nickname }}</strong>님</p></div>
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdown_user">
-                <a class="dropdown-item" href="{% url "accounts:profile" %}"> 나의 프로필 </a>
-                <a class="dropdown-item" href="{% url "study:group_list" %}"> 나의 스터디 </a>
-                <a class="dropdown-item" href="#">나의 벌금 현황</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="{% url "accounts:logout" %}" onclick="return confirm('오늘 공부는 다 했나염?');">로그아웃</a>
-
+<nav>
+    <div class="navbar navbar-expand-lg fixed-top"
+         style="background-color: #1976D2; box-shadow: 0px 1px 9px 1px #b7b7b7">
+        <div class="container d-flex justify-content-between" style="background-color: #1976D2">
+            <div>
+                <a href="{% url 'study:group_detail' group.id %}" class="navbar-brand d-flex align-items-center">
+                    <strong style="color: white; font-family: yg-jalnan">Study Admit</strong>
+                </a>
             </div>
-        </div>
-    </div>
-
-
-    {% if messages %}
-    <div class="container">
-        {% for message in messages %}
-        <div class="alert alert-info mt-3" role="alert">
-            {{ message.message }}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-        </div>
-
-</header>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-3">
-            <div class="border rounded" style="text-align: center;">
-                <div>
-                    <a href="{% url 'study:group_detail' group.id %}"><h3>{{ group.group_name }}</h3></a>
+            <div class="d-flex flex-row" >
+                <div style="background-color: white; padding:5px 20px;border-radius: 10px">
+                    <span style="color:#00386d;font-weight: bolder;">{{ user.nickname }}님</span>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="d-flex flex-row" style="background-color: white; padding:5px 20px;border-radius: 10px">
+                    <div>
+                        <a href="{% url "accounts:profile" %}" class="d-flex">
+                            <strong style="color:#1976D2; font-size: 15px">나의 프로필</strong>
+                        </a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div>
+                        <a href="{% url "study:group_list" %}" class="d-flex">
+                            <strong style="color:#1976D2; font-size: 15px">나의 스터디</strong>
+                        </a>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div>
+                        <a href="{% url "accounts:logout" %}" class="d-flex">
+                            <strong style="color:#1976D2; font-size: 15px">로그아웃</strong>
+                        </a>
+                    </div><br/>
                 </div>
 
-                <hr/>
-
-                <div><h6>우리의 목표</h6></div>
-                <div>{{ group.group_goal }}</div>
-
-                <hr/>
-
-                <div><h6>이것만은 꼭 지키자!</h6></div>
-                <div>{{ group.group_rule }}</div>
-
-                <hr/>
-
-                <div><h6>현재 멤버 {{ group.get_members }}명</h6></div>
-                <br/>
             </div>
-
-
-            <div>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="{% url 'study:member_info_list' group.id %}">그룹 멤버</a>
-
-                    </li>
-                    <li class="list-group-item">
-                        <a href="{% url 'assignment:assignment_home' group.id %}">과제 제출하기</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
-
-                    </li>
-                    <li class="list-group-item"><a href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i>내
-                        설정</a>
-                    </li>
-
-                    {% if usermembership.is_manager %}
-                    <li class="list-group-item">
-                        <a href="{% url 'study:group_settings_mn' group.id %}"><i class="material-icons">settings</i>그룹
-                            설정</a>
-                    </li>
-                    {% endif %}
-                    {% if usermembership.is_staff %}
-                    <li class="list-group-item">
-                        <a href="{% url 'study:group_settings_stf' group.id %}"><i class="material-icons">settings</i>그룹
-                            설정</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-        <div class="col-9">
-            {% block content %}
-            {% endblock %}
         </div>
     </div>
-</div>
+</nav>
 
-</body>
+<article style="background-color: #f7f7f7">
+    <div class="container" style="margin-top: 17px">
+        <div class="row">
+            <div class="col-3" style="background-color: #f7f7f7; padding-bottom: 300px">
 
+                <div class="border rounded mt-5" style="border: 2px solid #1976D2">
+                    <div style="margin-top: 10px; font-size: 30px; text-align: center; font-weight: bold">
+                        <a href="{% url 'study:group_detail' group.id %}">{{ group.group_name }}</a>
+                    </div>
+                    <hr/>
+
+                    <div style="padding-left:10px">
+                        <div style="color: #1976D2"><strong>우리의 목표:</strong></div>
+                        <div style="font-size: 18px">{{ group.group_goal }}</div>
+                    </div>
+                    <hr/>
+
+                    <div style="padding-left:10px">
+                        <div style="color: #1976D2"><strong>이것만은 꼭 지키자!</strong></div>
+                        <div style="font-size: 15px">{{ group.group_rule }}</div>
+                    </div>
+                    <hr/>
+
+                    <div style="text-align: center;">
+                        현재 멤버 {{ group.get_members }}명
+                    </div>
+                    <br/>
+                </div>
+
+                <br/>
+
+                <div>
+                    <ul class="list-group" style="font-size: 20px">
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
+                            <a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a>
+                        </li>
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
+                            <a href="{% url 'study:member_info_list' group.id %}">스터디 멤버</a>
+
+                        </li>
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
+                            <a href="{% url 'assignment:assignment_home' group.id %}">과제 제출하기</a>
+                        </li>
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
+                            <a href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
+
+                        </li>
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;"><a
+                                href="{% url 'study:group_mysettings' group.id %}"><i
+                                class="material-icons">settings</i>내
+                            설정</a>
+                        </li>
+
+                        {% if usermembership.is_manager %}
+                            <li class="list-group-item" style="background-color: #F7F7F7;">
+                                <a href="{% url 'study:group_settings_mn' group.id %}"><i
+                                        class="material-icons">settings</i>그룹
+                                    설정</a>
+                            </li>
+                        {% endif %}
+                        {% if usermembership.is_staff %}
+                            <li class="list-group-item">
+                                <a href="{% url 'study:group_settings_stf' group.id %}"><i
+                                        class="material-icons">settings</i>그룹
+                                    설정</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-9" style="background-color: white; margin-top: 25px; padding-top:30px">
+                <div style="width: 100%;">
+                    {% if messages %}
+                        <div class="container">
+                            {% for message in messages %}
+                                <div class="alert alert-info mt-3" role="alert">
+                                    {{ message.message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</article>
 
 
 </html>
