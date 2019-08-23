@@ -1,8 +1,18 @@
+{% extends "group_base.html" %}
+
+{% block content %}
 <form action="" enctype="multipart/form-data" method="post">
     {% csrf_token %}
-    {{ assignment.title }} 과제 인증
+    <h1>{{ assignment.title }} 과제 인증</h1>
+    <hr/>
     <table>
         {{ form.as_table }}
     </table>
-    <input type="submit">
+
+    <div class="buttons" style="margin-top: 10px">
+        <button type="submit" class="btn btn-primary" onclick="history.back(-1);">취소</button>
+        <button type="submit" class="btn btn-primary">제출</button>
+    </div>
 </form>
+
+{% endblock %}
