@@ -1,0 +1,124 @@
+{% extends 'group_base.html' %}
+
+{% block content %}
+
+
+
+<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-attendtable" role="tab" aria-controls="pills-attendtable" aria-selected="true">출석</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-assignment" role="tab" aria-controls="pills-assignment" aria-selected="false">과제</a>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-attendtable" role="tabpanel" aria-labelledby="pills-attendtable-tab">
+
+      <table class="table">
+      <caption>출석 현황</caption>
+      <thead>
+        <tr>
+          <th></th>
+          {% for member in memberships %}
+          <th>{{ member.person.nickname }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+          {% for attend in attends %}
+        <tr>
+          <th>{{ attend.gather_datetime }}({{ attend.title }})</th>
+
+            {% if usermembership.is_mn_stf %}
+            {% for member in memberships %}
+            <td>
+                <a href="#">
+                    {% if member.person in attend.attended %}
+                    <p style="color:green;">출석</p>
+                    {% elif member.person in attend.late %}
+                    <p style="color:darkorange;">지각</p>
+                    {% elif member.person in attend.absent %}
+                    <p style="color:red;">결석</p>
+                    {% else %}
+                    <p style="color:grey;">출석 정보 없음</p>
+                    {% endif %}
+                </a>
+            </td>
+            {% endfor %}
+<!--            출석은 동그라미(연두색) 지각은 세모(연노랑) 결석은 x(연빨강)로 표시-->
+            {% else %}
+            {% for member in memberships %}
+            <td>
+                    {% if member.person in attend.attended %}
+                    <p style="color:green;">출석</p>
+                    {% elif member.person in attend.late %}
+                    <p style="color:darkorange;">지각</p>
+                    {% elif member.person in attend.absent %}
+                    <p style="color:red;">결석</p>
+                    {% else %}
+                    <p style="color:grey;">출석 정보 없음</p>
+                    {% endif %}
+            </td>
+            {% endfor %}
+            {% endif %}
+
+        </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+  <div class="tab-pane fade" id="pills-assignment" role="tabpanel" aria-labelledby="pills-assignment-tab">
+
+      <table class="table">
+      <caption>과제 현황</caption>
+      <thead>
+        <tr>
+          <th></th>
+          {% for member in memberships %}
+          <th>{{ member.person.nickname }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+          {% for assignment in assignments %}
+        <tr>
+          <th>{{ assignment.due_date }}({{ assignment.title }})</th>
+            {% if usermembership.is_mn_stf %}
+            {% for membership in memberships %}
+            <td>
+                <a href="수정 url">
+                    {% if assignment.due_date <= membership.joined_at %}
+                    <p style="color:grey;">제출 정보 없음</p>
+                    {% elif membership.person in assignment.submitters %}
+                    <p style="color:green;">제출</p>
+                    {% else %}
+                    <p style="color:red;">미제출</p>
+                    {% endif %}
+                </a>
+            </td>
+            {% endfor %}
+<!--            출석은 동그라미(연두색) 지각은 세모(연노랑) 결석은 x(연빨강)로 표시-->
+            {% else %}
+            {% for membership in memberships %}
+            <td>
+                {% if assignment.due_date <= membership.joined_at %}
+                    <p style="color:grey;">제출 정보 없음</p>
+                {% elif membership.person in assignment.submitters %}
+                    <p style="color:green;">제출</p>
+                    {% else %}
+                    <p style="color:red;">미제출</p>
+                    {% endif %}
+            </td>
+            {% endfor %}
+            {% endif %}
+        </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+{% endblock %}

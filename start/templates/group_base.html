@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,10 @@
     <title>Title</title>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
     <link rel='stylesheet' href='//cdn.jsdelivr.net/font-kopub/1.0/kopubdotum.css'>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -51,22 +53,29 @@
             text-decoration: None;
         }
 
-        ul li {
-            list-style: none;
-            font-family: 'KoPub Dotum';
-            font-weight: bold;
+        .settings {
+            display: table-cell;
+        }
+
+        .settings > i {
+            vertical-align: middle;
+        }
+
+        .settings > span {
+            vertical-align: middle;
         }
 
         @font-face {
-            font-family: 'yg-jalnan';
-            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
+    font-family: 'yg-jalnan';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
     </style>
+
 </head>
-<body>
+
 
 <nav>
     <div class="navbar navbar-expand-lg fixed-top"
@@ -127,7 +136,7 @@
 
                     <div style="padding-left:10px">
                         <div style="color: #1976D2"><strong>이것만은 꼭 지키자!</strong></div>
-                        <div style="font-size: 15px">{{ group.group_rule }}</div>
+                        <div style="font-size: 15px; white-space:pre-line;">{{ group.group_rule }}</div>
                     </div>
                     <hr/>
 
@@ -155,24 +164,19 @@
                             <a href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
 
                         </li>
-                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;"><a
-                                href="{% url 'study:group_mysettings' group.id %}"><i
-                                class="material-icons">settings</i>내
-                            설정</a>
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
+                             <a class="settings" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i><span> 내 설정</span></a>
                         </li>
 
                         {% if usermembership.is_manager %}
                             <li class="list-group-item" style="background-color: #F7F7F7;">
-                                <a href="{% url 'study:group_settings_mn' group.id %}"><i
-                                        class="material-icons">settings</i>그룹
-                                    설정</a>
+                                <a class="settings" href="{% url 'study:group_settings_mn' group.id %}" style="display: table-cell"><i class="material-icons" style="vertical-align: middle;">settings</i><span style="vertical-align: middle;"> 그룹
+                            설정</span></a>
                             </li>
                         {% endif %}
                         {% if usermembership.is_staff %}
                             <li class="list-group-item">
-                                <a href="{% url 'study:group_settings_stf' group.id %}"><i
-                                        class="material-icons">settings</i>그룹
-                                    설정</a>
+                                <a class="settings" href="{% url 'study:group_settings_stf' group.id %}"><i class="material-icons">settings</i><span> 그룹 설정</span></a>
                             </li>
                         {% endif %}
                     </ul>
@@ -196,6 +200,5 @@
         </div>
     </div>
 </article>
-
 
 </html>

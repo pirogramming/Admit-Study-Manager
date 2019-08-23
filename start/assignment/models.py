@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 
-from accounts.models import StudyUser
+from django.conf import settings
 from study.models import Group
 
 
@@ -23,9 +23,9 @@ class Assignment(models.Model):
 
 
 class Done(models.Model):
-    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='dones')
     index_in_assignment = models.IntegerField()
-    author = models.ForeignKey(StudyUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     done_img = models.ImageField(upload_to='AssignmentsDone')
     injung = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
