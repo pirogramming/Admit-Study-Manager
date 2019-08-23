@@ -17,6 +17,7 @@ from assignment.forms import DoneForm
 from django.urls import reverse
 from django.utils.html import format_html
 
+from studypost.models import Notice
 from .forms import GroupForm, RegisterForm, GroupProfileForm
 from .models import Group, Membership, UpdateHistory
 from django.contrib import messages
@@ -135,7 +136,7 @@ def group_detail(request, id):
 
     latest_update = UpdateHistory.objects.filter(group=group).order_by('created_at').last()
     attend_posts = group.attend_set.all().order_by('-pk')[:3]
-    notice_posts = group.notice_set.all().order_by('-pk')[:3]
+    notice_posts = group.notice_set.all().order_by('-pk')[1:4]
     assign_posts = group.assignment_set.filter(group=group).order_by('-pk')[:3]
 
     for post in attend_posts:
@@ -149,7 +150,7 @@ def group_detail(request, id):
 
     now = datetime.now()
 
-    latest_notice = "공지를 바로 볼 수 있음"
+    latest_notice = Notice.objects.filter(group=group).order_by('created_at').last()
 
     # latest_assignment = "가장 최근 과제 instance"
     latest_assignment = Assignment.objects.filter(group=group).order_by('created_at').last()
@@ -158,19 +159,29 @@ def group_detail(request, id):
     doneform = DoneForm()
     latest_attend = group.attend_set.all().order_by('pk').last()
     # "가장 최근 출석"
-    confirm_value = latest_attend.attendconfirm_set.filter(
-        attend_user=request.user.nickname,
-        attend_check='출석 정보 없음'
-    )
-    # 출석 여부
     attendform = AttendConfirmForm()
-    # "출석코드 입력해서 출석완료하는 form"
-    # attend_history = "표로 이 출석에 대한 출석 결과 나옴"
 
-    instances_attend = latest_attend.attendconfirm_set.filter(attend_check='출석').order_by('arrive_time')
-    instances_late = latest_attend.attendconfirm_set.filter(attend_check='지각').order_by('arrive_time')
-    instances_none = latest_attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
-    instances_absence = latest_attend.attendconfirm_set.filter(attend_check='결석')
+    try:
+        confirm_value = latest_attend.attendconfirm_set.filter(
+            attend_user=request.user.nickname,
+            attend_check='출석 정보 없음'
+        )
+        # 출석 여부
+        attendform = AttendConfirmForm()
+        # "출석코드 입력해서 출석완료하는 form"
+        # attend_history = "표로 이 출석에 대한 출석 결과 나옴"
+
+        instances_attend = latest_attend.attendconfirm_set.filter(attend_check='출석').order_by('arrive_time')
+        instances_late = latest_attend.attendconfirm_set.filter(attend_check='지각').order_by('arrive_time')
+        instances_none = latest_attend.attendconfirm_set.filter(attend_check='출석 정보 없음')
+        instances_absence = latest_attend.attendconfirm_set.filter(attend_check='결석')
+
+    except:
+        confirm_value = False
+        instances_attend = False
+        instances_late = False
+        instances_none = False
+        instances_absence = False
 
     context = {
         'membership_manager': membership_manager,
@@ -193,6 +204,8 @@ def group_detail(request, id):
         'confirm_value': confirm_value,
         'attendform': attendform,
         'authors': authors,
+
+        'latest_notice':latest_notice,
 
         'instances_attend':instances_attend,
         'instances_late':instances_late,
