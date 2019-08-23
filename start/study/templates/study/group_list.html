@@ -2,31 +2,51 @@
 
 {% block content %}
 
-<h1>Group List</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10">
+                <div style="text-align: left;font-size: 30px;color: #1976D2">
+                        <strong>나의 스터디그룹 보기</strong>
+                    </div>
+                <div class="search_bar" style="text-align: right">
+                    <form action="" method="get">
+                        <input type="text" name="g" value="{{ g }}"/>
+                        <input type="submit" value="검색" class="btn btn-primary">
+                    </form><br/>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
 
-<div class="search_bar">
-    <form action="" method="get">
-        <input type="text" name="g" value="{{ g }}"/>
-        <input type="submit" value="검색" class="btn btn-primary">
-    </form>
-</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-10 mb-5">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                    <tr>
+                        <th>그룹명</th>
+                        <th>그룹 목표</th>
+                        <th>그룹 소개</th>
+                    </tr>
+                    </thead>
 
-<table class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>그룹명</th>
-            <th>그룹 소개</th>
-        </tr>
-    </thead>
+                    <tbody>
+                    {% for group in group_list %}
+                        <tr>
+                            <td><a href="{% url "study:group_detail" group.id %}">{{ group.group_name }}</a></td>
+                            <td>{{ group.group_goal }}</td>
+                            <td>{{ group.group_bio }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </div>
 
-    <tbody>
-        {% for group in group_list %}
-        <tr>
-            <td><a href="{% url "study:group_detail" group.id %}">{{group.group_name}}</a></td>
-            <td>{{ group.group_bio }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+
 
 {% endblock %}

@@ -30,6 +30,7 @@
                                     <tr>
                                         <th>스터디명</th>
                                         <th>스터디 목표</th>
+                                        <th>스터디 소개</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -39,6 +40,7 @@
                                                 <a href="{% url "study:group_detail" group.id %}">{{ group.group_name }}</a>
                                             </td>
                                             <td>{{ group.group_goal }}</td>
+                                            <td>{{ group.group_bio }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
