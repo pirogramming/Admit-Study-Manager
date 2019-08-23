@@ -1,17 +1,33 @@
 {% extends 'group_base.html' %}
 
 {% block content %}
-<h1>{{ group.group_name }}의 과제 현황 >_<</h1>
 
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
+<style>
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+</style>
+
+<h3 style="font-family: 'yg-jalnan';">{{ group.group_name }}의 과제 현황 >_<</h3>
+<br>
+
+<div class="d-flex justify-content-between">
+<div>
+<h3 style="font-family: 'yg-jalnan';">과제</h3>
+</div>
+
+<div>
     {% if usermembership.is_mn_stf %}
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
+    <a href="{% url 'assignment:assignment_new' group.id%}"><i class="fas fa-book-open"> 과제 등록</i></a>
     {% endif %}
-
-    <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
-    <br/>
-
-<h3>과제</h3>
-    <button type="button" class="btn btn-primary" style="float: right; margin-bottom:5px" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
+    <a href="{% url 'assignment:assignment_list' group.id%}" style="margin-left: 10px;"><i class="fas fa-list-ul"> 과제 목록</i></a>
+</div>
+</div>
 
 
 {% if n_assignment == 0 %}
@@ -29,14 +45,14 @@
                     {% for assignment in assignments %}
                     <tr align="center">
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a> </td>
-                        <td>{{ assignment.due_date }}까지
+                        <td>{{ assignment.due_date|date:"Y-m-d h:i" }}까지
                             {% if assignment.due_date <= now %}
                              (기한 지남)
                             {% endif %}</td>
                         <td>{% if user in assignment.submitters %}인증 완료
                             {% else %}
-                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary
-                            {% if assignment.due_date <= now %} disabled{% endif %}">인증하기</a>
+                            <a href="{% url "assignment:done_new" assignment.id %}"
+                            {% if assignment.due_date <= now %} disabled{% endif %}"><i class="far fa-check-circle">인증하기</i></a>
                             {% endif %}</td>
                     </tr>
                     {% endfor %}
@@ -44,9 +60,14 @@
             </table>
     {% endif %}
 
-
-    <h3 style="margin-top: 30px">인증</h3>
-    <button type="button" class="btn btn-primary" style="float: right; margin-bottom: 5px" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
+<div class="d-flex justify-content-between mt-5">
+    <div>
+        <h3 style="font-family: 'yg-jalnan';">인증</h3>
+    </div>
+    <div>
+        <a href="{% url 'assignment:done_list' group.id%}"><i class="fas fa-list-ul"> 목록</i></a>
+    </div>
+</div>
 
     {% if n_dones == 0 %}
         등록된 인증이 없습니다 ㅠ_ㅠ
@@ -62,8 +83,8 @@
                 <tbody>
                         {% for done in dones %}
                             <tr align="center">
-                    <th scope="row">{{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">
-                        <br>{{ done.author }}님의 인증</a></th>
+                    <th scope="row">{{ done.assignment.title }}<a href="{% url "assignment:done_detail" done.id %}">
+                        <br>{{ done.author.nickname }}님의 인증</a></th>
                     <td><img src="{{ done.done_img.url }}" height="200"/></td>
                     <td>{% if user != done.author %}
                             {% if user in done.injung_check %}
