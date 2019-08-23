@@ -27,6 +27,10 @@
         font-weight: normal;
     }
 
+    .notice, .attendance, .assignment {
+        padding: 10px;
+    }
+
 </style>
 
 
@@ -206,7 +210,7 @@
             </div>
             {% else %}
             <div class="latest_attendance">
-                <div><h3>{{ latest_attend.title }}</h3></div>
+                <div><h5>{{ latest_attend.title }}</h5></div>
                 <div> {# 출석 띄우기 #}
                     <div>
                         <strong>모임일시:</strong>{{ latest_attend.gather_datetime }}
@@ -315,7 +319,7 @@
             <div><p>등록된 과제가 없습니다.</div>
             {% else %}
             <div class="latest_assignment">
-                <div><h3>{{ latest_assignment.title }}</h3></div>
+                <div><h5>{{ latest_assignment.title }}</h5></div>
                 <div>
                     <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
                 </div>
@@ -323,7 +327,7 @@
 
                 <div class="assignment_set">
                     {% for done in dones %}
-                    <div class="인증 col-4 border rounded" style="float: left; text-align: center;">
+                    <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
 
                         <h4>{{ done.author.nickname }}님</h4>
 
@@ -347,7 +351,7 @@
                         {{ done.created_at }} 에 인증!
                         <br/>
                         {% if done.author == request.user %}
-                        <p>나의 ㅇㅈ수:{{ done.injung }}</p>
+                        <div >나의 ㅇㅈ수:{{ done.injung }}</div>
                         {% else %}
                         <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
                         {% endif %}
@@ -357,13 +361,13 @@
 
                 {% if not user in authors %}
                 {% if not latest_assignment.due_date <= now %}
-                <div class="인증 col-4 border rounded" style="float: left; text-align: center;">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#assModal">
+                    <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;" data-toggle="modal" data-target="#assModal">
                         내 과제 인증하기
                     </button>
-                </div>
                 {% else %}
-                <p>만료된 과제입니다.</p>
+                <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
+                    <p>이미 만료된 과제입니다.</p>
+                </div>
                 {% endif %}
                 {% endif %}
 
