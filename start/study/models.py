@@ -38,7 +38,7 @@ class Group(models.Model):
 class Membership(models.Model):
     person = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    joined_at = models.DateTimeField(default=datetime.combine(date(2019, 5, 1), time(11, 0)))   #auto_now_add=True,
+    joined_at = models.DateTimeField(auto_now_add=True)   #auto_now_add=True,
 
     ROLE_CHOICES = [
         ('MANAGER', 'MANAGER'),
