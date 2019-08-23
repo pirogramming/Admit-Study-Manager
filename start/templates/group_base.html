@@ -66,11 +66,11 @@
         }
 
         @font-face {
-    font-family: 'yg-jalnan';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
 
     </style>
 
@@ -164,23 +164,29 @@
                             <a href="{% url 'attendance:attend_list' group.id %}">출석하기</a>
                         </li>
 
-                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;"">
+                        <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;"
+                        ">
                         <a href="{% url 'table:table' group.id %}">히스토리</a>
                         </li>
 
                         <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
-                             <a class="settings" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i><span> 내 설정</span></a>
+                            <a class="settings" href="{% url 'study:group_mysettings' group.id %}"><i
+                                    class="material-icons">settings</i><span> 내 설정</span></a>
                         </li>
 
                         {% if usermembership.is_manager %}
                             <li class="list-group-item" style="background-color: #F7F7F7;">
-                                <a class="settings" href="{% url 'study:group_settings_mn' group.id %}" style="display: table-cell"><i class="material-icons" style="vertical-align: middle;">settings</i><span style="vertical-align: middle;"> 그룹
+                                <a class="settings" href="{% url 'study:group_settings_mn' group.id %}"
+                                   style="display: table-cell"><i class="material-icons"
+                                                                  style="vertical-align: middle;">settings</i><span
+                                        style="vertical-align: middle;"> 그룹
                             설정</span></a>
                             </li>
                         {% endif %}
                         {% if usermembership.is_staff %}
                             <li class="list-group-item">
-                                <a class="settings" href="{% url 'study:group_settings_stf' group.id %}"><i class="material-icons">settings</i><span> 그룹 설정</span></a>
+                                <a class="settings" href="{% url 'study:group_settings_stf' group.id %}"><i
+                                        class="material-icons">settings</i><span> 그룹 설정</span></a>
                             </li>
                         {% endif %}
                     </ul>
@@ -204,5 +210,15 @@
         </div>
     </div>
 </article>
+
+<footer style="text-align: center;">
+    <div class="pt-3 pb-3 row" style="background-color: #F2F2F2;">
+        <div class="col-lg-12">
+            <div><strong style="color: #1976D2; font-family: yg-jalnan; font-size: 20px">Study Admit</strong></div>
+            <div style="font-family: sans-serif">Study Admit ⓒ 2019 All Right Reserved, Pirogramming 11</div>
+            <div style="font-family: sans-serif">박소윤 곽진현 김종혁 김소현 이승환</div>
+        </div>
+    </div>
+</footer>
 
 </html>

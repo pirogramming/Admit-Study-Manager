@@ -1,445 +1,518 @@
 {% extends 'group_base.html' %}
 
+{% load static %}
 {% block content %}
 
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<style>
-    span {
-        color: blue;
-    }
+    <style>
+        span {
+            color: blue;
+        }
 
-    * {
-        font-family: 'KoPub Dotum';
-        font-size: 14px;
-        font-weight: bold;
-    }
+        * {
+            font-family: 'KoPub Dotum';
+            font-size: 14px;
+            font-weight: bold;
+        }
 
-    * > h3 {
-        font-family: 'KoPub Dotum';
-    }
+        * > h3 {
+            font-family: 'KoPub Dotum';
+        }
 
-    * > h5 {
-        font-weight: bold;
-    }
+        * > h5 {
+            font-weight: bold;
+        }
 
-    * > h6 {
-        font-weight: normal;
-    }
+        * > h6 {
+            font-weight: normal;
+        }
 
-    .notice, .attendance, .assignment {
-        padding: 10px;
-    }
+        .notice, .attendance, .assignment {
+            padding: 10px;
+        }
 
-</style>
+    </style>
 
-
-<h1>Group Details </h1>
-
-<div>
-    <h4>초대 링크 :</h4>
-    <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link"
-           readonly/>
-    <button onclick="myFunction()">초대 링크 복사</button>
-</div>
-<hr/>
-
-<div>
-    <h4>구성원</h4>
-    <ul style="list-style: none;">
-        {% for member in membership_manager %}
-        <li style="color:dodgerblue;">{{ member.person.nickname }}(관리자)</li>
-        <a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a>
-        {% endfor %}
-        {% for member in membership_staff %}
-        <li style="color:deepskyblue;">{{ member.person.nickname }}(스탭)</li>
-        <a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a>
-        {% endfor %}
-        {% for member in membership_member %}
-        <li>{{ member.person.nickname }}</li>
-        <a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a>
-        {% endfor %}
-        <li>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#invlinkModal">
-                +
+    <div>
+        <p>
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample">
+                초대 링크 열기/닫기
             </button>
-        </li>
-    </ul>
-</div>
-
-
-<div class="modal fade" id="invlinkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">링크로 새 멤버 초대하기</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>다른 회원이 링크를 통해 접속하면 그룹에 가입할 수 있습니다.
-                </p>
-                <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}" id="link"
-                       readonly/>
-                <button onclick="myFunction()">초대 링크 복사</button>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-<hr/>
-
-<div>
-    <div>
-        <h4>{{ group.group_name }}의 현황</h4>
-        <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>
-        <small>{{ latest_update.created_at }} 기준</small>
-    </div>
-
-
-    <div>
-        <p><strong>ㅇㅈ 랭킹</strong></p>
-        <table border="2" , style="text-align: center;">
-            <tr style="text-align: center;">
-                <th>등수</th>
-                <th>닉네임</th>
-                <th>ㅇㅈ개수</th>
-            </tr>
-            {% for member, i in memberships_zip %}
-            <tr style="text-align: center;">
-                <td>{{ i }}등</td>
-                <td>{{ member.person.nickname }}</td>
-                <td>{{ member.total_admit }}개</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    <br/>
-
-    <div>
-        <p><strong>벌금 현황</strong></p>
-
-        <table border="2" , style="text-align: center">
-            <tr style="text-align: center;">
-                <th>닉네임</th>
-                <th>지각</th>
-                <th>결석</th>
-                <th>과제 미제출</th>
-                <th>벌금</th>
-            </tr>
-            {% for member, i in penalty_list_zip %}
-            <tr style="text-align: center;">
-                <td>{{ member.person.nickname }}</td>
-                <td>{{ member.late_attend }}회</td>
-                <td>{{ member.noshow_attend }}회</td>
-                <td>{{ member.noshow_assign }}회</td>
-                <td>{{ member.total_penalty }}원</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</div>
-<hr/>
-
-<div>
-    <h4><a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a></h4>
-
-</div>
-<hr/>
-
-<div>
-    <h4><a href="{% url 'attendance:attend_list' group.id %}">출석하기</a></h4>
-    <div>
-        {% for attend_post in attend_posts %}
-        <br/>
-        <div>
-            <div>
-                <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
-            </div>
-            <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
-            <div>출석 만료 시간 : {{ attend_post.expired_datetime }}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
-</div>
-<hr/>
-
-<div>
-    <h4><a href="{% url 'assignment:assignment_list' group.id %}">과제 인증하기</a></h4>
-    <div>
-        {% for assign_post in assign_posts %}
-        <br/>
-        <div>
-            <div><a href="{% url "assignment:assignment_detail" assign_post.id %}">{{ assign_post.title }}</a></div>
-            <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
-</div>
-<hr/>
-
-
-<div class="container">
-    <div class="row">
-        <div class="notice col-6 border rounded">
-            <h5>최신 공지</h5>
-            {% if not latest_notice %}
-            <p>등록된 공지가 없습니다.</p>
-            {% else %}
-            <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h3></a>
-            <div>게시일: {{ latest_notice.created_at }}</div>
-            <div>글쓴이: {{ latest_notice.author.nickname }}</div>
-
-            <div class="content-wrapper">
-                <h5>내용: {{ latest_notice.content|linebreaks }}</h5>
-            </div>
-            {% endif %}
-
-            <div>
-        {% for notice_post in notice_posts %}
-        <br/>
-        <div>
-            <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
-            <div>게시일: {{ notice_post.created_at }}</div>
-            <div>글쓴이: {{ notice_post.author.nickname }}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
-
-
-        </div>
-
-        <div class="attendance col-6 border rounded">
-            <h4 style="float:right;"><a href="{% url 'attendance:attend_list' group.id %}">출석으로 가기</a></h4>
-            <h5>최신 출석</h5>
-
-            {% if not latest_attend %}
-            <div>
-                <p>등록된 출석이 없습니다.</p>
-                {% if usermembership.is_manager %}
-                <a href="{% url 'attendance:attend_new' group.id %}"><button>출석 생성하기</button></a>
-                {% endif %}
-            </div>
-            {% else %}
-            <div class="latest_attendance">
-                <div><h5>{{ latest_attend.title }}</h5></div>
-                <div> {# 출석 띄우기 #}
-                    <div>
-                        <strong>모임일시:</strong>{{ latest_attend.gather_datetime }}
-                    </div>
-                    <div>
-                        <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime }}
-                    </div>
-                </div>
-                <hr/>
-
-                <div> {# 출석용 폼 띄우기 #}
-                    {% if latest_attend.attend_status == '출석 시간 만료' %}
-                    <p>출석 시간 만료입니다. 출석 할 수 없습니다.</p>
-                    <div>
-                        <ul class="list-group">
-                            <li class="list-group-item" style="color:green;">출석함!</li>
-
-                            <li class="list-group-item">
-                                {% for instance_attend in instances_attend %}
-                                <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
-                                {% endfor %}
-                            </li>
-                            <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
-
-                            <li class="list-group-item">
-                                {% for instance_late in instances_late %}
-                                <span style="color:black;">{{ instance_late.person.nickname }}</span>
-                                {% endfor %}
-                            </li>
-
-                            <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
-
-                            <li class="list-group-item">
-                                {% for instance_absence in instances_absence %}
-                                <span style="color:black;">{{ instance_absence.person.nickname }}</span>
-                                {% endfor %}
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-                    {% elif not confirm_value %}
-                    <p>이미 출석하셨습니다:)</p>
-                    <div>
-                        <ul class="list-group">
-                            <li class="list-group-item" style="color:green;">출석함!</li>
-
-                            <li class="list-group-item">
-                                {% for instance_attend in instances_attend %}
-                                <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
-                                {% endfor %}
-                            </li>
-                            <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
-
-                            <li class="list-group-item">
-                                {% for instance_late in instances_late %}
-                                <span style="color:black;">{{ instance_late.person.nickname }}</span>
-                                {% endfor %}
-                            </li>
-
-                            <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
-
-                            <li class="list-group-item">
-                                {% for instance_absence in instances_absence %}
-                                <span style="color:black;">{{ instance_absence.person.nickname }}</span>
-                                {% endfor %}
-                            </li>
-
-                        </ul>
-
-                    </div>
-
-                    {% elif latest_attend.attend_status == '정상 출석 가능' %}
-                    <div>
-                        <form action="#" method="POST">
-                            {% csrf_token %}
-                            <div>{{ attendform.as_p }}</div>
-                            <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
-                            <div>현재 정상 출석 가능합니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
-                        </form>
-                    </div>
-                    {% elif latest_attend.attend_status == '지각 출석 가능' %}
-                    <div>
-                        <form action="#" method="POST">
-                            {% csrf_token %}
-                            <div>{{ attendform.as_p }}</div>
-                            <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
-                            <div>현재 지각 출석입니다</div>
-                            <input type="submit" name="attendance" value="출석하기"/>
-                        </form>
-                    </div>
-                    {% endif %}
-
-                    {% endif %}
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="assignment col-12 border rounded">
-            <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">과제로 가기</a></h4>
-            <h5>최신 과제</h5>
-            {% if not latest_assignment %}
-            <div><p>등록된 과제가 없습니다.</div>
-            {% else %}
-            <div class="latest_assignment">
-                <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}"><h5>{{ latest_assignment.title }}</h5></a></div>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
                 <div>
-                    <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
+                    <h4>초대 링크 :</h4>
+                    <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}"
+                           id="link"
+                           readonly/>
+                    <button onclick="myFunction()">초대 링크 복사</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+
+    <div class="jumbotron">
+        <div style="font-size: 60px">{{ group.group_name }}</div>
+        <div style="font-size: 20px">{{ group.group_bio }}</div>
+        <div></div>
+    </div>
+    <hr/>
+
+    <div>
+        <h4>구성원</h4><br/>
+        <div class="col-sm-12 d-flex flex-wrap">
+            {% for member in membership_manager %}
+                <div style="color:dodgerblue; text-align: center">
+                    {% if user.img_profile %}
+                        <div>
+                            <img class="img_profile" src="{{ user.img_profile.url }}"
+                                 style="width:100px;height:100px;"/>
+                        </div><br/>
+                    {% else %}
+                        <div>
+                            <img class="img_profile" src="{% static 'img/anonym.jpg' %}"
+                                 style="width:100px;height:100px;"/>
+                        </div><br/>
+                    {% endif %}
+                    <div>{{ member.person.nickname }}</div>
+                    <div>(스터디장)</div>
+                    <div><a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a></div>
+                </div>
+            {% endfor %} &nbsp;&nbsp;&nbsp;
+
+            {% for member in membership_staff %}
+                <div style="color:deepskyblue; text-align: center">
+                    {% if user.img_profile %}
+                        <div>
+                            <img class="img_profile" src="{{ user.img_profile.url }}"
+                                 style="width:100px;height:100px;"/>
+                        </div><br/>
+                    {% else %}
+                        <div>
+                            <img class="img_profile" src="{% static 'img/anonym.jpg' %}"
+                                 style="width:100px;height:100px;"/>
+                        </div><br/>
+                    {% endif %}
+                    <div>{ member.person.nickname }}</div>
+                    <div>(스탭)</div>
+                    <div><a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a></div>
+                </div>
+            {% endfor %} &nbsp;&nbsp;&nbsp;
+
+
+            {% for member in membership_member %}
+                <div style="text-align: center">
+                    {% if user.img_profile %}
+                        <div>
+                            <img class="img_profile" src="{{ user.img_profile.url }}"
+                                 style="width:100px;height:100px;"/>
+                        </div><br/>
+                    {% else %}
+                        <div>
+                            <img class="img_profile" src="{% static 'img/anonym.jpg' %}"
+                                 style="width:100px;height:100px;"/>
+                        </div><br/>
+                    {% endif %}
+                    <div>{{ member.person.nickname }}</div>
+                    <div>(스터디원)</div>
+                    <div><a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a></div>
+                </div>
+            {% endfor %} &nbsp;&nbsp;&nbsp;
+
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="invlinkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">링크로 새 멤버 초대하기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>다른 회원이 링크를 통해 접속하면 그룹에 가입할 수 있습니다.
+                    </p>
+                    <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}"
+                           id="link"
+                           readonly/>
+                    <button onclick="myFunction()">초대 링크 복사</button>
+
                 </div>
 
+            </div>
+        </div>
+    </div>
 
-                <div class="assignment_set">
-                    {% for done in dones %}
-                    <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
 
-                        <h4>{{ done.author.nickname }}님</h4>
+    <hr/>
 
-                        <img class="scale" src="{{ done.done_img.url }}" height="100"
-                             data-toggle="modal" data-target="#imgModal{{forloop.counter}}"/>
+    <div>
+        <div>
+            <h4>{{ group.group_name }}의 현황</h4>
+            <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>
+            <small>{{ latest_update.created_at }} 기준</small>
+        </div>
+        <br/>
 
-                        <div class="modal fade" id="imgModal{{forloop.counter}}" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content" style="background:transparent; border: transparent;">
-                                    <div class="modal-body">
-                                        <img class="scale" src="{{ done.done_img.url }}" height="600"/>
-                                    </div>
-                                </div>
-                                <div class="modal-footer" style="border: transparent;">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                                </div>
-                            </div>
-                        </div>
 
-                        <br/>
-                        {{ done.created_at }} 에 인증!
-                        <br/>
-                        {% if done.author == request.user %}
-                        <div >나의 ㅇㅈ수:{{ done.injung }}</div>
-                        {% else %}
-                        <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
-                        {% endif %}
+        <div>
+            <div><strong>ㅇㅈ 랭킹</strong></div>
+            <table class='table' style="text-align: center">
+                <tr align="center" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
+                    <th scope="col">등수</th>
+                    <th scope="col">닉네임</th>
+                    <th scope="col">ㅇㅈ개수</th>
+                </tr>
+                {% for member, i in memberships_zip %}
+                    <tr style="text-align: center;">
+                        <td>{{ i }}등</td>
+                        <td>{{ member.person.nickname }}</td>
+                        <td>{{ member.total_admit }}개</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <br/>
+
+        <div>
+            <div><strong>벌금 현황</strong></div>
+
+            <table class='table' style="text-align: center">
+                <tr align="center" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
+                    <th scope="col">닉네임</th>
+                    <th scope="col">지각</th>
+                    <th scope="col">결석</th>
+                    <th scope="col">과제 미제출</th>
+                    <th scope="col">벌금</th>
+                </tr>
+                {% for member, i in penalty_list_zip %}
+                    <tr align="center">
+                        <td>{{ member.person.nickname }}</td>
+                        <td>{{ member.late_attend }}회</td>
+                        <td>{{ member.noshow_attend }}회</td>
+                        <td>{{ member.noshow_assign }}회</td>
+                        <td>{{ member.total_penalty }}원</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <hr/>
+
+    <div>
+        <h4><a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a></h4>
+    </div>
+    <hr/>
+
+    <div>
+        <h4><a href="{% url 'attendance:attend_list' group.id %}">출석하기</a></h4>
+        <div>
+            {% for attend_post in attend_posts %}
+                <br/>
+                <div>
+                    <div>
+                        <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
                     </div>
+                    <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
+                    <div>출석 만료 시간 : {{ attend_post.expired_datetime }}</div>
+                </div>
+                <br/>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+
+    <div>
+        <h4><a href="{% url 'assignment:assignment_list' group.id %}">과제 인증하기</a></h4>
+        <div>
+            {% for assign_post in assign_posts %}
+                <br/>
+                <div>
+                    <div><a href="{% url "assignment:assignment_detail" assign_post.id %}">{{ assign_post.title }}</a>
+                    </div>
+                    <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
+                </div>
+                <br/>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="notice col-6 border rounded">
+                <h5>최신 공지</h5>
+                {% if not latest_notice %}
+                    <p>등록된 공지가 없습니다.</p>
+                {% else %}
+                    <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h3
+                            style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h3></a>
+                    <div>게시일: {{ latest_notice.created_at }}</div>
+                    <div>글쓴이: {{ latest_notice.author.nickname }}</div>
+
+                    <div class="content-wrapper">
+                        <h5>내용: {{ latest_notice.content|linebreaks }}</h5>
+                    </div>
+                {% endif %}
+
+                <div>
+                    {% for notice_post in notice_posts %}
+                        <br/>
+                        <div>
+                            <div>
+                                <a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a>
+                            </div>
+                            <div>게시일: {{ notice_post.created_at }}</div>
+                            <div>글쓴이: {{ notice_post.author.nickname }}</div>
+                        </div>
+                        <br/>
                     {% endfor %}
                 </div>
 
-                {% if not user in authors %}
-                {% if not latest_assignment.due_date <= now %}
-                <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;" data-toggle="modal" data-target="#assModal">
-                    내 과제 인증하기
-                </button>
+
+            </div>
+
+            <div class="attendance col-6 border rounded">
+                <h4 style="float:right;"><a href="{% url 'attendance:attend_list' group.id %}">출석으로 가기</a></h4>
+                <h5>최신 출석</h5>
+
+                {% if not latest_attend %}
+                    <div>
+                        <p>등록된 출석이 없습니다.</p>
+                        {% if usermembership.is_manager %}
+                            <a href="{% url 'attendance:attend_new' group.id %}">
+                                <button>출석 생성하기</button>
+                            </a>
+                        {% endif %}
+                    </div>
                 {% else %}
-                <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
-                    <p>이미 만료된 과제입니다.</p>
-                </div>
-                {% endif %}
+                    <div class="latest_attendance">
+                    <div><h5>{{ latest_attend.title }}</h5></div>
+                    <div> {# 출석 띄우기 #}
+                        <div>
+                            <strong>모임일시:</strong>{{ latest_attend.gather_datetime }}
+                        </div>
+                        <div>
+                            <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime }}
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div> {# 출석용 폼 띄우기 #}
+                    {% if latest_attend.attend_status == '출석 시간 만료' %}
+                        <p>출석 시간 만료입니다. 출석 할 수 없습니다.</p>
+                        <div>
+                            <ul class="list-group">
+                                <li class="list-group-item" style="color:green;">출석함!</li>
+
+                                <li class="list-group-item">
+                                    {% for instance_attend in instances_attend %}
+                                        <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
+                                    {% endfor %}
+                                </li>
+                                <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
+
+                                <li class="list-group-item">
+                                    {% for instance_late in instances_late %}
+                                        <span style="color:black;">{{ instance_late.person.nickname }}</span>
+                                    {% endfor %}
+                                </li>
+
+                                <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
+
+                                <li class="list-group-item">
+                                    {% for instance_absence in instances_absence %}
+                                        <span style="color:black;">{{ instance_absence.person.nickname }}</span>
+                                    {% endfor %}
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    {% elif not confirm_value %}
+                        <p>이미 출석하셨습니다:)</p>
+                        <div>
+                            <ul class="list-group">
+                                <li class="list-group-item" style="color:green;">출석함!</li>
+
+                                <li class="list-group-item">
+                                    {% for instance_attend in instances_attend %}
+                                        <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
+                                    {% endfor %}
+                                </li>
+                                <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
+
+                                <li class="list-group-item">
+                                    {% for instance_late in instances_late %}
+                                        <span style="color:black;">{{ instance_late.person.nickname }}</span>
+                                    {% endfor %}
+                                </li>
+
+                                <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
+
+                                <li class="list-group-item">
+                                    {% for instance_absence in instances_absence %}
+                                        <span style="color:black;">{{ instance_absence.person.nickname }}</span>
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </div>
+
+                    {% elif latest_attend.attend_status == '정상 출석 가능' %}
+                        <div>
+                            <form action="#" method="POST">
+                                {% csrf_token %}
+                                <div>{{ attendform.as_p }}</div>
+                                <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
+                                <div>현재 정상 출석 가능합니다</div>
+                                <input type="submit" name="attendance" value="출석하기"/>
+                            </form>
+                        </div>
+                    {% elif latest_attend.attend_status == '지각 출석 가능' %}
+                        <div>
+                            <form action="#" method="POST">
+                                {% csrf_token %}
+                                <div>{{ attendform.as_p }}</div>
+                                <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
+                                <div>현재 지각 출석입니다</div>
+                                <input type="submit" name="attendance" value="출석하기"/>
+                            </form>
+                        </div>
+                    {% endif %}
+
                 {% endif %}
 
+                </div>
+                </div>
             </div>
-            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="assignment col-12 border rounded">
+                <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">과제로 가기</a></h4>
+                <h5>최신 과제</h5>
+                {% if not latest_assignment %}
+                    <div><p>등록된 과제가 없습니다.</div>
+                {% else %}
+                    <div class="latest_assignment">
+                        <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}">
+                            <h5>{{ latest_assignment.title }}</h5></a></div>
+                        <div>
+                            <strong>제출 기한:</strong>{{ latest_assignment.due_date }}
+                            {% if latest_assignment.due_date <= now %}(만료){% endif %}
+                        </div>
+
+
+                        <div class="assignment_set">
+                            {% for done in dones %}
+                                <div class="인증 col-4 border rounded"
+                                     style="float: left; text-align: center; height:200px;">
+
+                                    <h4>{{ done.author.nickname }}님</h4>
+
+                                    <img class="scale" src="{{ done.done_img.url }}" height="100"
+                                         data-toggle="modal" data-target="#imgModal{{ forloop.counter }}"/>
+
+                                    <div class="modal fade" id="imgModal{{ forloop.counter }}" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content"
+                                                 style="background:transparent; border: transparent;">
+                                                <div class="modal-body">
+                                                    <img class="scale" src="{{ done.done_img.url }}" height="600"/>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer" style="border: transparent;">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    닫기
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br/>
+                                    {{ done.created_at }} 에 인증!
+                                    <br/>
+                                    {% if done.author == request.user %}
+                                        <div>나의 ㅇㅈ수:{{ done.injung }}</div>
+                                    {% else %}
+                                        <button type="button"
+                                                onclick="location.href='{% url 'assignment:injung_plus' done.id %}' ">
+                                            인정!
+                                        </button> {{ done.injung }}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if not user in authors %}
+                            {% if not latest_assignment.due_date <= now %}
+                                <button type="button" class="인증 col-4 border rounded"
+                                        style="float: left; text-align: center; height:200px;" data-toggle="modal"
+                                        data-target="#assModal">
+                                    내 과제 인증하기
+                                </button>
+                            {% else %}
+                                <div class="인증 col-4 border rounded"
+                                     style="float: left; text-align: center; height:200px;">
+                                    <p>이미 만료된 과제입니다.</p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 
-
-
-<div class="modal fade" id="assModal" tabindex="-1" role="dialog" aria-labelledby="assModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assModalLabel">과제 인증하기</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal fade" id="assModal" tabindex="-1" role="dialog" aria-labelledby="assModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assModalLabel">과제 인증하기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" enctype="multipart/form-data" method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ latest_assignment.title }} 과제 인증
+                        <table>
+                            {{ doneform.as_table }}
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" name="assignment">
+                    </div>
+                </form>
             </div>
-            <form action="" enctype="multipart/form-data" method="post">
-                <div class="modal-body">
-                    {% csrf_token %}
-                    {{ latest_assignment.title }} 과제 인증
-                    <table>
-                        {{ doneform.as_table }}
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" name="assignment">
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
-<footer>
-    <div style="background-color: darkslategrey">
-        <p>푸터</br>푸터푸터</p>
+
+
+    <script>
+        function myFunction() {
+            var copyText = document.getElementById("link");
+            copyText.select();
+            document.execCommand("copy");
+            alert("초대 링크를 복사했습니다." + copyText.value);
+        }
+    </script>
+
+    <!--  alert("초대 링크를 복사했습니다." + copyText.value);-->
     </div>
-</footer>
-
-
-<script>
-    function myFunction() {
-        var copyText = document.getElementById("link");
-        copyText.select();
-        document.execCommand("copy");
-        alert("초대 링크를 복사했습니다." + copyText.value);
-    }
-</script>
-
-<!--  alert("초대 링크를 복사했습니다." + copyText.value);-->
-</div>
 {% endblock %}
