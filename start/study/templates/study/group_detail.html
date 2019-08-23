@@ -2,10 +2,22 @@
 {% load static %}
 {% block content %}
 
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <style>
+    * > h4 {
+        font-weight: bold;
+    }
 
+    .img_profile {
+        height:50px; width:50px;
+        /*border: 1px solid #1976D2;*/
+        border-radius: 100%;
+        display: block;
+        margin: 0 auto;
+    }
 
 </style>
 
@@ -32,77 +44,70 @@
 
 <hr/>
 
-<div class="jumbotron">
-    <div style="font-size: 60px">{{ group.group_name }}</div>
+<div class="jumbotron" style="position:relative">
+    <div style="font-size: 60px; font-family: 'yg-jalnan';">{{ group.group_name }}</div>
     <div style="font-size: 20px">{{ group.group_bio }}</div>
-</div>
-
-
-<!--구성원-->
-<div>
-    <h4>구성원</h4><br/>
+    <br/>
+    <br/>
+    <div style="position:absolute; right:0; bottom:0;">
+    <br/>
     <div class="col-sm-12 d-flex flex-wrap">
         {% for member in membership_manager %}
-            <div style="color:dodgerblue; text-align: center">
+        <a href="{% url 'study:member_info' member.id %}">
+        <button style="color:dodgerblue; text-align: center; background:transparent; border:transparent;">
                 {% if member.person.img_profile %}
                     <div>
-                        <img class="img_profile" src="{{ member.person.img_profile.url }}"
-                             style="width:100px;height:100px;"/>
-                    </div><br/>
+                        <img class="img_profile" src="{{ member.person.img_profile.url }}"/>
+                    </div>
                 {% else %}
                     <div>
-                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}"
-                             style="width:100px;height:100px;"/>
-                    </div><br/>
+                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}"/>
+                    </div>
                 {% endif %}
-                <div>{{ member.person.nickname }}</div>
-                <div>(스터디장)</div>
-                <div><a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a></div>
-            </div>
+                <div><strong>{{ member.person.nickname }}</strong></div>
+            </button>
+        </a>
         {% endfor %} &nbsp;&nbsp;&nbsp;
 
         {% for member in membership_staff %}
-            <div style="color:deepskyblue; text-align: center">
+        <a href="{% url 'study:member_info' member.id %}">
+            <button style="color:deepskyblue; text-align: center; background:transparent; border:transparent;">
                 {% if member.person.img_profile %}
                     <div>
-                        <img class="img_profile" src="{{ member.person.img_profile.url }}"
-                             style="width:100px;height:100px;"/>
-                    </div><br/>
+                        <img class="img_profile" src="{{ member.person.img_profile.url }}"/>
+                    </div>
                 {% else %}
                     <div>
-                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}"
-                             style="width:100px;height:100px;"/>
-                    </div><br/>
+                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}"/>
+                    </div>
                 {% endif %}
-                <div>{{ member.person.nickname }}</div>
-                <div>(스탭)</div>
-                <div><a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a></div>
-            </div>
+                <div><strong>{{ member.person.nickname }}</strong></div>
+            </button>
+        </a>
         {% endfor %} &nbsp;&nbsp;&nbsp;
-
 
         {% for member in membership_member %}
-            <div style="text-align: center">
+        <a href="{% url 'study:member_info' member.id %}">
+            <button style="text-align: center; background:transparent; border:transparent;">
                 {% if member.person.img_profile %}
                     <div>
-                        <img class="img_profile" src="{{ member.person.img_profile.url }}"
-                             style="width:100px;height:100px;"/>
-                    </div><br/>
+                        <img class="img_profile" src="{{ member.person.img_profile.url }}"/>
+                    </div>
                 {% else %}
                     <div>
-                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}"
-                             style="width:100px;height:100px;"/>
-                    </div><br/>
+                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}"/>
+                    </div>
                 {% endif %}
-                <div>{{ member.person.nickname }}</div>
-                <div>(스터디원)</div>
-                <div><a href="{% url 'study:member_info' member.id %}" class="btn btn-secondary">info</a></div>
-            </div>
+                <div><strong>{{ member.person.nickname }}</strong></div>
+            </button>
+        </a>
         {% endfor %} &nbsp;&nbsp;&nbsp;
-    </div>
-</div>
 
-<!--구성원 끝-->
+    </div>
+    <h6 style="float:right;">{{ group.get_members }}명이 함께 공부 중 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h6>
+
+</div>
+</div>
 
 <hr/>
 
@@ -110,12 +115,13 @@
     <div>
         <h4>{{ group.group_name }}의 현황</h4>
         <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>
-        <small>{{ latest_update.created_at }} 기준</small>
+        <small>{{ latest_update.created_at|date:"Y-m-d h:i" }} 기준</small>
     </div>
 
+    <br/>
 
     <div>
-        <div><strong>ㅇㅈ 랭킹</strong></div>
+        <div><i class="fas fa-trophy"></i><strong> ㅇㅈ 랭킹</strong></div>
         <table class='table' style="text-align: center">
             <tr align="center" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
                 <th scope="col">등수</th>
@@ -133,8 +139,9 @@
     </div>
     <br/>
 
+
     <div>
-        <div><strong>벌금 현황</strong></div>
+        <div><i class="fas fa-coins"></i><strong> 벌금 현황</strong></div>
 
         <table class='table' style="text-align: center">
             <tr align="center" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
@@ -160,57 +167,36 @@
 
 <div class="container">
     <div class="row">
-        <div class="notice col-6 border rounded">
-            <h4 style="float:right;"><a href="{% url 'studypost:notice_list' group.id %}">공지로 가기</a></h4>
-            <h5>최신 공지</h5>
+        <div class="notice col-6" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
+            <br/>
+            <h4 style="float:right;"><a href="{% url 'studypost:notice_list' group.id %}">+</a></h4>
             {% if not latest_notice %}
-            <p>등록된 공지가 없습니다.</p>
+            <h5>등록된 공지가 없습니다.</h5>
             {% else %}
-            <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h3></a>
-            <div>게시일: {{ latest_notice.created_at }}</div>
-            <div>글쓴이: {{ latest_notice.author.nickname }}</div>
-
+            <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h4></a>
+            <h6>{{ latest_notice.created_at|date:"Y-m-d h:i" }} | {{ latest_notice.author.nickname }}</h6>
+            <hr/>
             <div class="content-wrapper">
-                <h5>내용: {{ latest_notice.content|linebreaks }}</h5>
+                <h5>{{ latest_notice.content|linebreaks }}</h5>
             </div>
             {% endif %}
 
-            <div>
-                {% for notice_post in notice_posts %}
-                <br/>
-                <div>
-                    <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
-                    <div>게시일: {{ notice_post.created_at }}</div>
-                    <div>글쓴이: {{ notice_post.author.nickname }}</div>
-                </div>
-                <br/>
-                {% endfor %}
-            </div>
 
 
         </div>
 
-        <div class="attendance col-6 border rounded">
-            <h4 style="float:right;"><a href="{% url 'attendance:attend_list' group.id %}">출석으로 가기</a></h4>
-            <h5>최신 출석</h5>
-
+        <div class="attendance col-6" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
+            <br/>
+            <h4 style="float:right;"><a href="{% url 'attendance:attend_list' group.id %}">+</a></h4>
             {% if not latest_attend %}
             <div>
-                <p>등록된 출석이 없습니다.</p>
-                {% if usermembership.is_manager %}
-                <a href="{% url 'attendance:attend_new' group.id %}"><button>출석 생성하기</button></a>
-                {% endif %}
+                <h5>등록된 출석이 없습니다.</h5>
             </div>
             {% else %}
             <div class="latest_attendance">
-                <div><h5>{{ latest_attend.title }}</h5></div>
+            <a href="#"><h4 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_attend.title }}</h4></a>
                 <div> {# 출석 띄우기 #}
-                    <div>
-                        <strong>모임일시:</strong>{{ latest_attend.gather_datetime }}
-                    </div>
-                    <div>
-                        <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime }}
-                    </div>
+                        <strong>모임시간 | {{ latest_attend.gather_datetime|date:"Y-m-d h:i" }} ({{ latest_attend.sub_time}}분 허용)</strong>
                 </div>
                 <hr/>
 
@@ -247,7 +233,7 @@
                     </div>
 
                     {% elif not confirm_value %}
-                    <p>이미 출석하셨습니다:)</p>
+                    <p>출석 완료:)</p>
                     <div>
                         <ul class="list-group">
                             <li class="list-group-item" style="color:green;">출석함!</li>
@@ -302,30 +288,32 @@
 
                 </div>
             </div>
-            {% endif %} <!--혹시 conflict생기면 이 부분이 옳으니 이 부분을 남겨주세요-->
+            {% endif %}
+            <br/>
         </div>
     </div>
+    <br/>
     <div class="row mb-5">
-        <div class="assignment col-12 border rounded">
-            <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">과제로 가기</a></h4>
-            <h5>최신 과제</h5>
+        <div class="assignment col-12" style="border-top:2px solid #1976D2; border-bottom:2px solid #1976D2;">
+            <br/>
+            <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">+</a></h4>
             {% if not latest_assignment %}
-            <div><p>등록된 과제가 없습니다.</div>
+            <div><h5>등록된 과제가 없습니다.</h5></div>
             {% else %}
             <div class="latest_assignment">
-                <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}"><h5>{{ latest_assignment.title }}</h5></a></div>
+                <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}"><h4>{{ latest_assignment.title }}</h4></a></div>
                 <div>
-                    <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
+                    <strong>제출 기한 | {{ latest_assignment.due_date|date:"Y-m-d h:i" }} {% if latest_assignment.due_date <= now %}(만료){% endif %}</strong>
                 </div>
-
+                <hr/>
 
                 <div class="assignment_set">
                     {% for done in dones %}
-                    <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
+                    <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:300px;">
 
                         <h4>{{ done.author.nickname }}님</h4>
 
-                        <img class="scale" src="{{ done.done_img.url }}" height="100"
+                        <img class="scale" src="{{ done.done_img.url }}" height="150px"
                              data-toggle="modal" data-target="#imgModal{{forloop.counter}}"/>
 
                         <div class="modal fade" id="imgModal{{forloop.counter}}" role="dialog" aria-hidden="true">
@@ -342,10 +330,10 @@
                         </div>
 
                         <br/>
-                        {{ done.created_at }} 에 인증!
+                        <h6>{{ done.created_at|date:"Y-m-d h:i" }} 에 인증!</h6>
                         <br/>
                         {% if done.author == request.user %}
-                        <div >나의 ㅇㅈ수:{{ done.injung }}</div>
+                        <div>나의 ㅇㅈ {{ done.injung }}</div>
                         {% else %}
                         <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
                         {% endif %}
@@ -360,13 +348,14 @@
                 </button>
                 {% else %}
                 <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
-                    <p>인증 기간이 끝났습니다.</p>
+                    <h5>인증 기간이 끝났습니다.</h5>
                 </div>
                 {% endif %}
                 {% endif %}
 
             </div>
             {% endif %}
+
         </div>
     </div>
 </div>
