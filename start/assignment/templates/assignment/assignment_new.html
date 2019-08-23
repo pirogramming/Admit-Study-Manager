@@ -3,14 +3,16 @@
 {% block content %}
 
     <h2>새 과제 업로드</h2>
+    <hr/>
 
     <form action="#" method="POST">
     {% csrf_token %}
 
 
-        <div>
+        <div class="row col-12">
                 <br/>
-                <div>
+
+            <div class="titlencontent col-6"><div>
                     <strong>{{ form.title.label_tag }}</strong>
                     {{ form.title }}
                 </div>
@@ -22,14 +24,15 @@
                     <strong>{{ form.content.label_tag }}</strong>
                     {{ form.content }}
                 </div>
-            </div>
+            </div></div>
+
             <hr/>
 
-            <div>
+            <div class="duedate col-6">
                 <div>
-                    <h5>과제 기한 입력</h5>
+                    <h5 style="font-weight: bold">과제 기한</h5>
+                    <hr/>
                 </div>
-                <br/>
 
                 <div>
                     <strong>{{ form.due_date.label_tag }}</strong>
@@ -41,15 +44,16 @@
                 <div>
                     <strong>이 과제는</strong>
                     <div>
-                        {{ form.due_date_ampm }} {{ form.due_date_hour }}시 {{ form.due_date_minute }}분까지!
+                        {{ form.due_date_ampm }} <br/>{{ form.due_date_hour }}시 {{ form.due_date_minute }}분까지!
                     </div>
                 </div>
                 <br/>
             </div><br/>
 
-            <div>
-                <input type="submit" value="과제 만들기">
-            </div><br/>
+            <div class="mx-auto">
+                <button type="submit" class="btn btn-primary" onclick="history.back(-1);">취소</button>
+                <button type="submit" class="btn btn-primary">저장</button>
+            </div>
 
          </div>
 

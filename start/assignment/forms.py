@@ -47,5 +47,8 @@ class DoneForm(forms.ModelForm):
     class Meta:
         model = Done
         fields = ('done_img',)
+        labels = {
+            'done_img': '이미지 첨부',
+        }
 
 
