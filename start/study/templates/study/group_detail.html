@@ -163,7 +163,7 @@
     <div class="row">
         <div class="notice col-6 border rounded">
             <h4 style="float:right;"><a href="{% url 'studypost:notice_list' group.id %}">공지로 가기</a></h4>
-            <h5>최신 공지</h5>
+            <h5 style="font-weight: bold">최신 공지</h5>
             {% if not latest_notice %}
             <p>등록된 공지가 없습니다.</p>
             {% else %}
@@ -193,7 +193,7 @@
 
         <div class="attendance col-6 border rounded">
             <h4 style="float:right;"><a href="{% url 'attendance:attend_list' group.id %}">출석으로 가기</a></h4>
-            <h5>최신 출석</h5>
+            <h5 style="font-weight: bold">최신 출석</h5>
 
             {% if not latest_attend %}
             <div>
@@ -309,7 +309,7 @@
     <div class="row mb-5">
         <div class="assignment col-12 border rounded">
             <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">과제로 가기</a></h4>
-            <h5>최신 과제</h5>
+            <h5 style="font-weight: bold">최신 과제</h5>
             {% if not latest_assignment %}
             <div><p>등록된 과제가 없습니다.</div>
             {% else %}
@@ -343,7 +343,7 @@
                         </div>
 
                         <br/>
-                        {{ done.created_at }} 에 인증!
+                        {{ done.created_at|date:"Y-m-d H:i" }} 에 인증!
                         <br/>
                         {% if done.author == request.user %}
                         <div >나의 ㅇㅈ수:{{ done.injung }}</div>
