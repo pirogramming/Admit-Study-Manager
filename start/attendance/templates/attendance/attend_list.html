@@ -2,31 +2,55 @@
 
 
 {% block content %}
+
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
+<style>
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+</style>
+
+<div>
+    <h3 style="font-family: 'yg-jalnan', cursive;">출석 체크</h3>
+</div>
+
+<br>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <td>출석</td>
+            <td>출석 기한</td>
+            <td>출석 가능 여부</td>
+        </tr>
+    </thead>
+    
+    <tbody>
+    {% for post in posts %}
+    <tr>
+        <td><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></td>
+        <td>{{ post.init_datetime|date:"Y-m-d h:i" }}부터 {{ post.expired_datetime|date:"h:i" }}까지 출석 가능</td>
+        <td>{{ post.attend_status }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<div class="d-flex justify-content-between">
     <div>
-        <div>
-            <h2>출석 내역 확인</h2>
-        </div>
-        <div>
-            <p>최근 5번 모임의 출석 내역을 확인 가능합니다</p>
-        </div>
-        <div>
-            {% for post in posts %}
-                <br/>
-                <div>
-                    <ul>
-                        <li><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></li>
-                        <li>출석 기한 : {{ post.init_datetime }}부터 {{ post.expired_datetime }}까지 출석 가능</li>
-                        <li>출석 가능 여부 : {{ post.attend_status }}</li>
-                    </ul>
-                </div>
-                <hr/>
-            {% endfor %}
-        </div>
-        <div>
-            <a href="{% url 'attendance:attend_new' group.id %}">출석 만들기(방장기능)</a>
-        </div>
-        <div>
-            <a href="{% url 'study:group_detail' group.id %}">스터디 홈으로</a>
-        </div>
+        {% if usermembership.is_manager %}
+        <a href="{% url 'attendance:attend_new' group.id %}"><i class="fas fa-pen"> 출석 만들기</i></a>
+        {% endif %}
     </div>
+    <div>
+        <a href="{% url 'study:group_detail' group.id %}"><i class="fas fa-home"> 스터디 홈</i></a>
+    </div>
+</div>
 {% endblock %}

@@ -1,35 +1,65 @@
 {% extends 'group_base.html' %}
 
 {% block content %}
+
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
+<style>
+
+    * {
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+    .attend_info {
+        border: 2px solid #9b9b9b;
+        border-radius: 20px;
+        padding: 10px;
+    }
+
+    .attend_check {
+        border: 2px solid #9b9b9b;
+        border-radius: 20px;
+        padding: 10px;
+    }
+</style>
     <div>
-        <h2>{{ attend.title }} 출석 체크하기</h2><br/>
-        <div> {# 출석 띄우기 #}
+        <h3 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">{{ attend.title }} 출석 체크</h3><br/>
+        <div class="attend_info"> {# 출석 띄우기 #}
             <div>
-                <h3>출석 정보</h3>
+                <h4 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석 정보</h4>
             </div>
             <div>
-                <strong>모임일시:</strong>{{ attend.gather_datetime }}
+                <strong>모임일시 </strong>{{ attend.gather_datetime|date:"Y-m-d h:i" }}
             </div>
             <div>
-                <strong>출석 가능 기한:</strong>{{ attend.expired_datetime }}
+                <strong>출석 가능 기한 </strong>{{ attend.expired_datetime|date:"Y-m-d h:i" }}
             </div>
         </div>
+        {% if usermembership.is_mn_stf %}
+        <div class="wrap mt-3">
+            <a href="{% url "attendance:attend_edit" attend.id %}" style="color: #a6a6a6;
+        font-size: 14px;">출석 수정</a>
+            <a href="{% url "attendance:attend_delete" attend.id %}" style="color: #a6a6a6;
+        font-size: 14px; margin-left: 10px;">출석 삭제</a>
+            {# 권한 : 매니저랑 스탭이 접속할때만 버튼 생성됨 #}
+        </div>
+        {% endif %}
         <hr/>
-        <div>
-            <h3>출석하기</h3>
-        </div>
-        <div> {# 출석용 폼 띄우기 #}
-            {% if attend.attend_status == '정상 출석 가능' %}
+
+        <div class="attend_check">
+            <h4 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석하기</h4>
+            <div> {# 출석용 폼 띄우기 #}
+                {% if attend.attend_status == '정상 출석 가능' %}
                 <div>
                     <form action="#" method="POST">
                         {% csrf_token %}
-                        <div>{{ form.as_p }}</div>
                         <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                         <div>현재 정상 출석 가능합니다</div>
-                        <input type="submit" value="출석하기"/>
+                        <div style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석 코드 <input type="text" name="attendance_number">
+                            <input class="btn btn-primary" type="submit" value="출석"></div>
+
                     </form>
                 </div>
-            {% elif attend.attend_status == '지각 출석 가능' %}
+                {% elif attend.attend_status == '지각 출석 가능' %}
                 <div>
                     <form action="#" method="POST">
                         {% csrf_token %}
@@ -39,54 +69,58 @@
                         <input type="submit" value="출석하기"/>
                     </form>
                 </div>
-            {% else %}
+                {% else %}
                 <div>
                     <div>{{ attend.attend_status }}입니다. 출석 할 수 없습니다.</div>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
+
         <hr/>
 
         <div>
             <div>
-                <h3>출석한 사람 명단</h3>
+                <h4 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석한 사람 명단</h4>
             </div>
-            <div>
-                <div>
+            <div class="d-flex justify-content-start flex-wrap">
+                <div class="wrap1 m-3">
                     {% if instances_attend %}
                         <div><strong>출석한자</strong></div>
                         {% for instance in instances_attend %}
                             <div>
-                                {{ instance.attend_user }} | {{ instance.arrive_time }} | <p style="color: green">
+                                {{ instance.attend_user }} | {{ instance.arrive_time|date:"Y-m-d h:i" }} | <p style="color: green">
                                 정상출석</p>
                             </div>
                         {% endfor %}
                     {% endif %}
                 </div>
-            </div>
-            <div>
-                {% if instances_late %}
-                    <div><strong>지각한자</strong></div>
-                    {% for instance in instances_late %}
+
+                <div class="wrap2 m-3">
+                    {% if instances_late %}
+                        <div><strong>지각한자</strong></div>
+                        {% for instance in instances_late %}
+                            <div>
+                                {{ instance.attend_user }} | {{ instance.arrive_time }} | <p
+                                    style="color: orange">{{ instance.sub_time }}분 지각</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="wrap3 m-3">
+                    <div><strong>출석하지 않은 자들</strong></div>
+                    <div>
+                        <small>사정이 있다면 스터디장에게 말하기!</small>
+                        <br/>
+                        <small>출석 만료 시간이 지나면 결석으로 처리됩니다</small>
+                    </div>
+                    {% for instance in instances_none %}
                         <div>
-                            {{ instance.attend_user }} | {{ instance.arrive_time }} | <p
-                                style="color: orange">{{ instance.sub_time }}분 지각</p>
+                            {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                         </div>
                     {% endfor %}
-                {% endif %}
             </div>
-            <div>
-                <div><strong>출석하지 않은 자들</strong></div>
-                <div>
-                    <small>사정이 있다면 스터디장에게 말하기!</small>
-                    <br/>
-                    <small>출석 만료 시간이 지나면 결석으로 처리됩니다</small>
-                </div>
-                {% for instance in instances_none %}
-                    <div>
-                        {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
-                    </div>
-                {% endfor %}
 
                 {% if instances_absence %}
                     {% for instance in instances_absence %}
@@ -96,44 +130,42 @@
                     {% endfor %}
                 {% endif %}
             </div>
-
-            {% if usermembership.is_mn_stf %}
-            <div>
-                <a href="{% url "attendance:attend_edit" attend.id %}" class="btn btn-secondary">출석 수정하기</a>
-                <a href="{% url "attendance:attend_delete" attend.id %}" class="btn btn-secondary">출석 삭제하기</a>
-                {# 권한 : 매니저랑 스탭이 접속할때만 버튼 생성됨 #}
-            </div>
-            {% endif %}
         </div>
+
     </div>
 
-    <hr/>
+    <hr style="border: 3px solid #d7d7d7; border-radius: 100%;">
 
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <td>출석</td>
+        <td>출석 기한</td>
+        <td>출석 가능 여부</td>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for post in posts %}
+    <tr>
+        <td><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></td>
+        <td>{{ post.init_datetime|date:"Y-m-d h:i" }}부터 {{ post.expired_datetime|date:"h:i" }}까지 출석 가능</td>
+        <td>{{ post.attend_status }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<div class="d-flex justify-content-between">
     <div>
-        <div>
-            <h2>출석 내역 확인</h2>
-        </div>
-        <div>
-            <p>최근 5번 모임의 출석 내역을 확인 가능합니다</p>
-        </div>
-        <div>
-            {% for post in posts %}
-                <br/>
-                <div>
-                    <ul>
-                        <li><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></li>
-                        <li>출석 기한 : {{ post.init_datetime }}부터 {{ post.expired_datetime }}까지 출석 가능</li>
-                        <li>출석 가능 여부 : {{ post.attend_status }}</li>
-                    </ul>
-                </div>
-                <hr/>
-            {% endfor %}
-        </div>
-        <div>
-            <a href="{% url 'attendance:attend_new' group.id %}">출석 만들기(방장기능)</a>
-        </div>
-        <div>
-            <a href="{% url 'study:group_detail' group.id %}">스터디 홈으로</a>
-        </div>
+        {% if usermembership.is_manager %}
+        <a href="{% url 'attendance:attend_new' group.id %}"><i class="fas fa-pen"> 출석 만들기</i></a>
+        {% endif %}
     </div>
+    <div>
+        <a href="{% url 'study:group_detail' group.id %}"><i class="fas fa-home"> 스터디 홈</i></a>
+    </div>
+</div>
 {% endblock %}

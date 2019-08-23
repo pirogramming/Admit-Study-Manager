@@ -147,17 +147,7 @@
 
 <div>
     <h4><a href="{% url 'studypost:notice_list' group.id %}">스터디 공지</a></h4>
-    <div>
-        {% for notice_post in notice_posts %}
-        <br/>
-        <div>
-            <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
-            <div>게시일: {{ notice_post.created_at }}</div>
-            <div>글쓴이: {{ notice_post.author.nickname }}</div>
-        </div>
-        <br/>
-        {% endfor %}
-    </div>
+
 </div>
 <hr/>
 
@@ -197,10 +187,39 @@
 
 <div class="container">
     <div class="row">
-        <div class="notice col-6 border rounded">공지 리스트</div>
+        <div class="notice col-6 border rounded">
+            <h5>최신 공지</h5>
+            {% if not latest_notice %}
+            <p>등록된 공지가 없습니다.</p>
+            {% else %}
+            <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h3></a>
+            <div>게시일: {{ latest_notice.created_at }}</div>
+            <div>글쓴이: {{ latest_notice.author.nickname }}</div>
+
+            <div class="content-wrapper">
+                <h5>내용: {{ latest_notice.content|linebreaks }}</h5>
+            </div>
+            {% endif %}
+
+            <div>
+        {% for notice_post in notice_posts %}
+        <br/>
+        <div>
+            <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
+            <div>게시일: {{ notice_post.created_at }}</div>
+            <div>글쓴이: {{ notice_post.author.nickname }}</div>
+        </div>
+        <br/>
+        {% endfor %}
+    </div>
+
+
+        </div>
 
         <div class="attendance col-6 border rounded">
-            <h5>최근 출석</h5>
+            <h4 style="float:right;"><a href="{% url 'attendance:attend_list' group.id %}">출석으로 가기</a></h4>
+            <h5>최신 출석</h5>
+
             {% if not latest_attend %}
             <div>
                 <p>등록된 출석이 없습니다.</p>
@@ -231,14 +250,14 @@
                             <li class="list-group-item">
                                 {% for instance_attend in instances_attend %}
                                 <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
-                            {% endfor %}
+                                {% endfor %}
                             </li>
                             <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
 
                             <li class="list-group-item">
                                 {% for instance_late in instances_late %}
                                 <span style="color:black;">{{ instance_late.person.nickname }}</span>
-                                 {% endfor %}
+                                {% endfor %}
                             </li>
 
                             <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
@@ -262,14 +281,14 @@
                             <li class="list-group-item">
                                 {% for instance_attend in instances_attend %}
                                 <span style="color:black;"> {{ instance_attend.person.nickname }} </span>
-                            {% endfor %}
+                                {% endfor %}
                             </li>
                             <li class="list-group-item " style="color:darkorange;">지각ㅠ</li>
 
                             <li class="list-group-item">
                                 {% for instance_late in instances_late %}
                                 <span style="color:black;">{{ instance_late.person.nickname }}</span>
-                                 {% endfor %}
+                                {% endfor %}
                             </li>
 
                             <li class="list-group-item" style="color:red;">결석ㅠㅠ</li>
@@ -306,20 +325,21 @@
                     </div>
                     {% endif %}
 
-                {% endif %}
+                    {% endif %}
 
+                </div>
             </div>
         </div>
     </div>
-    </div>
     <div class="row">
         <div class="assignment col-12 border rounded">
-            <h5>최근 과제</h5>
+            <h4 style="float:right;"><a href="{% url 'assignment:assignment_list' group.id %}">과제로 가기</a></h4>
+            <h5>최신 과제</h5>
             {% if not latest_assignment %}
             <div><p>등록된 과제가 없습니다.</div>
             {% else %}
             <div class="latest_assignment">
-                <div><h5>{{ latest_assignment.title }}</h5></div>
+                <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}"><h5>{{ latest_assignment.title }}</h5></a></div>
                 <div>
                     <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
                 </div>
@@ -361,9 +381,9 @@
 
                 {% if not user in authors %}
                 {% if not latest_assignment.due_date <= now %}
-                    <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;" data-toggle="modal" data-target="#assModal">
-                        내 과제 인증하기
-                    </button>
+                <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;" data-toggle="modal" data-target="#assModal">
+                    내 과제 인증하기
+                </button>
                 {% else %}
                 <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
                     <p>이미 만료된 과제입니다.</p>
