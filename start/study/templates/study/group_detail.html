@@ -24,7 +24,7 @@
             <input type="text" value="http://127.0.0.1:8000/study/invitation/{{ group.invitation_url }}"
                    id="link"
                    readonly/>
-            <button onclick="myFunction()">초대 링크 복사</button>
+            <button class="btn btn-primary" onclick="myFunction()">초대 링크 복사</button>
         </div>
     </div>
 </div>
@@ -109,10 +109,11 @@
 <div> <!--현황들, 벌금현황까지 묶임-->
     <div>
         <h4>{{ group.group_name }}의 현황</h4>
-        <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>
-        <small>{{ latest_update.created_at }} 기준</small>
+        <a href="{% url "study:group_update" group.id %}" class="btn btn-primary">업데이트</a>
+        <small>{% if latest_update == None %}첫 업데이트를 해주세요 :){% else %}{{ latest_update.created_at|date:"Y-m-d H:i" }}기준{% endif %}</small>
     </div>
 
+<br>
 
     <div>
         <div><strong>ㅇㅈ 랭킹</strong></div>
@@ -167,7 +168,7 @@
             <p>등록된 공지가 없습니다.</p>
             {% else %}
             <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h3></a>
-            <div>게시일: {{ latest_notice.created_at }}</div>
+            <div>게시일: {{ latest_notice.created_at|date:"Y-m-d H:i" }}</div>
             <div>글쓴이: {{ latest_notice.author.nickname }}</div>
 
             <div class="content-wrapper">
@@ -198,7 +199,7 @@
             <div>
                 <p>등록된 출석이 없습니다.</p>
                 {% if usermembership.is_manager %}
-                <a href="{% url 'attendance:attend_new' group.id %}"><button>출석 생성하기</button></a>
+                <a href="{% url 'attendance:attend_new' group.id %}" class="btn btn-primary">출석 생성하기</a>
                 {% endif %}
             </div>
             {% else %}
