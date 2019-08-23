@@ -4,6 +4,7 @@ from django.db import models
 from django.urls import reverse
 from study.models import Group
 from accounts.models import StudyUser
+from datetime import datetime
 
 
 
@@ -14,7 +15,7 @@ def lnglat_validator(value):
 
 class Notice(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    title = models.CharField(max_length=20, verbose_name='제목')
+    title = models.CharField(max_length=20, verbose_name='제목', help_text='글제목')
     content = models.TextField(verbose_name='내용')
     photo = models.ImageField(blank=True, null=True, verbose_name='사진', upload_to='studypost/notice/%Y/%m/%d')
     file = models.FileField(blank=True, null=True, verbose_name='파일 업로드', upload_to='studypost/notice/%Y/%m/%d')
@@ -29,6 +30,13 @@ class Notice(models.Model):
 
     def get_absolute_url(self):
         return reverse('studypost:notice_detail', args=[self.id])
+
+    def sub_time(self):
+        now_time = datetime.now()
+        sub_time = now_time - self.created_at
+        sub_time = sub_time.seconds//60
+
+        return sub_time
 
 
 class Homework(models.Model):
@@ -45,6 +53,13 @@ class Homework(models.Model):
 
     def get_absolute_url(self):
         return reverse('studypost:homework_detail', args=[self.id])
+
+    def sub_time(self):
+        now_time = datetime.now()
+        sub_time = now_time - self.created_at
+        sub_time = sub_time.seconds//60
+
+        return sub_time
 
 
 

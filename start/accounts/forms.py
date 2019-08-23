@@ -63,6 +63,11 @@ class LoginForm(forms.ModelForm):
 
 
 class UserEditForm(UserChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(UserEditForm, self).__init__(*args, **kwargs)
+        self.fields['img_profile'].label = ''
+
+
     class Meta:
         model = StudyUser
         fields = ['img_profile', 'nickname', 'phone_number', 'bio']
@@ -75,5 +80,7 @@ class UserEditForm(UserChangeForm):
         }
 
         help_texts = {
-            'phone_number': '"-"를 포함해서 써주세요'
+            'nickname': '5자 이하로 써주세요',
+            'phone_number': '"-"를 포함해서 써주세요',
+            'bio': '자신을 소개해주세요',
         }
