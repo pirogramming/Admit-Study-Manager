@@ -32,7 +32,7 @@
                     <p><strong>아이디 :</strong> {{ user.username }}</p>
                     <p><strong>이름 :</strong> {{ user.nickname }}</p>
                     <p><strong>이메일 :</strong> {{ user.email }}</p>
-                    <p><strong>가입일자 :</strong> {{ user.date_joined }}</p>
+                    <p><strong>가입일자 :</strong> {{ user.date_joined|date:"Y-m-d H:i" }}</p>
                     <p><strong>전화번호 :</strong> {{ user.phone_number }}</p>
                     <p><strong>자기소개 :</strong><br/> {{ user.bio }}</p>
                 </div>
