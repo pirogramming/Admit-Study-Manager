@@ -3,20 +3,66 @@
 
 {% block content %}
 
-<ul>
-    {% if user.img_profile %}
-    <li><br/><img src="{{ user.img_profile.url }}" width="10%" height="10%"/></li>
-    {% else %}
-    <li><br/><img src="{% static 'img/anonym.jpg' %}" width="10%" height="10%"/></li>
+<style>
+
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .card ul {
+        padding: 0 20px;
+    }
+
+    .card ul li {
+        list-style: none;
+        font-family: 'Nanum Gothic', sans-serif;
+        font-weight: bold;
+    }
+
+    #profile_img {
+        border: 3px solid #1976D2;
+        border-radius: 100%;
+        width: 130px;
+        height: 130px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .card ul li p {
+        text-align: center;
+        font-family: 'yg-jalnan', cursive
+    }
+
+</style>
+
+<h3 style="font-family: 'yg-jalnan', cursive;">멤버 정보</h3>
+
+<div class="d-flex flex-row justify-content-start flex-wrap mt-3">
+    {% if membership.is_active %}
+    <div class="card m-3" style="width: 18rem; border: 5px solid #1976D2;">
+        <ul>
+            {% if membership.person.img_profile %}
+            <li><br/><img src="{{ membership.person.img_profile.url }}" id="profile_img"/><br>
+                <p>{{ membership.person.nickname }}</p></li>
+            {% else %}
+            <li><br/><img src="{% static 'img/anonym.jpg' %}" id="profile_img"/><br>
+                <p>{{ membership.person.nickname }}</p></li>
+            {% endif %}
+            <li>그룹 권한  {{ membership.role }}</li>
+            <li>{{ membership.person.email }}</li>
+            <li>{{ membership.person.nickname }} 님의 ㅇㅈ : {{ membership.total_admit }}</li>
+            <li>{{ membership.person.nickname }} 님의 벌금 : {{ membership.total_penalty }}</li>
+            <li>{{ membership.person.nickname }} 님의 ㅇㅈ 랭킹 : {{ membership.rank }}</li>
+            <hr>
+            <li style="font-weight: lighter;">자기소개
+                <br>
+                {{ membership.person.bio }}</li>
+        </ul>
+    </div>
     {% endif %}
-    <li>그룹 권한 : {{ membership.role }}</li>
-    <li>닉네임 : {{ user.nickname }}</li>
-    <li>이메일 : {{ user.email }}</li>
-    <li>자기소개 : {{ user.bio }}</li>
-    <li>전화번호 : {{ user.phone_number }}</li>
-    <li>{{ user.nickname }}님의 ㅇㅈ : {{ membership.total_admit }}</li>
-    <li>{{ user.nickname }}님의 벌금 : {{ membership.total_penalty }}</li>
-    <li>{{ user.nickname }}님의 ㅇㅈ 랭킹 : {{ membership.rank }}</li>
-</ul>
+</div>
 
 {% endblock %}
