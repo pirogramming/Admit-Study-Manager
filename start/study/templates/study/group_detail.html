@@ -114,8 +114,8 @@
 <div> <!--현황들, 벌금현황까지 묶임-->
     <div>
         <h4>{{ group.group_name }}의 현황</h4>
-        <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>
-        <small>{{ latest_update.created_at|date:"Y-m-d h:i" }} 기준</small>
+        <a href="{% url "study:group_update" group.id %}" class="btn btn-primary">업데이트</a>
+        <small>{% if latest_update == None %}첫 업데이트를 해주세요 :){% else %}{{ latest_update.created_at|date:"Y-m-d H:i" }}기준{% endif %}</small>
     </div>
 
     <br/>
@@ -232,6 +232,9 @@
 
                     </div>
 
+                    {% elif latest_attend.attend_status == '출석 시작 전' %}
+                        <p>출석 체크 시작 전입니다. 늦지 마세요:)</p>
+
                     {% elif not confirm_value %}
                     <p>출석 완료:)</p>
                     <div>
@@ -335,7 +338,7 @@
                         {% if done.author == request.user %}
                         <div>나의 ㅇㅈ {{ done.injung }}</div>
                         {% else %}
-                        <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
+                        <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
                         {% endif %}
                     </div>
                     {% endfor %}

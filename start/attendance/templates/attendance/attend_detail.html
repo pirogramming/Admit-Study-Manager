@@ -28,10 +28,10 @@
                 <h4 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석 정보</h4>
             </div>
             <div>
-                <strong>모임일시 </strong>{{ attend.gather_datetime|date:"Y-m-d h:i" }}
+                <strong>모임일시 </strong>{{ attend.gather_datetime|date:"Y-m-d H:i" }}
             </div>
             <div>
-                <strong>출석 가능 기한 </strong>{{ attend.expired_datetime|date:"Y-m-d h:i" }}
+                <strong>출석 가능 기한 </strong>{{ attend.expired_datetime|date:"Y-m-d H:i" }}
             </div>
         </div>
         {% if usermembership.is_mn_stf %}
@@ -89,7 +89,7 @@
                         <div><strong>출석한자</strong></div>
                         {% for instance in instances_attend %}
                             <div>
-                                {{ instance.attend_user }} | {{ instance.arrive_time|date:"Y-m-d h:i" }} | <p style="color: green">
+                                {{ instance.attend_user }} | {{ instance.arrive_time|date:"Y-m-d H:i" }} | <p style="color: green">
                                 정상출석</p>
                             </div>
                         {% endfor %}
@@ -149,7 +149,7 @@
     {% for post in posts %}
     <tr>
         <td><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></td>
-        <td>{{ post.init_datetime|date:"Y-m-d h:i" }}부터 {{ post.expired_datetime|date:"h:i" }}까지 출석 가능</td>
+        <td>{{ post.init_datetime|date:"Y-m-d H:i" }}부터 {{ post.expired_datetime|date:"H:i" }}까지 출석 가능</td>
         <td>{{ post.attend_status }}</td>
     </tr>
     {% endfor %}

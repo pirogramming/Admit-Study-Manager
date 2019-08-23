@@ -154,8 +154,8 @@ def injung_plus(request, done_id):
         return redirect(done)
     elif request.user in authors:
         when = injungs.get(author=request.user).created_at
-        messages.warning(request, "이미 {}에 인정하셨습니다!".format(when))
-        return redirect(done)
+        messages.warning(request, "{:%Y-%m-%d}에 이미 인정하셨습니다!".format(when))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         done.injung += 1
         original_author.admit_assign += 1

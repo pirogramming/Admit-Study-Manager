@@ -14,7 +14,7 @@
       <div class="card-body">
         <h2 class="card-title">{{ done.author }}님의 인증</h2>
         <p class="card-text">{{ done.assignment.title }} 과제에 대한 인증입니다 :)</p>
-        <p class="card-text"><small class="text-muted">{{ done.created_at }} 에 인증함</small></p>
+        <p class="card-text"><small class="text-muted">{{ done.created_at|date:"Y-m-d H:i" }}에 인증함</small></p>
       </div>
       <div class="card-footer align-self-end">
           {% if user != done.author %}
