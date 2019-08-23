@@ -34,7 +34,7 @@
                     <p><strong>이메일 :</strong> {{ user.email }}</p>
                     <p><strong>가입일자 :</strong> {{ user.date_joined|date:"Y-m-d H:i" }}</p>
                     <p><strong>전화번호 :</strong> {{ user.phone_number }}</p>
-                    <p><strong>자기소개 :</strong><br/> {{ user.bio }}</p>
+                    <p><strong>자기소개 :</strong><br/>{% if user.bio == None %}등록된 자기소개가 없습니다.{% else %}{{ user.bio }}{% endif %}</p>
                 </div>
             </div>
             <div class="col-lg-1"></div>
