@@ -29,36 +29,40 @@
           {% for attend in attends %}
         <tr>
           <th>{{ attend.gather_datetime }}({{ attend.title }})</th>
-            {% for attendconfirm in attend.get_set %}
+
             {% if usermembership.is_mn_stf %}
+            {% for member in memberships %}
             <td>
-                <a href="수정 url">
-                    {% if attendconfirm.attend_check == '출석' %}
-                    <p style="color:green;">{{ attendconfirm.attend_check }}</p>
-                    {% elif attendconfirm.attend_check == '지각' %}
-                    <p style="color:orangered;">{{ attendconfirm.attend_check }}</p>
-                    {% elif attendconfirm.attend_check == '결석' %}
-                    <p style="color:red;">{{ attendconfirm.attend_check }}</p>
+                <a href="#">
+                    {% if member.person in attend.attended %}
+                    <p style="color:green;">출석</p>
+                    {% elif member.person in attend.late %}
+                    <p style="color:orangered;">지각</p>
+                    {% elif member.person in attend.absent %}
+                    <p style="color:red;">결석</p>
                     {% else %}
-                    <p>{{ attendconfirm.attend_check }}</p>
+                    <p>출석 정보 없음</p>
                     {% endif %}
                 </a>
             </td>
+            {% endfor %}
 <!--            출석은 동그라미(연두색) 지각은 세모(연노랑) 결석은 x(연빨강)로 표시-->
             {% else %}
+            {% for member in memberships %}
             <td>
-                {% if attendconfirm.attend_check == '출석' %}
-                    <p style="color:green;">{{ attendconfirm.attend_check }}</p>
-                    {% elif attendconfirm.attend_check == '지각' %}
-                    <p style="color:orangered;">{{ attendconfirm.attend_check }}</p>
-                    {% elif attendconfirm.attend_check == '결석' %}
-                    <p style="color:red;">{{ attendconfirm.attend_check }}</p>
+                    {% if member.person in attend.attended %}
+                    <p style="color:green;">출석</p>
+                    {% elif member.person in attend.late %}
+                    <p style="color:orangered;">지각</p>
+                    {% elif member.person in attend.absent %}
+                    <p style="color:red;">결석</p>
                     {% else %}
-                    <p>{{ attendconfirm.attend_check }}</p>
+                    <p>출석 정보 없음</p>
                     {% endif %}
             </td>
-            {% endif %}
             {% endfor %}
+            {% endif %}
+
         </tr>
           {% endfor %}
       </tbody>

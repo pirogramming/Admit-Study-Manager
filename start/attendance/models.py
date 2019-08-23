@@ -22,6 +22,16 @@ class Attend(models.Model):     # 모델폼으로 구현
     def get_set(self):
         return self.attendconfirm_set.all()
 
+    def attended(self):
+        return [x.person for x in AttendConfirm.objects.filter(attend=self, attend_check='출석')]
+
+    def late(self):
+        return [x.person for x in AttendConfirm.objects.filter(attend=self, attend_check='지각')]
+
+    def absent(self):
+        return [x.person for x in AttendConfirm.objects.filter(attend=self, attend_check='결석')]
+
+
 class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현
     ATTEND_CHANCE = [
         ('출석 정보 없음', '출석 정보 없음'),
