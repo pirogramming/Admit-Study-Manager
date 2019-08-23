@@ -21,6 +21,7 @@ def assignment_home(request, group_id):
 
     ctx = {
         'group': group, 'usermembership': usermembership, 'assignments': assignments, 'dones': dones, 'now': now,
+        'n_assignment': len(assignments), 'n_dones': len(dones),
     }
     return render(request, 'assignment/assignment_home.html', ctx)
 
@@ -122,7 +123,8 @@ def done_new(request, assignment_id):
 def done_list(request, group_id):
     group = get_object_or_404(Group, id=group_id)
     dones = Done.objects.filter(assignment__group=group).order_by('-created_at')
-    ctx = {'group': group, 'dones': dones, }
+    num = len(dones)
+    ctx = {'group': group, 'dones': dones, 'num': num,}
     return render(request, 'assignment/done_list.html', ctx)
 
 

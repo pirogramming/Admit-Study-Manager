@@ -15,12 +15,10 @@
 <h1>{{ group.group_name }}의 과제 리스트</h1>
 
 
-    <a href="{% url "assignment:assignment_home" group.id %}" class="btn btn-primary" style="float: right; margin-bottom: 5px; margin-left: 2px">과제 홈으로</a>
-
-
+    <div style="margin-bottom: 5px"><a href="{% url "assignment:assignment_home" group.id %}" class="btn btn-primary" style="float: right; margin-left: 2px">과제 홈으로</a>
     {% if usermembership.is_mn_stf %}
-    <a href="{% url 'assignment:assignment_new' group.id%}" class="btn btn-primary" style="float: right; margin-bottom: 5px;">새 과제 등록</a>
-    {% endif %}
+    <a href="{% url 'assignment:assignment_new' group.id%}" class="btn btn-primary" style="float: right;">새 과제 등록</a>
+    {% endif %}<br/></div>
 
 
     {% if num == 0 %}
