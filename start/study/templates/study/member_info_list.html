@@ -59,7 +59,12 @@
             <li>{{ member.person.nickname }} 님의 ㅇㅈ 랭킹 : {{ member.rank }}</li>
             <hr>
             <li style="font-weight: lighter;"><div style="font-weight: bold">자기소개</div>
-                {{ member.person.bio }}</li>
+                {% if not member.person.bio %}
+                    등록된 자기소개가 없습니다.
+                {% else %}
+                    {{ member.person.bio }}
+                {% endif %}
+            </li>
         </ul>
     </div>
     {% endif %}

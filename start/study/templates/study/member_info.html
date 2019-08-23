@@ -57,9 +57,13 @@
             <li>{{ membership.person.nickname }} 님의 벌금 : {{ membership.total_penalty }}</li>
             <li>{{ membership.person.nickname }} 님의 ㅇㅈ 랭킹 : {{ membership.rank }}</li>
             <hr>
-            <li style="font-weight: lighter;">자기소개
-                <br>
-                {{ membership.person.bio }}</li>
+            <li style="font-weight: lighter;"><div style="font-weight: bold">자기소개</div>
+                {% if not membership.person.bio %}
+                    등록된 자기소개가 없습니다.
+                {% else %}
+                    {{ membership.person.bio }}
+                {% endif %}
+            </li>
         </ul>
     </div>
     {% endif %}
