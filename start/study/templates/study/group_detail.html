@@ -18,10 +18,12 @@
     }
 
     * > h5 {
+        font-family: 'KoPub Dotum';
         font-weight: bold;
     }
 
     * > h6 {
+        font-family: 'KoPub Dotum';
         font-weight: normal;
     }
 
@@ -95,7 +97,7 @@
     <div>
         <h4>{{ group.group_name }}의 현황</h4>
         <button type="button" onclick="location.href='{% url "study:group_update" group.id %}'">업데이트</button>
-        <small>{{ latest_update.created_at }} 기준</small>
+        <small>{{ latest_update.created_at|date:"Y-m-d h:i" }} 기준</small>
     </div>
 
 
@@ -159,7 +161,7 @@
                 <a href="{% url 'attendance:attend_list' group.id %}">{{ attend_post.title }}</a>
             </div>
             <div>출석 가능 여부 : {{ attend_post.attend_status }}</div>
-            <div>출석 만료 시간 : {{ attend_post.expired_datetime }}</div>
+            <div>출석 만료 시간 : {{ attend_post.expired_datetime|date:"Y-m-d h:i" }}</div>
         </div>
         <br/>
         {% endfor %}
@@ -174,7 +176,7 @@
         <br/>
         <div>
             <div><a href="{% url "assignment:assignment_detail" assign_post.id %}">{{ assign_post.title }}</a></div>
-            <div>{{ assign_post.due_date }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
+            <div>{{ assign_post.due_date|date:"Y-m-d h:i" }} {% if assign_post.due_date <= now %}(만료){% endif %}</div>
         </div>
         <br/>
         {% endfor %}
@@ -192,7 +194,7 @@
             <p>등록된 공지가 없습니다.</p>
             {% else %}
             <a href="{% url 'studypost:notice_detail' latest_notice.id %}"><h3 style="font-family: 'KoPub Dotum'; font-weight: bold;">{{ latest_notice.title }}</h3></a>
-            <div>게시일: {{ latest_notice.created_at }}</div>
+            <div>게시일: {{ latest_notice.created_at|date:"Y-m-d h:i" }}</div>
             <div>글쓴이: {{ latest_notice.author.nickname }}</div>
 
             <div class="content-wrapper">
@@ -205,7 +207,7 @@
                 <br/>
                 <div>
                     <div><a href="{% url "studypost:notice_detail" notice_post.id %}">{{ notice_post.title }}</a></div>
-                    <div>게시일: {{ notice_post.created_at }}</div>
+                    <div>게시일: {{ notice_post.created_at|date:"Y-m-d h:i" }}</div>
                     <div>글쓴이: {{ notice_post.author.nickname }}</div>
                 </div>
                 <br/>
@@ -231,10 +233,10 @@
                 <div><h5>{{ latest_attend.title }}</h5></div>
                 <div> {# 출석 띄우기 #}
                     <div>
-                        <strong>모임일시:</strong>{{ latest_attend.gather_datetime }}
+                        <strong>모임일시:</strong>{{ latest_attend.gather_datetime|date:"Y-m-d h:i" }}
                     </div>
                     <div>
-                        <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime }}
+                        <strong>출석 가능 기한:</strong>{{ latest_attend.expired_datetime|date:"Y-m-d h:i" }}
                     </div>
                 </div>
                 <hr/>
@@ -340,7 +342,7 @@
             <div class="latest_assignment">
                 <div><a href="{% url 'assignment:assignment_detail' latest_assignment.id %}"><h5>{{ latest_assignment.title }}</h5></a></div>
                 <div>
-                    <strong>제출 기한:</strong>{{ latest_assignment.due_date }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
+                    <strong>제출 기한:</strong>{{ latest_assignment.due_date|date:"Y-m-d h:i" }} {% if latest_assignment.due_date <= now %}(만료){% endif %}
                 </div>
 
 
@@ -367,10 +369,9 @@
                         </div>
 
                         <br/>
-                        {{ done.created_at }} 에 인증!
-                        <br/>
+                        <h6>{{ done.created_at|date:"Y-m-d h:i" }} 에 인증!</h6>
                         {% if done.author == request.user %}
-                        <div >나의 ㅇㅈ수:{{ done.injung }}</div>
+                        <div ><h6>나의 ㅇㅈ수:{{ done.injung }}</h6></div>
                         {% else %}
                         <button type="button" onclick="location.href='{% url 'assignment:injung_plus' done.id%}' ">인정!</button> {{ done.injung }}
                         {% endif %}
@@ -381,11 +382,11 @@
                 {% if not user in authors %}
                 {% if not latest_assignment.due_date <= now %}
                 <button type="button" class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;" data-toggle="modal" data-target="#assModal">
-                    내 과제 인증하기
+                    <h6>내 과제 인증하기</h6>
                 </button>
                 {% else %}
                 <div class="인증 col-4 border rounded" style="float: left; text-align: center; height:200px;">
-                    <p>인증 기간이 끝났습니다.</p>
+                    <h6 style="vertical-align: center;">인증 기간이 끝났습니다.</h6>
                 </div>
                 {% endif %}
                 {% endif %}
