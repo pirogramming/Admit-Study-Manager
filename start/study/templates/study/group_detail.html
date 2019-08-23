@@ -324,7 +324,7 @@
 
                         <h4>{{ done.author.nickname }}님</h4>
 
-                        <img class="scale" src="{{ done.done_img.url }}" height="150px"
+                        <img class="scale" src="{{ done.done_img.url }}" style="width: 100%; height: auto; max-height: 150px"
                              data-toggle="modal" data-target="#imgModal{{forloop.counter}}"/>
 
                         <div class="modal fade" id="imgModal{{forloop.counter}}" role="dialog" aria-hidden="true">
