@@ -1,22 +1,47 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<h2>{{ user.nickname }}'s Profile</h2>
 
-<ul>
-    {% if user.img_profile %}
-        <li>프로필이미지 : <br/><img src="{{ user.img_profile.url }}" width="10%" height="10%"/></li>
-    {% else %}
-        <li>이미지 없음 : <br/><img src="{% static 'img/anonym.jpg' %}" width="10%" height="10%"/></li>
-    {% endif %}
-        <li>이름 : {{ user.nickname }}</li>
-        <li>이메일 : {{ user.email }}</li>
-        <li>가입일자 : {{ user.date_joined }}</li>
-        <li>자기소개 : {{ user.bio }}</li>
-</ul>
-<div>
-    <a href="{% url 'accounts:profile_revise' %}">프로필 수정하기</a>
-    <a href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
-</div>
+{% block content %}
+    <div class="container">
+    <br/>
+        <div class="row">
+            <div class="col-lg-1"></div><br/>
+            <div class="col-lg-10" style="font-size: 26px"><strong>{{ user.nickname }}의 프로필</strong><div><hr/>
+            <div class="col-lg-1"></div><br/>
+        </div>
+        <div class="row" style="margin:0px 30px">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-4">
+                {% if user.img_profile %}
+                    <div style="margin-left: 50px; margin-top:10px; border-radius: 120px">
+                        <img class="img_profile" src="{{ user.img_profile.url }}" style="width:230px; height: 230px"/>
+                    </div>
+                {% else %}
+                    <div style="margin-left: 50px;margin-top:10px; border-radius: 120px">
+                        <img class="img_profile" src="{% static 'img/anonym.jpg' %}" style="width:230px; height: 230px"/>
+                    </div>
+                {% endif %}
+                <div style="text-align: center; margin-top:15px; margin-left: 80px">
+                    <a href="{% url 'accounts:profile_revise' %}">프로필 수정하기</a><br/>
+                    <a href="{% url 'accounts:password_change' %}">비밀번호 변경</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div style="text-align: left; font-size: 20px; margin-left: 80px">
+                    <p><strong>아이디 :</strong> {{ user.username }}</p>
+                    <p><strong>이름 :</strong> {{ user.nickname }}</p>
+                    <p><strong>이메일 :</strong> {{ user.email }}</p>
+                    <p><strong>가입일자 :</strong> {{ user.date_joined }}</p>
+                    <p><strong>전화번호 :</strong> {{ user.phone_number }}</p>
+                    <p><strong>자기소개 :</strong><br/> {{ user.bio }}</p>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
+        </div>
+    </div>
+
+
+
+
 {% endblock %}

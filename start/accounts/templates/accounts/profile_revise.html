@@ -1,38 +1,44 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
-    <h1>프로필 수정하기</h1>
-    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
-        <div>
-            <div>
-                <div>
-                    <strong>{{ profileform.img_profile.label_tag }}<strong></strong></strong>
-                </div>
-                {% if user.img_profile %}
-                    <div><img src="{{ user.img_profile.url }}" width="10%" height="10%"/></div>
-                {% endif %}
-                <div>{{ profileform.img_profile }}</div>
-                <div><small>25MB 이하 이미지만 가능합니다</small></div>
-            </div><br/>
-            <div>
-                <div><strong>{{ profileform.nickname.label_tag }}</strong></div>
-                <div>{{ profileform.nickname }}</div>
-                <div><small>특수문자를 사용할 수 없습니다</small></div>
-            </div><br/>
-            <div>
-                <div><strong>{{ profileform.phone_number.label_tag }}</strong></div>
-                <div>{{ profileform.phone_number }}</div>
-                <div><small>"-"를 포함해서 형식에 맞게 써주세요</small></div>
-            </div><br/>
-            <div>
-                <div><strong>{{ profileform.bio.label_tag }}</strong></div>
-                <div>{{ profileform.bio }}</div>
-                <div><small>친구가 나를 찾을 때 프로필 상단에 표시됩니다</small></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div style="font-size: 26px">
+                    프로필 수정하기
+                </div><br/>
             </div>
-            <br/>
-
-            <button type="submit">수정하기</button>
+            <div class="col-lg-2"></div>
         </div>
-    </form>
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div>
+                    <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        {% if user.img_profile %}
+                            <div><img src="{{ user.img_profile.url }}"style="width:150px; height: 150px"/></div><br/>
+                        {% else %}
+                            <div><img src="{% static 'img/anonym.jpg'  %}"style="width:150px; height: 150px"/></div><br/>
+                        {% endif %}
+                        <div style="margin-left: 50px">{{ profileform.img_profile|as_crispy_field }}</div>
+                        <div><small>25MB이하 파일만 가능합니다</small></div><br/>
+                        <div>{{ profileform.nickname|as_crispy_field }}</div>
+                        <div>{{ profileform.phone_number|as_crispy_field }}</div>
+                        <div>{{ profileform.bio|as_crispy_field }}</div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">수정하기</button>
+                        </div>
+                    </form>
+                </div>
+                <br/>
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+    </div>
+
+
 {% endblock %}
 

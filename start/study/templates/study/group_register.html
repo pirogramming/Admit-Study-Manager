@@ -1,11 +1,52 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-<form action="" method="post">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit">
-</form>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div style="font-size: 25px; font-weight: bold; color: #1976D2; margin:20px 0px; text-align: left">
+                    스터디 상세정보
+                </div>
+                <div style="font-size: 20px; text-align: left; background-color: #F2F2F2; padding: 10px;">
+                    <strong>그룹 이름</strong> : {{ group.group_name }}<br/>
+                    <strong>그룹 소개</strong> : {{ group.group_bio }}<br/>
+                    <strong>그룹 목표</strong> : {{ group.group_goal }}
+                </div>
+                <div>
+                    {% for member in membership_manager %}
+                        <div style="color:dodgerblue;font-size: 20px;margin:10px 0px; text-align: left">
+                            <strong>스터디장:</strong> {{ member.person.nickname }}({{ member.person.username }})
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2">
+            </div>
+            <div class="col-lg-8">
+                <hr/>
+                <div style="color: #1976D2; font-size: 25px; font-weight: bold; text-align: left">
+                    스터디 가입하기
+                </div>
+                <br/>
+                <div style="font-size: 12px;text-align: left">
+                    가입 코드를 입력해주세요. 가입 코드는 스터디장에게 문의하세요
+                </div>
+                <div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form.group_code|as_crispy_field }}
+                        <input type="submit" value="가입하기" width="50" class="btn btn-primary mb-3">
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
+
 {% endblock %}

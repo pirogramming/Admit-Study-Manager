@@ -10,7 +10,7 @@
     <button type="button" class="btn btn-primary" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">새 인증 등록</button>
     <br/>
 
-<h3>과제:</h3>
+<h3>과제</h3>
     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:assignment_list' group.id%}' ">목록으로</button>
 
 
@@ -22,7 +22,7 @@
                     <tr align="center">
                         <th scope="col">과제명</th>
                         <th scope="col">기한</th>
-                        <th scope="col">인증 여부</th>
+                        <th scope="col">인증</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,17 +33,17 @@
                             {% if assignment.due_date <= now %}
                              (기한 지남)
                             {% endif %}</td>
-                        <td>{% if user in assignment.submitters %}
-                            인증 완료
+                        <td>{% if user in assignment.submitters %}인증 완료
                             {% else %}
-                            미인증
+                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary
+                            {% if assignment.due_date <= now %} disabled{% endif %}">인증하기</a>
                             {% endif %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
 
-    <h3>인증:</h3>     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
+    <h3>인증</h3>     <button type="button" class="btn btn-primary" style="float: right" onclick="location.href='{% url 'assignment:done_list' group.id%}' ">목록으로</button>
     {% if dones == None %}
         등록된 인증 없음. 1빠 해볼까요~~?
     {% else %}
@@ -61,7 +61,15 @@
                     <th scope="row">{{ done.assignment.title }} 과제에 대한 <a href="{% url "assignment:done_detail" done.id %}">
                         <br>{{ done.author }}님의 인증</a></th>
                     <td><img src="{{ done.done_img.url }}" height="200"/></td>
-                    <td>인정버튼 커밍순</td>
+                    <td>{% if user != done.author %}
+                            {% if user in done.injung_check %}
+                                이미 ㅇㅈ함
+                            {% else %}
+                                <a href="{% url "assignment:injung_plus" done.id %}" class="btn btn-primary">인정</a>
+                            {% endif %}
+                        {% else %}
+                            자추 ㄴㄴ
+                        {% endif %}</td>
                             </tr>
                         {% endfor %}
                 </tbody>
