@@ -1,12 +1,32 @@
 {% extends 'group_base.html' %}
 
 {% block content %}
+
+<style>
+
+    * {
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+
+    .top {
+        border: 2px solid #9b9b9b;
+        border-radius: 20px;
+        padding: 10px;
+    }
+
+    .bottom {
+        border: 2px solid #9b9b9b;
+        border-radius: 20px;
+        padding: 10px;
+    }
+</style>
+
     <div>
-        <h2>출석 만들기</h2>
+        <h3 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석 만들기</h3>
         <form action="#" method="POST">
             {% csrf_token %}
 
-            <div>
+            <div class="top">
                 <br/>
                 <div>
                     <strong>{{ form.title.label_tag }}</strong>
@@ -16,25 +36,27 @@
                     <small>{{ form.username.errors }}</small>
                     <small>출석 포스팅의 이름을 지어주세요 ex)첫 모임/주말 회식</small>
                 </div>
-            </div>
-            <br/>
+                <br/>
 
-            <div>
                 <div>
-                    <strong>{{ form.attendance_number.label_tag }}</strong>
-                    {{ form.attendance_number }}
-                    <small>{{ form.attendance_number.errors }}</small>
-                </div>
-                <div>
-                    <small>3~5 자리의 무작위 출석 비밀번호를 작성해주세요</small>
-                </div>
-                <div>
-                    <small>이 번호를 알고 있는 팀원만 출석이 가능합니다. 공정한 출석체크에 활용하세요!</small>
+                    <div>
+                        <strong>{{ form.attendance_number.label_tag }}</strong>
+                        {{ form.attendance_number }}
+                        <small>{{ form.attendance_number.errors }}</small>
+                    </div>
+                    <div>
+                        <small>3~5 자리의 무작위 출석 비밀번호를 작성해주세요</small>
+                    </div>
+                    <div>
+                        <small>이 번호를 알고 있는 팀원만 출석이 가능합니다. 공정한 출석체크에 활용하세요!</small>
+                    </div>
                 </div>
             </div>
+
+
             <hr/>
 
-            <div>
+            <div class="bottom">
                 <div>
                     <h5>모임 날짜와 시간을 지정해주세요</h5>
                 </div>
