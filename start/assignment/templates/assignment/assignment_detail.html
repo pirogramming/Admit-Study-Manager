@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
 {{ message.message }}
 
     <div class="jumbotron">
@@ -11,7 +13,7 @@
     {% endif %}
     <h1 class="display-4">{{ assignment.title }}</h1>
         <p class="lead">{{ assignment.content|linebreaks }}</p>
-        <p class="lead">{{ assignment.due_date }} 까지 {% if assignment.due_date <= now %}(기한 지남){% endif %}</p>
+        <p class="lead">{{ assignment.due_date|date:"Y-m-d h:i" }} 까지 {% if assignment.due_date <= now %}(기한 지남){% endif %}</p>
     <hr class="my-4">
 
         {% if user in authors %}
@@ -42,8 +44,8 @@
                 {% for done in dones %}
                 <tr align="center">
                     <th scope="row">{{ done.index_in_assignment }}등</th>
-                    <td>{{ done.author }}</td>
-                    <td>{{ done.created_at }}</td>
+                    <td>{{ done.author.nickname }}</td>
+                    <td>{{ done.created_at|date:"Y-m-d h:i" }}</td>
                     <td>{% if user != done.author %}
                             {% if user in done.injung_check %}
                                 이미 ㅇㅈ함
@@ -60,16 +62,12 @@
 {% endif %}
 
 <br>
-
-    <button type="button" class="btn btn-primary" style="float: right; margin-left: 2px" onclick="location.href='{% url "assignment:assignment_list" assignment.group.id %}'">목록으로</button>
-
-   {% if usermembership.is_mn_stf %}
-    <button type="button" class="btn btn-primary" style="float: right", onclick="location.href='{% url 'assignment:assignment_new' group.id%}' ">새 과제 등록</button>
-    {% endif %}
-
+    <div class="d-flex justify-content-end">
+        <a href="{% url "assignment:assignment_list" assignment.group.id %}"><i class="fas fa-list-ul"> 목록</i></a>
+    </div>
 
     <!-- 과제 리스트 -->
-    <div class="assignment_list" style="margin-top: 130px">
+    <div class="assignment_list" style="margin-top: 30px">
         <table class="table">
                 <thead>
                     <tr align="center" style="border-top:3px solid #1976D2; border-bottom:3px solid #1976D2">
@@ -89,7 +87,7 @@
                                 {{ assign_ment.index_in_group }}
                             {% endif %}</th>
                         <td><a href="{% url "assignment:assignment_detail" assign_ment.id %}">{{ assign_ment.title }}</a></td>
-                        <td>{{ assign_ment.due_date }}{% if assign_ment.due_date <= now %}(만료){% endif %}</td>
+                        <td>{{ assign_ment.due_date|date:"Y-m-d h:i" }}{% if assign_ment.due_date <= now %}(만료){% endif %}</td>
                         <td>{% if user in assign_ment.submitters %}인증 완료{% else %}미인증{% endif %}</td>
                     </tr>
                         {% endfor %}

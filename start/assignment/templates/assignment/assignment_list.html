@@ -12,13 +12,32 @@
 
 {% block content %}
 
-<h1>{{ group.group_name }}의 과제 리스트</h1>
+<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+
+<style>
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+</style>
 
 
-    <div style="margin-bottom: 5px"><a href="{% url "assignment:assignment_home" group.id %}" class="btn btn-primary" style="float: right; margin-left: 2px">과제 홈으로</a>
-    {% if usermembership.is_mn_stf %}
-    <a href="{% url 'assignment:assignment_new' group.id%}" class="btn btn-primary" style="float: right;">새 과제 등록</a>
-    {% endif %}<br/></div>
+<h3 style="font-family: 'yg-jalnan';">{{ group.group_name }}의 과제 리스트</h3>
+<br>
+
+    <div class="d-flex justify-content-end">
+        <div>
+            <a href="{% url "assignment:assignment_home" group.id %}" style="margin-right: 10px;"><i
+                class="fas fa-home"> 과제 홈</i></a>
+        </div>
+        <div>
+            {% if usermembership.is_mn_stf %}
+            <a href="{% url 'assignment:assignment_new' group.id%}"><i class="fas fa-book-open"> 과제 등록</i></a>
+            {% endif %}
+        </div>
+    </div>
 
 
     {% if num == 0 %}
@@ -39,11 +58,11 @@
                     <tr align="center">
                         <th scope="row">{{ assignment.index_in_group }}</th>
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
-                        <td>{{ assignment.due_date }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
+                        <td>{{ assignment.due_date|date:"Y-m-d h:i" }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
                         <td>{% if user in assignment.submitters %}인증 완료
                             {% else %}
-                            <a href="{% url "assignment:done_new" assignment.id %}" class="btn btn-primary
-                                {% if assignment.due_date <= now %}disabled{% endif %}">인증하기</a>
+                            <a href="{% url "assignment:done_new" assignment.id %}"
+                            {% if assignment.due_date <= now %} disabled{% endif %}"><i class="far fa-check-circle">인증하기</i></a>
                             {% endif %}</td>
                     </tr>
                         {% endfor %}
