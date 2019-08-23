@@ -4,10 +4,11 @@
 
     {{ message.message }}
 
+
     <div class="card mb-3 text-center">
-  <div class="row no-gutters">
-    <div class="col-5 text-center">
-      <img src="{{ done.done_img.url }}" class="card-img" style="max-height:300px">
+  <div class="row no-gutters align-items-center">
+    <div class="col-5">
+      <img src="{{ done.done_img.url }}" class="card-img" style="width:100%; height:auto">
     </div>
     <div class="col-7">
       <div class="card-body">
@@ -15,7 +16,7 @@
         <p class="card-text">{{ done.assignment.title }} 과제에 대한 인증입니다 :)</p>
         <p class="card-text"><small class="text-muted">{{ done.created_at }} 에 인증함</small></p>
       </div>
-      <div class="card-footer">
+      <div class="card-footer align-self-end">
           {% if user != done.author %}
                     {% if user in done.injung_check %}
                         <a href="#" class="btn btn-primary disabled">인정</a>
