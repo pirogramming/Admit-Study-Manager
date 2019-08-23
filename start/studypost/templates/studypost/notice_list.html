@@ -39,7 +39,24 @@
 
 </style>
 
-<h4 style="font-family: 'yg-jalnan', cursive;">모임 공지</h4>
+<div class="d-flex justify-content-between align-items-end">
+    <div>
+    <h4 style="font-family: 'yg-jalnan', cursive;">모임 공지</h4>
+    </div>
+    <div class="dropdown mt-3">
+        <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+            공지 올리기
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'studypost:notice_new' group.id %}" style="color:  #292929;">모임 공지</a>
+            <a class="dropdown-item" href="{% url 'studypost:homework_new' group.id %}" style="color:  #292929;">기타
+                공지</a>
+        </div>
+    </div>
+</div>
+
 <hr>
 <table class="table table-hover table-borderless">
     <tbody>
@@ -83,16 +100,6 @@
 </table>
 
 
-<div class="dropdown mt-3">
-  <a class="btn btn-default dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    공지 올리기
-  </a>
-
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    <a class="dropdown-item" href="{% url 'studypost:notice_new' group.id %}" style="color:  #1976D2;">모임 공지</a>
-    <a class="dropdown-item" href="{% url 'studypost:homework_new' group.id %}" style="color:  #1976D2;">기타 공지</a>
-  </div>
-</div>
 
 
 {% endblock %}
