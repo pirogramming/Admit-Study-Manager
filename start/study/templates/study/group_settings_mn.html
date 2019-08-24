@@ -239,8 +239,7 @@
                             {% if membership_staff %}
                             {% for member in membership_staff %}
                         <li class="list-group-item" style="color:deepskyblue">
-                        <form action="" method="POST">
-                    {% csrf_token %}
+                        <form action="" method="POST">{% csrf_token %}
                             {{ member.person.nickname }}({{ member.person.username }})
                         <input type="hidden" name="out" value="{{ member.person.username }}">
                             <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +

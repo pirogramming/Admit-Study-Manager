@@ -54,9 +54,9 @@
                         {% csrf_token %}
                         <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
                         <div>현재 정상 출석 가능합니다</div>
-                        <div style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석 코드 <input type="text" name="attendance_number">
+                        <div style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">
+                            {{ form }}
                             <input class="btn btn-primary" type="submit" value="출석"></div>
-
                     </form>
                 </div>
                 {% elif attend.attend_status == '지각 출석 가능' %}

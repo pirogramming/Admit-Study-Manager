@@ -57,8 +57,8 @@
 
 
         * {
-        list-style: none;
-        font-family: 'Nanum Gothic', sans-serif;
+            list-style: none;
+            font-family: 'Nanum Gothic', sans-serif;
         }
 
         .settings {
@@ -79,6 +79,13 @@
             font-weight: normal;
             font-style: normal;
         }
+
+
+        .div-kopub{
+            font-family: 'KoPub Dotum';
+            font-weight: 800;
+        }
+
 
     </style>
 
@@ -102,19 +109,19 @@
                 <div class="d-flex flex-row" style="background-color: white; padding:5px 20px;border-radius: 10px">
                     <div>
                         <a href="{% url "accounts:profile" %}" class="d-flex">
-                        <strong style="color:#1976D2; font-size: 15px">나의 프로필</strong>
+                            <strong style="color:#1976D2; font-size: 15px">나의 프로필</strong>
                         </a>
                     </div>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div>
                         <a href="{% url "study:group_list" %}" class="d-flex">
-                        <strong style="color:#1976D2; font-size: 15px">나의 스터디</strong>
+                            <strong style="color:#1976D2; font-size: 15px">나의 스터디</strong>
                         </a>
                     </div>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <div>
                         <a href="{% url "accounts:logout" %}" class="d-flex">
-                        <strong style="color:#1976D2; font-size: 15px">로그아웃</strong>
+                            <strong style="color:#1976D2; font-size: 15px">로그아웃</strong>
                         </a>
                     </div>
                     <br/>
@@ -179,20 +186,25 @@
 
                         <li class="list-group-item list-group-item-action" style="background-color: #F7F7F7;">
 
-                            <a class="settings" href="{% url 'study:group_mysettings' group.id %}"><i class="material-icons">settings</i><span> 내 설정</span></a>
+                            <a class="settings" href="{% url 'study:group_mysettings' group.id %}"><i
+                                    class="material-icons">settings</i><span> 내 설정</span></a>
                         </li>
 
                         {% if usermembership.is_manager %}
-                        <li class="list-group-item" style="background-color: #F7F7F7;">
-                            <a class="settings" href="{% url 'study:group_settings_mn' group.id %}" style="display: table-cell"><i class="material-icons" style="vertical-align: middle;">settings</i><span style="vertical-align: middle;"> 그룹
+                            <li class="list-group-item" style="background-color: #F7F7F7;">
+                                <a class="settings" href="{% url 'study:group_settings_mn' group.id %}"
+                                   style="display: table-cell"><i class="material-icons"
+                                                                  style="vertical-align: middle;">settings</i><span
+                                        style="vertical-align: middle;"> 그룹
                             설정</span></a>
-                        </li>
+                            </li>
                         {% endif %}
                         {% if usermembership.is_staff %}
 
-                        <li class="list-group-item">
-                            <a class="settings" href="{% url 'study:group_settings_stf' group.id %}"><i class="material-icons">settings</i><span> 그룹 설정</span></a>
-                        </li>
+                            <li class="list-group-item">
+                                <a class="settings" href="{% url 'study:group_settings_stf' group.id %}"><i
+                                        class="material-icons">settings</i><span> 그룹 설정</span></a>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -200,13 +212,13 @@
             <div class="col-9" style="background-color: white; margin-top: 25px; padding-top:30px">
                 <div style="width: 100%;">
                     {% if messages %}
-                    <div class="container">
-                        {% for message in messages %}
-                        <div class="alert alert-info mt-3" role="alert">
-                            {{ message.message }}
+                        <div class="container">
+                            {% for message in messages %}
+                                <div class="alert alert-info mt-3" role="alert">
+                                    {{ message.message }}
+                                </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
                     {% endif %}
                 </div>
 

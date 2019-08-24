@@ -102,7 +102,7 @@ def attend_detail(request, group_id, detail_id):
 
         if confirm_value:
             if form.is_valid():
-                input_attend_number = form.cleaned_data['input_number']
+                input_attend_number = request.POST['input_number']
                 attend_number = attend.attendance_number
 
                 if attend_number == input_attend_number:
