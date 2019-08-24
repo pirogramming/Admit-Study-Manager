@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from study.models import Group
 from accounts.models import StudyUser
@@ -30,6 +32,12 @@ class Attend(models.Model):     # 모델폼으로 구현
 
     def absent(self):
         return [x.person for x in AttendConfirm.objects.filter(attend=self, attend_check='결석')]
+
+    def sub_time(self):
+        now_time = datetime.now()
+        sub_time = self.expired_datetime - self.gather_datetime
+        sub_time = sub_time.seconds//60
+        return sub_time
 
 
 class AttendConfirm(models.Model):  # 템플릿 인풋으로 폼 구현

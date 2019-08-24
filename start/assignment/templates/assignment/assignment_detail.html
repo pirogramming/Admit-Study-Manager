@@ -13,14 +13,14 @@
     {% endif %}
     <h1 class="display-4">{{ assignment.title }}</h1>
         <p class="lead">{{ assignment.content|linebreaks }}</p>
-        <p class="lead">{{ assignment.due_date|date:"Y-m-d h:i" }} 까지 {% if assignment.due_date <= now %}(기한 지남){% endif %}</p>
+        <p class="lead">{{ assignment.due_date|date:"Y-m-d H:i" }} 까지 {% if assignment.due_date <= now %}(기한 지남){% endif %}</p>
     <hr class="my-4">
 
         {% if user in authors %}
         <p>이미 인증하셨습니다! 멋져요~>_<</p>
         {% else %}
         <a href="{% url "assignment:done_new" assignment.id %}"
-           class="btn btn-primary {% if assignment.due_date <= now %}disabled{% endif %}">인증하기</a>
+           class="btn btn-{% if assignment.due_date <= now %}secondary disabled{% else %}primary{% endif %}">인증하기</a>
         {% endif %}
     </div>
 
@@ -45,7 +45,7 @@
                 <tr align="center">
                     <th scope="row">{{ done.index_in_assignment }}등</th>
                     <td>{{ done.author.nickname }}</td>
-                    <td>{{ done.created_at|date:"Y-m-d h:i" }}</td>
+                    <td>{{ done.created_at|date:"Y-m-d H:i" }}</td>
                     <td>{% if user != done.author %}
                             {% if user in done.injung_check %}
                                 이미 ㅇㅈ함
@@ -87,7 +87,7 @@
                                 {{ assign_ment.index_in_group }}
                             {% endif %}</th>
                         <td><a href="{% url "assignment:assignment_detail" assign_ment.id %}">{{ assign_ment.title }}</a></td>
-                        <td>{{ assign_ment.due_date|date:"Y-m-d h:i" }}{% if assign_ment.due_date <= now %}(만료){% endif %}</td>
+                        <td>{{ assign_ment.due_date|date:"Y-m-d H:i" }}{% if assign_ment.due_date <= now %}(만료){% endif %}</td>
                         <td>{% if user in assign_ment.submitters %}인증 완료{% else %}미인증{% endif %}</td>
                     </tr>
                         {% endfor %}

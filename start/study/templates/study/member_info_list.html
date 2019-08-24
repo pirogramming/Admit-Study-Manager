@@ -52,15 +52,19 @@
             <li><br/><img src="{% static 'img/anonym.jpg' %}" id="profile_img"/><br>
                 <p>{{ member.person.nickname }}</p></li>
             {% endif %}
-            <li>그룹 권한  {{ member.role }}</li>
+            <li>그룹 권한:  {{ member.role }}</li>
             <li>{{ member.person.email }}</li>
             <li>{{ member.person.nickname }} 님의 ㅇㅈ : {{ member.total_admit }}</li>
             <li>{{ member.person.nickname }} 님의 벌금 : {{ member.total_penalty }}</li>
             <li>{{ member.person.nickname }} 님의 ㅇㅈ 랭킹 : {{ member.rank }}</li>
             <hr>
-            <li style="font-weight: lighter;">자기소개
-                <br>
-                {{ member.person.bio }}</li>
+            <li style="font-weight: lighter;"><div style="font-weight: bold">자기소개</div>
+                {% if not member.person.bio %}
+                    등록된 자기소개가 없습니다.
+                {% else %}
+                    {{ member.person.bio }}
+                {% endif %}
+            </li>
         </ul>
     </div>
     {% endif %}

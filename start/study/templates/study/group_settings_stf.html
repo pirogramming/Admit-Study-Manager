@@ -4,23 +4,7 @@
 
 
 <style>
-    * {
-        font-family: 'KoPub Dotum';
-        font-size: 14px;
-        font-weight: bold;
-    }
 
-    * > h3 {
-        font-family: 'KoPub Dotum';
-    }
-
-    * > h5 {
-        font-weight: bold;
-    }
-
-    * > h6 {
-        font-weight: normal;
-    }
 </style>
 
 <script>
@@ -101,7 +85,7 @@
                     </div><br/>
 
                     <input type="hidden" name="groupprofilerevise" value="revise">
-                    <button type="submit">수정하기</button>
+                    <button class="btn btn-primary" type="submit">수정하기</button>
                     </input>
                 </div>
             </form>
@@ -130,7 +114,7 @@
 
 
                 <input type="hidden" name="rulerevise" value="revise">
-                <button type="submit">수정하기</button>
+                <button class="btn btn-primary" type="submit">수정하기</button>
                 </input>
 
             </form>
@@ -181,7 +165,7 @@
                         <!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
                         {% endfor %}
                         <input type="hidden" name="staffin" value="staffin">
-                        <button type="submit" id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
+                        <button class="btn btn-primary" type="submit" id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
                             선택한 구성원을 스탭으로 추가
                         </button>
                         </input>
@@ -224,7 +208,7 @@
                 {% csrf_token %}
                             {{ member.person.nickname }}({{ member.person.username }})
                         <input type="hidden" name="out" value="{{ member.person.username }}">
-                        <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
+                        <button class="btn btn-primary" style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
                         </input>

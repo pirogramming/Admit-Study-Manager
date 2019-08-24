@@ -58,11 +58,11 @@
                     <tr align="center">
                         <th scope="row">{{ assignment.index_in_group }}</th>
                         <td><a href="{% url "assignment:assignment_detail" assignment.id %}">{{ assignment.title }}</a></td>
-                        <td>{{ assignment.due_date|date:"Y-m-d h:i" }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
+                        <td>{{ assignment.due_date|date:"Y-m-d H:i" }}{% if assignment.due_date <= now %}(만료){% endif %}</td>
                         <td>{% if user in assignment.submitters %}인증 완료
                             {% else %}
                             <a href="{% url "assignment:done_new" assignment.id %}"
-                            {% if assignment.due_date <= now %} disabled{% endif %}"><i class="far fa-check-circle">인증하기</i></a>
+                               {% if assignment.due_date <= now %}style="color: gray"{% endif %}><i class="far fa-check-circle">인증하기</i></a>
                             {% endif %}</td>
                     </tr>
                         {% endfor %}

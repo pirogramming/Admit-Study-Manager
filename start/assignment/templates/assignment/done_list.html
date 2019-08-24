@@ -14,8 +14,8 @@
                 <img src="{{ done.done_img.url }}" class="card-img-top">
                 <div class="card-body">
                     <h5 class="card-title" style="font-weight: bold"><a href="{% url "assignment:done_detail" done.id %}">{{ done.author }}{% if user == done.author%}(나){% endif %}님의 인증</a></h5>
-                <p class="card-text">{{ done.assignment.title }} 과제에 대한 인증입니다 :) </p>
-                <p class="card-text">인증 시간: {{ done.created_at }}</p>
+                <p class="card-text">{{ done.assignment.title }} 과제에 대한 <br/> 인증입니다 :) </p>
+                <p class="card-text">인증 시간: {{ done.created_at|date:"Y-m-d H:i" }}</p>
 
             </div>
             {% if user != done.author %}

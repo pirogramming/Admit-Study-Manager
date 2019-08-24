@@ -85,7 +85,7 @@
                         </div><br/>
 
                         <input type="hidden" name="groupprofilerevise" value="revise">
-                        <button type="submit">수정하기</button>
+                        <button class="btn btn-primary" type="submit">수정하기</button>
                         </input>
                     </div>
                 </form>
@@ -114,7 +114,7 @@
 
 
                     <input type="hidden" name="rulerevise" value="revise">
-                    <button type="submit">수정하기</button>
+                    <button class="btn btn-primary" type="submit">수정하기</button>
                     </input>
 
                 </form>
@@ -145,7 +145,7 @@
                             {% csrf_token %}
                             {{ member.person.nickname }}({{ member.person.username }})
                             <input type="hidden" name="staffout" value="{{ member.person.username }}">
-                            <button style="float: right;" type="submit" onclick="return confirm('선택한 멤버의 스탭 권한을 취소하겠습니까?');">스탭 권한 취소</button>
+                            <button class="btn btn-primary" style="float: right;" type="submit" onclick="return confirm('선택한 멤버의 스탭 권한을 취소하겠습니까?');">스탭 권한 취소</button>
                             </input>
                         </form>
                     </li>
@@ -172,7 +172,7 @@
                             <!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
                             {% endfor %}
                             <input type="hidden" name="staffin" value="staffin">
-                            <button type="submit"  id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
+                            <button type="submit" class="btn btn-primary" id="staffin" onclick="return confirm('선택한 멤버를 스탭으로 추가하겠습니까?');">
                                 선택한 구성원을 스탭으로 추가
                             </button>
                             </input>
@@ -213,7 +213,7 @@
                             <!--              <input type="checkbox" name="staffin" value="{{ member.person.username }}">{{ member.person.username }}</input>-->
                             {% endfor %}
                             <input type="hidden">
-                            <button type="submit" id="managerin" onclick="return confirm('선택한 멤버에게 스터디장 권한을 위임하겠습니까?');">
+                            <button class="btn btn-primary" type="submit" id="managerin" onclick="return confirm('선택한 멤버에게 스터디장 권한을 위임하겠습니까?');">
                                 선택한 구성원에게 스터디장 권한 위임</button>
                             </input>
 
@@ -242,7 +242,7 @@
                         <form action="" method="POST">{% csrf_token %}
                             {{ member.person.nickname }}({{ member.person.username }})
                         <input type="hidden" name="out" value="{{ member.person.username }}">
-                            <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
+                            <button class="btn btn-primary" style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
                             </input>
@@ -260,7 +260,7 @@
                     {% csrf_token %}
                                 {{ member.person.nickname }}({{ member.person.username }})
                             <input type="hidden" name="out" value="{{ member.person.username }}">
-                            <button style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
+                            <button class="btn btn-primary" style="float: right;" onclick="return confirm('멤버를 강제탈퇴시키면 재가입이 불가능하며, ' +
      '그룹페이지에서 새로운 정보를 생성하지 못합니다. ' +
       '정말 강제탈퇴시키겠습니까?');">강제 탈퇴</button>
                             </input>
@@ -280,11 +280,11 @@
                 <h5>그룹 삭제</h5>
                 {% if membership_staff or membership_member %}
                 <h6>그룹을 삭제하려면 먼저 그룹 스탭과 멤버를 모두 탈퇴시켜 주세요.</h6>
-                <button type="submit" disabled>그룹 삭제</button>
+                <button type="submit" class="btn btn-primary" disabled>그룹 삭제</button>
                 {% else %}
                 <form action="" method="POST">
                     <input type="hidden" name="dltGroup" value="dlt">
-                    <button type="submit" onclick="return confirm('그룹을 삭제하면 그룹과 관련된 모든 정보가 삭제되어' +
+                    <button class="btn btn-primary" type="submit" onclick="return confirm('그룹을 삭제하면 그룹과 관련된 모든 정보가 삭제되어' +
      '정보를 다시 열람할 수 없습니다. ' +
       '정말 삭제하시겠습니까?');">그룹 삭제</button>
                     </input>

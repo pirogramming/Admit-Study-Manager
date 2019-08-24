@@ -34,7 +34,7 @@
     {% for post in posts %}
     <tr>
         <td><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></td>
-        <td>{{ post.init_datetime|date:"Y-m-d h:i" }}부터 {{ post.expired_datetime|date:"h:i" }}까지 출석 가능</td>
+        <td>{{ post.init_datetime|date:"Y-m-d H:i" }}부터 {{ post.expired_datetime|date:"H:i" }}까지 출석 가능</td>
         <td>{{ post.attend_status }}</td>
     </tr>
     {% endfor %}
