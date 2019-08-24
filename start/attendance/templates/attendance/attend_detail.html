@@ -2,25 +2,26 @@
 
 {% block content %}
 
-<script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
+    <script src="https://kit.fontawesome.com/6e27c4910b.js"></script>
 
-<style>
+    <style>
 
-    * {
-        font-family: 'Nanum Gothic', sans-serif;
-    }
-    .attend_info {
-        border: 2px solid #9b9b9b;
-        border-radius: 20px;
-        padding: 10px;
-    }
+        * {
+            font-family: 'Nanum Gothic', sans-serif;
+        }
 
-    .attend_check {
-        border: 2px solid #9b9b9b;
-        border-radius: 20px;
-        padding: 10px;
-    }
-</style>
+        .attend_info {
+            border: 2px solid #9b9b9b;
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        .attend_check {
+            border: 2px solid #9b9b9b;
+            border-radius: 20px;
+            padding: 10px;
+        }
+    </style>
     <div>
         <h3 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">{{ attend.title }} 출석 체크</h3><br/>
         <div class="attend_info"> {# 출석 띄우기 #}
@@ -35,13 +36,13 @@
             </div>
         </div>
         {% if usermembership.is_mn_stf %}
-        <div class="wrap mt-3">
-            <a href="{% url "attendance:attend_edit" attend.id %}" style="color: #a6a6a6;
+            <div class="wrap mt-3">
+                <a href="{% url "attendance:attend_edit" attend.id %}" style="color: #a6a6a6;
         font-size: 14px;">출석 수정</a>
-            <a href="{% url "attendance:attend_delete" attend.id %}" style="color: #a6a6a6;
+                <a href="{% url "attendance:attend_delete" attend.id %}" style="color: #a6a6a6;
         font-size: 14px; margin-left: 10px;">출석 삭제</a>
-            {# 권한 : 매니저랑 스탭이 접속할때만 버튼 생성됨 #}
-        </div>
+                {# 권한 : 매니저랑 스탭이 접속할때만 버튼 생성됨 #}
+            </div>
         {% endif %}
         <hr/>
 
@@ -49,30 +50,30 @@
             <h4 style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">출석하기</h4>
             <div> {# 출석용 폼 띄우기 #}
                 {% if attend.attend_status == '정상 출석 가능' %}
-                <div>
-                    <form action="#" method="POST">
-                        {% csrf_token %}
-                        <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
-                        <div>현재 정상 출석 가능합니다</div>
-                        <div style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">
-                            {{ form }}
-                            <input class="btn btn-primary" type="submit" value="출석"></div>
-                    </form>
-                </div>
+                    <div>
+                        <form action="#" method="POST">
+                            {% csrf_token %}
+                            <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
+                            <div>현재 정상 출석 가능합니다</div>
+                            <div style="font-family: 'Nanum Gothic', sans-serif; font-weight: bold;">
+                                {{ form }}
+                                <input class="btn btn-primary" type="submit" value="출석"></div>
+                        </form>
+                    </div>
                 {% elif attend.attend_status == '지각 출석 가능' %}
-                <div>
-                    <form action="#" method="POST">
-                        {% csrf_token %}
-                        <div>{{ form.as_p }}</div>
-                        <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
-                        <div>현재 지각 출석입니다</div>
-                        <input type="submit" value="출석하기"/>
-                    </form>
-                </div>
+                    <div>
+                        <form action="#" method="POST">
+                            {% csrf_token %}
+                            <div>{{ form.as_p }}</div>
+                            <div>스터디장에게 문의한 후 출석코드를 입력하세요</div>
+                            <div>현재 지각 출석입니다</div>
+                            <input type="submit" value="출석하기"/>
+                        </form>
+                    </div>
                 {% else %}
-                <div>
-                    <div>{{ attend.attend_status }}입니다. 출석 할 수 없습니다.</div>
-                </div>
+                    <div>
+                        <div>{{ attend.attend_status }}입니다. 출석 할 수 없습니다.</div>
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -89,7 +90,8 @@
                         <div><strong>출석한자</strong></div>
                         {% for instance in instances_attend %}
                             <div>
-                                {{ instance.attend_user }} | {{ instance.arrive_time|date:"Y-m-d H:i" }} | <p style="color: green">
+                                {{ instance.attend_user }} | {{ instance.arrive_time|date:"Y-m-d H:i" }} | <p
+                                    style="color: green">
                                 정상출석</p>
                             </div>
                         {% endfor %}
@@ -120,52 +122,50 @@
                             {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
                         </div>
                     {% endfor %}
+                    {% if instances_absence %}
+                        {% for instance in instances_absence %}
+                            <div>
+                                {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
             </div>
 
-                {% if instances_absence %}
-                    {% for instance in instances_absence %}
-                        <div>
-                            {{ instance.attend_user }} | <p style="color: red">{{ instance.attend_check }}</p>
-                        </div>
-                    {% endfor %}
-                {% endif %}
+            <hr style="border: 3px solid #d7d7d7; border-radius: 100%;">
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <td>출석</td>
+                    <td>출석 기한</td>
+                    <td>출석 가능 여부</td>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></td>
+                        <td>{{ post.init_datetime|date:"Y-m-d H:i" }}부터 {{ post.expired_datetime|date:"H:i" }}까지 출석 가능
+                        </td>
+                        <td>{{ post.attend_status }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <hr>
+
+            <div class="d-flex justify-content-between">
+                <div>
+                    {% if usermembership.is_manager %}
+                        <a href="{% url 'attendance:attend_new' group.id %}"><i class="fas fa-pen"> 출석 만들기</i></a>
+                    {% endif %}
+                </div>
+                <div>
+                    <a href="{% url 'study:group_detail' group.id %}"><i class="fas fa-home"> 스터디 홈</i></a>
+                </div>
             </div>
-        </div>
-
-    </div>
-
-    <hr style="border: 3px solid #d7d7d7; border-radius: 100%;">
-
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <td>출석</td>
-        <td>출석 기한</td>
-        <td>출석 가능 여부</td>
-    </tr>
-    </thead>
-
-    <tbody>
-    {% for post in posts %}
-    <tr>
-        <td><a href="{% url 'attendance:attend_detail' group.id post.id %}">{{ post.title }}</a></td>
-        <td>{{ post.init_datetime|date:"Y-m-d H:i" }}부터 {{ post.expired_datetime|date:"H:i" }}까지 출석 가능</td>
-        <td>{{ post.attend_status }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<hr>
-
-<div class="d-flex justify-content-between">
-    <div>
-        {% if usermembership.is_manager %}
-        <a href="{% url 'attendance:attend_new' group.id %}"><i class="fas fa-pen"> 출석 만들기</i></a>
-        {% endif %}
-    </div>
-    <div>
-        <a href="{% url 'study:group_detail' group.id %}"><i class="fas fa-home"> 스터디 홈</i></a>
-    </div>
-</div>
 {% endblock %}
